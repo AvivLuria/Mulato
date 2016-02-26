@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Events;
 
 public class Player : MovingObject {
 
@@ -12,6 +13,10 @@ public class Player : MovingObject {
 	private float playerMovementTimeToMove = 1.0f;
 	public Transform bombPrefab;
 
+    [System.Serializable]
+    public class PlayerDeployBombEvent : UnityEvent<int, int> { }
+    public PlayerDeployBombEvent onPlayerDeployedBomb;
+
 	// Use this for initialization
 	protected override void Start () {
 		// TODO: we need to add animator here
@@ -19,7 +24,6 @@ public class Player : MovingObject {
 		// We take this parameters from the gameManager and store them in the end of the level
 		points = GameManager.instance.playerPoints;
 		life = GameManager.instance.playerLife;
-
 		base.Start ();
 	}
 
@@ -66,7 +70,8 @@ public class Player : MovingObject {
 	private void SetBomb() {
 		bombPrefab.GetComponent<BombManager> ().power = power;
 		Instantiate (bombPrefab, transform.position, Quaternion.identity);
-	}
+        onPlayerDeployedBomb.Invoke(0, 1);
+    }
 
 	private void OnTriggerEnter2D(Collider2D other) {
 		// TODO: we need to do player hit from the bomb
@@ -96,7 +101,7 @@ public class Player : MovingObject {
 	}
 
 	//AttemptMove takes a generic parameter T which for Player will be of the type Wall,
-	// it also takes integers for x and y direction to move in.
+	// it also takes integers for row and column direction to move in.
 	protected override void AttemptMove <T> (int xDir, int yDir)
 	{
 		base.AttemptMove <T> (xDir, yDir);

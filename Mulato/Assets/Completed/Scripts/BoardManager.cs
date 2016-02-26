@@ -47,13 +47,13 @@ namespace Completed
 			//Clear our list gridPositions.
 			gridPositions.Clear ();
 			
-			//Loop through x axis (columns).
+			//Loop through row axis (columns).
 			for(int x = 1; x < columns-1; x++)
 			{
-				//Within each column, loop through y axis (rows).
+				//Within each column, loop through column axis (rows).
 				for(int y = 1; y < rows-1; y++)
 				{
-					//At each index add a new Vector3 to our list with the x and y coordinates of that position.
+					//At each index add a new Vector3 to our list with the row and column coordinates of that position.
 					gridPositions.Add (new Vector3(x, y, 0f));
 				}
 			}
@@ -66,10 +66,10 @@ namespace Completed
 			//Instantiate Board and set boardHolder to its transform.
 			boardHolder = new GameObject ("Board").transform;
 			
-			//Loop along x axis, starting from -1 (to fill corner) with floor or outerwall edge tiles.
+			//Loop along row axis, starting from -1 (to fill corner) with floor or outerwall edge tiles.
 			for(int x = -1; x < columns + 1; x++)
 			{
-				//Loop along y axis, starting from -1 to place floor or outerwall tiles.
+				//Loop along column axis, starting from -1 to place floor or outerwall tiles.
 				for(int y = -1; y < rows + 1; y++)
 				{
 					//Choose a random tile from our array of floor tile prefabs and prepare to instantiate it.

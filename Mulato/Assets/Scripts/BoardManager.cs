@@ -3,7 +3,26 @@ using System;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
-public class BoardManager : MonoBehaviour {
+public class BoardManager : SceneSingleton<BoardManager> {
+
+	public enum GridPointObject {
+		Empty,
+		Wall,
+        Box,
+		Enemy,
+		Player,
+		PowerUp,
+		Bomb
+	}
+		
+	public class GridPoint {
+		public int row;
+		public int column;
+		public GridPointObject gridPointObject;
+	    public Transform gridPointTransform;
+        public GameObject gameObject;
+	}
+
 	[Serializable]
 	public class Count
 	{
@@ -16,8 +35,7 @@ public class BoardManager : MonoBehaviour {
 			maximum = max;
 		}
 	}
-
-
+		
 	public int columns = 9;
 	public int rows = 10;
 	public Count wallCount = new Count (5, 9);
@@ -27,58 +45,85 @@ public class BoardManager : MonoBehaviour {
 	public GameObject boxTiles;
 	public GameObject powerUpsTiles;
 	public GameObject enemyTiles;
+	private List<GridPoint[]> m_board;
+
+    public const int c_boardMaximumColumn = 10;
 
 	private Transform boardHolder;
 	private List <Vector3> gridPositions = new List<Vector3> ();
 
-	void InitializeList()
+    public void InitializeList()
 	{
 		gridPositions.Clear ();
 
-		for (int x = 1; x < columns - 1; x++) {
-			for (int y = 1; y < rows - 1; y++) {
+		for (var x = 1; x < columns - 1; x++) {
+			for (var y = 1; y < rows - 1; y++) {
 				gridPositions.Add (new Vector3 (x, y, 0f));
 			}
 		}
 	}
 
-	void BoardSetup () 
+    private void BoardSetup () 
 	{
 		boardHolder = new GameObject ("Board").transform;
+        m_board = new List<GridPoint[]>();
 
-		for (int x = -1; x < columns + 1; x++) {
-			for (int y = -1; y < rows + 1; y++) {
+		for (var i = 0; i < rows; i++) {
+            m_board.Add(new GridPoint[columns]);
+		}
+
+        m_board[1][1] = new GridPoint()
+        {
+            row = 1,
+            column = 1,
+            gridPointObject = GridPointObject.Player
+        };
+
+		for (var column = 0; column < columns; column++) {
+			for (var row = 0; row < rows; row++) {
 				
 				GameObject toInstantiate = floorTiles;
+                m_board[row][column] = new GridPoint()
+                {
+                    row = row,
+                    column = column,
+                    gridPointObject = GridPointObject.Empty
+                };
 				// If a wall
-				if ((x == -1 || x == columns || y == -1 || y == rows) ||
-					((x % 2 == 1) && (y % 2 == 1))) {
+				if ((row == 0 || column == columns - 1 || column == 0 || row == rows - 1) ||
+					((row % 2 == 0) && (column % 2 == 0))) {
 					toInstantiate = wallTiles;
+                    m_board[row][column].gridPointObject = GridPointObject.Wall;
 				}
 
-				GameObject instance = Instantiate (toInstantiate, new Vector3 (x, y, 0f), Quaternion.identity) as GameObject;
-
-				instance.transform.SetParent (boardHolder);
+				var instance = Instantiate (toInstantiate, new Vector3 (column, row, 0f), Quaternion.identity) as GameObject;
+                m_board[row][column].gameObject = instance;
+				instance.transform.SetParent(boardHolder);
 
 			}
 		}
 	}
 
-	Vector3 RandomPosition()
+    public GridPoint RandomPosition()
 	{
-		int randomIndex = Random.Range (0, gridPositions.Count);
-		Vector3 randomPosition = gridPositions [randomIndex];
-		gridPositions.RemoveAt (randomIndex);
-		return randomPosition;
+		var randomRowIndex = Random.Range (0, m_board.Count);
+        var randomColumnIndex = Random.Range(0, m_board[0].Length);
+        return new GridPoint {row = randomRowIndex, column = randomColumnIndex};
 	}
 
-	void LayoutObjectAtRandom(GameObject obj, int minimum, int maximum)
+    public void LayoutObjectAtRandom(GameObject obj, GridPointObject gridPointObjectToAdd, int minimum, int maximum)
 	{
-		int objectCount = Random.Range (minimum, maximum + 1);
+		var objectCount = Random.Range (minimum, maximum + 1);
 
 		for (int i = 0; i < objectCount; i++) {
-			Vector3 randomPosition = RandomPosition ();
-			Instantiate (obj, randomPosition, Quaternion.identity);
+			var randomPosition = RandomPosition();
+		    var gridPoint = m_board[randomPosition.row][randomPosition.column];
+		    var gridPointObject = gridPoint.gridPointObject;
+            if (gridPointObject != GridPointObject.Wall && gridPointObject != GridPointObject.Player)
+            {
+                gridPoint.gridPointObject = gridPointObjectToAdd;
+			    gridPoint.gameObject = Instantiate(obj, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+		    }
 		}
 	}
 
@@ -90,15 +135,21 @@ public class BoardManager : MonoBehaviour {
 		InitializeList ();
 
 		//Instantiate a random number of boxes tiles based on minimum and maximum, at randomized positions.
-		LayoutObjectAtRandom (boxTiles, wallCount.minimum, wallCount.maximum);
+		LayoutObjectAtRandom (boxTiles, GridPointObject.Box, wallCount.minimum, wallCount.maximum);
 
 		//Instantiate a random number of powerUps tiles based on minimum and maximum, at randomized positions.
-		LayoutObjectAtRandom (powerUpsTiles, powerUpsCount.minimum, powerUpsCount.maximum);
+		LayoutObjectAtRandom (powerUpsTiles, GridPointObject.PowerUp, powerUpsCount.minimum, powerUpsCount.maximum);
 
 		//Determine number of enemies based on current level number, based on a logarithmic progression
-		int enemyCount = (int)Mathf.Log(level, 2f);
+		var enemyCount = (int)Mathf.Log(level, 2f);
 
 		//Instantiate a random number of enemies based on minimum and maximum, at randomized positions.
-		LayoutObjectAtRandom (enemyTiles, enemyCount, enemyCount);
+		LayoutObjectAtRandom (enemyTiles, GridPointObject.Enemy, enemyCount, enemyCount);
 	}
+
+    public bool CanMoveToGridPoint(int rowToMoveTo, int columnToMoveTo)
+    {
+        var gridPointObject = m_board[rowToMoveTo][columnToMoveTo].gridPointObject;
+        return gridPointObject != GridPointObject.Wall && gridPointObject != GridPointObject.Box;
+    }
 }

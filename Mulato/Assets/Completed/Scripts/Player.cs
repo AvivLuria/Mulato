@@ -61,10 +61,10 @@ namespace Completed
 			//Check if we are running either in the Unity editor or in a standalone build.
 			#if UNITY_STANDALONE || UNITY_WEBPLAYER
 			
-			//Get input from the input manager, round it to an integer and store in horizontal to set x axis move direction
+			//Get input from the input manager, round it to an integer and store in horizontal to set row axis move direction
 			horizontal = (int) (Input.GetAxisRaw ("Horizontal"));
 			
-			//Get input from the input manager, round it to an integer and store in vertical to set y axis move direction
+			//Get input from the input manager, round it to an integer and store in vertical to set column axis move direction
 			vertical = (int) (Input.GetAxisRaw ("Vertical"));
 			
 			//Check if moving horizontally, if so set vertical to zero.
@@ -88,28 +88,28 @@ namespace Completed
 					touchOrigin = myTouch.position;
 				}
 				
-				//If the touch phase is not Began, and instead is equal to Ended and the x of touchOrigin is greater or equal to zero:
-				else if (myTouch.phase == TouchPhase.Ended && touchOrigin.x >= 0)
+				//If the touch phase is not Began, and instead is equal to Ended and the row of touchOrigin is greater or equal to zero:
+				else if (myTouch.phase == TouchPhase.Ended && touchOrigin.row >= 0)
 				{
 					//Set touchEnd to equal the position of this touch
 					Vector2 touchEnd = myTouch.position;
 					
-					//Calculate the difference between the beginning and end of the touch on the x axis.
-					float x = touchEnd.x - touchOrigin.x;
+					//Calculate the difference between the beginning and end of the touch on the row axis.
+					float row = touchEnd.row - touchOrigin.row;
 					
-					//Calculate the difference between the beginning and end of the touch on the y axis.
-					float y = touchEnd.y - touchOrigin.y;
+					//Calculate the difference between the beginning and end of the touch on the column axis.
+					float column = touchEnd.column - touchOrigin.column;
 					
-					//Set touchOrigin.x to -1 so that our else if statement will evaluate false and not repeat immediately.
-					touchOrigin.x = -1;
+					//Set touchOrigin.row to -1 so that our else if statement will evaluate false and not repeat immediately.
+					touchOrigin.row = -1;
 					
-					//Check if the difference along the x axis is greater than the difference along the y axis.
-					if (Mathf.Abs(x) > Mathf.Abs(y))
-						//If x is greater than zero, set horizontal to 1, otherwise set it to -1
-						horizontal = x > 0 ? 1 : -1;
+					//Check if the difference along the row axis is greater than the difference along the column axis.
+					if (Mathf.Abs(row) > Mathf.Abs(column))
+						//If row is greater than zero, set horizontal to 1, otherwise set it to -1
+						horizontal = row > 0 ? 1 : -1;
 					else
-						//If y is greater than zero, set horizontal to 1, otherwise set it to -1
-						vertical = y > 0 ? 1 : -1;
+						//If column is greater than zero, set horizontal to 1, otherwise set it to -1
+						vertical = column > 0 ? 1 : -1;
 				}
 			}
 			
@@ -124,7 +124,7 @@ namespace Completed
 		}
 		
 		//AttemptMove overrides the AttemptMove function in the base class MovingObject
-		//AttemptMove takes a generic parameter T which for Player will be of the type Wall, it also takes integers for x and y direction to move in.
+		//AttemptMove takes a generic parameter T which for Player will be of the type Wall, it also takes integers for row and column direction to move in.
 		protected override void AttemptMove <T> (int xDir, int yDir)
 		{
 			//Every time player moves, subtract from food points total.
@@ -133,7 +133,7 @@ namespace Completed
 			//Update food text display to reflect current score.
 			foodText.text = "Food: " + food;
 			
-			//Call the AttemptMove method of the base class, passing in the component T (in this case Wall) and x and y direction to move.
+			//Call the AttemptMove method of the base class, passing in the component T (in this case Wall) and row and column direction to move.
 			base.AttemptMove <T> (xDir, yDir);
 			
 			//Hit allows us to reference the result of the Linecast done in Move.

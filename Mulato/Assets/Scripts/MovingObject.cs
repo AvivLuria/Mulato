@@ -28,7 +28,7 @@ public abstract class MovingObject : MonoBehaviour
 
 
 	//Move returns true if it is able to move and false if not. 
-	//Move takes parameters for x direction, y direction and a RaycastHit2D to check collision.
+	//Move takes parameters for row direction, column direction and a RaycastHit2D to check collision.
 	protected bool Move (int xDir, int yDir, out RaycastHit2D hit)
 	{
 		//Store start position to move from, based on objects current transform position.

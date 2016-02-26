@@ -20,12 +20,12 @@ public class Player : MovingObject {
 	// Use this for initialization
 	protected override void Start () {
 		// TODO: we need to add animator here
-
 		// We take this parameters from the gameManager and store them in the end of the level
 		points = GameManager.instance.playerPoints;
 		life = GameManager.instance.playerLife;
 		base.Start ();
 	}
+
 
 	private void OnDisable()
 	{

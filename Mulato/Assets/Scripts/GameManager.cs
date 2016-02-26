@@ -18,12 +18,11 @@ public class GameManager : MonoBehaviour {
 
 		DontDestroyOnLoad (gameObject);
 
-		boardScript = GetComponent<BoardManager> ();
 		InitGame ();
 	}
 
 	void InitGame () {
-		boardScript.SetupScene (level);
+		BoardManager.main.SetupScene(level);
 	}
 
 	public void GameOver()

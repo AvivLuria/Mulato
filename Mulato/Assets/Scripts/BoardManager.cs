@@ -47,8 +47,6 @@ public class BoardManager : SceneSingleton<BoardManager> {
 	public GameObject enemyTiles;
 	private List<GridPoint[]> m_board;
 
-    public const int c_boardMaximumColumn = 10;
-
 	private Transform boardHolder;
 	private List <Vector3> gridPositions = new List<Vector3> ();
 

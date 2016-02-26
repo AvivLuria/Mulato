@@ -18,8 +18,8 @@ public class BoardManager : MonoBehaviour {
 	}
 
 
-	public int columns = 8;
-	public int rows = 8;
+	public int columns = 9;
+	public int rows = 10;
 	public Count wallCount = new Count (5, 9);
 	public Count powerUpsCount = new Count (1, 5);
 	public GameObject floorTiles;
@@ -51,7 +51,8 @@ public class BoardManager : MonoBehaviour {
 				
 				GameObject toInstantiate = floorTiles;
 				// If a wall
-				if (x == -1 || x == columns || y == -1 || y == rows) {
+				if ((x == -1 || x == columns || y == -1 || y == rows) ||
+					((x % 2 == 1) && (y % 2 == 1))) {
 					toInstantiate = wallTiles;
 				}
 

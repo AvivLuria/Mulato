@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Scripts;
 using UnityEngine.Events;
 
 public class Player : MovingObject {
@@ -21,8 +22,8 @@ public class Player : MovingObject {
 	protected override void Start () {
 		// TODO: we need to add animator here
 		// We take this parameters from the gameManager and store them in the end of the level
-		points = GameManager.instance.playerPoints;
-		life = GameManager.instance.playerLife;
+		points = GameManager.main.playerPoints;
+		life = GameManager.main.playerLife;
 		base.Start ();
 	}
 
@@ -30,8 +31,8 @@ public class Player : MovingObject {
 	private void OnDisable()
 	{
 		// Store the parameters in the gameManager
-		GameManager.instance.playerLife = life;
-		GameManager.instance.playerPoints = points;
+		GameManager.main.playerLife = life;
+		GameManager.main.playerPoints = points;
 	}
 	
 	// Update is called once per frame
@@ -43,17 +44,17 @@ public class Player : MovingObject {
 			int vertical = 0;
 
 		
-			if (Mathf.Abs (JoyStick.instance.inputVector.x) >= Mathf.Abs (JoyStick.instance.inputVector.z)) {
-				if (JoyStick.instance.inputVector.x > 0) {
+			if (Mathf.Abs (JoyStick.main.inputVector.x) >= Mathf.Abs (JoyStick.main.inputVector.z)) {
+				if (JoyStick.main.inputVector.x > 0) {
 					horizontal = 1;
-				} else if (JoyStick.instance.inputVector.x < 0) {
+				} else if (JoyStick.main.inputVector.x < 0) {
 					horizontal = -1;
 				}
 			} else {
 				
-				if (JoyStick.instance.inputVector.z > 0) {
+				if (JoyStick.main.inputVector.z > 0) {
 					vertical = 1;
-				} else if (JoyStick.instance.inputVector.z < 0) {
+				} else if (JoyStick.main.inputVector.z < 0) {
 					vertical = -1;
 				}
 			}
@@ -86,7 +87,7 @@ public class Player : MovingObject {
 	private void CheckIfGameOver()
 	{
 		if (life <= 0)
-			GameManager.instance.GameOver ();
+			GameManager.main.GameOver ();
 	}
 
 	protected override void OnCantMove <T> (T component)

@@ -1,38 +1,36 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using Assets.Scripts.Utils;
+using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+namespace Assets.Scripts
+{
+    public class GameManager : SceneSingleton<GameManager> {
+        public int playerLife = 1;
+        public int playerPoints = 0;
+        private int level = 3;
 
-	public static GameManager instance = null;
-	public BoardManager boardScript;
-	public int playerLife = 1;
-	public int playerPoints = 0;
-	private int level = 3;
+        public override void Awake()
+        {
+            base.Awake();
+            DontDestroyOnLoad (gameObject);
 
-	void Awake()
-	{
-		if (instance == null)
-			instance = this;
-		else if (instance != this)
-			Destroy (gameObject);
+            InitGame ();
+        }
 
-		DontDestroyOnLoad (gameObject);
+        private void InitGame () {
+            try
+            {
+                BoardManager.main.SetupScene(level);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
+        }
 
-		InitGame ();
-	}
-
-	void InitGame () {
-		BoardManager.main.SetupScene(level);
-	}
-
-	public void GameOver()
-	{
-		enabled = false;
-	}
-		
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+        public void GameOver()
+        {
+            enabled = false;
+        }
+    }
 }

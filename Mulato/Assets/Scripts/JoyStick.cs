@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Scripts.Utils;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class JoyStick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler {
-	public static JoyStick instance = null;
+public class JoyStick : SceneSingleton<JoyStick>, IDragHandler, IPointerUpHandler, IPointerDownHandler {
+
 	private Image bgImag;
 	private Image joystickImg;
 	public Vector3 inputVector;
 
 	private void Start () {
-		if (instance == null)
-			instance = this;
+
 		bgImag = GetComponent<Image> ();
 		joystickImg = transform.GetChild (0).GetComponent<Image> ();
 

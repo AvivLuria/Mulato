@@ -161,6 +161,14 @@ namespace Assets.Scripts
             LayoutObjectAtRandom (enemyTiles, GridPointObject.Enemy, enemyCount, enemyCount);
         }
 
+        public void updatePosition(int oldRow, int oldCol, int newRow, int newCol)
+        {
+            var gridPoint = m_board[oldRow][oldCol];
+            var gridPointNew = m_board[newRow][newCol];
+            gridPointNew.gridPointObject = gridPoint.gridPointObject;
+           // gridPointNew.gameObject = gridPoint.gameObject;
+        }
+
         public bool CanMoveToGridPoint(int rowToMoveTo, int columnToMoveTo)
         {
             var gridPointObject = m_board[rowToMoveTo][columnToMoveTo].gridPointObject;

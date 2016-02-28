@@ -10,6 +10,8 @@ public class Player : MovingObject {
 	public int power = 3;
 	public int speed = 1;
 	public int points = 0;
+    public int gridRow;
+    public int gridCol;
 	private float playerMovementDeylay = 0.175f;
 	private float playerMovementTimeToMove = 1.0f;
 	public Transform bombPrefab;

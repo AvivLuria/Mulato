@@ -93,6 +93,8 @@ namespace Assets.Scripts
         protected virtual void AttemptMove <T> (int xDir, int yDir)
             where T : Component
         {
+            
+            
             //Hit will store whatever our linecast hits when Move is called.
             RaycastHit2D hit;
 

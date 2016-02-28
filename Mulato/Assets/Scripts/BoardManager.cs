@@ -22,7 +22,7 @@ namespace Assets.Scripts
             public int row;
             public int column;
             public GridPointObject gridPointObject;
-            public Transform gridPointTransform;
+            //public Transform gridPointTransform;
             public GameObject gameObject;
         }
 
@@ -38,7 +38,9 @@ namespace Assets.Scripts
                 maximum = max;
             }
         }
-		
+
+        public int playerPositionRow;
+        public int playerPositionCol;
         public int columns = 9;
         public int rows = 10;
         public Count wallCount = new Count (5, 9);
@@ -48,6 +50,7 @@ namespace Assets.Scripts
         public GameObject boxTiles;
         public GameObject powerUpsTiles;
         public GameObject enemyTiles;
+        public GameObject Player;
         private List<GridPoint[]> m_board;
 
         private Transform boardHolder;
@@ -105,6 +108,13 @@ namespace Assets.Scripts
             }
         }
 
+        private void setupPlayer(int playerPositionRow, int playerPositionCol)
+        {
+            var gridPoint = m_board[playerPositionRow][playerPositionCol];
+            gridPoint.gridPointObject = GridPointObject.Player;
+            gridPoint.gameObject = Instantiate(Player, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+        }
+
         public GridPoint RandomPosition()
         {
             var randomRowIndex = Random.Range (0, m_board.Count);
@@ -140,6 +150,9 @@ namespace Assets.Scripts
 
             //Instantiate a random number of powerUps tiles based on minimum and maximum, at randomized positions.
             LayoutObjectAtRandom (powerUpsTiles, GridPointObject.PowerUp, powerUpsCount.minimum, powerUpsCount.maximum);
+
+            // Setup player position on the map
+            setupPlayer(playerPositionRow, playerPositionCol);
 
             //Determine number of enemies based on current level number, based on a logarithmic progression
             var enemyCount = (int)Mathf.Log(level, 2f);

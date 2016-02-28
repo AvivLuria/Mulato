@@ -13,19 +13,11 @@ namespace Assets.Scripts
         {
             base.Awake();
             DontDestroyOnLoad (gameObject);
-
             InitGame ();
         }
 
         private void InitGame () {
-            try
-            {
-                BoardManager.main.SetupScene(level);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e.Message);
-            }
+             BoardManager.main.SetupScene(level);
         }
 
         public void GameOver()

@@ -8,17 +8,14 @@ public class Enemy : MovingObject {
 	private Transform target;
 	public float delaytime = 1.0f;
 	private float timeToMove = 1.0f;
-
+    public int gridRow;
+    public int gridCol;
 
 	// Use this for initialization
 	protected override void Start () {
 		// TODO: add animator
 		target = GameObject.FindGameObjectWithTag("Player").transform;
 		base.Start ();
-	}
-
-	protected override void AttemptMove<T> (int xDir, int yDir) {
-		base.AttemptMove<T> (xDir, yDir);
 	}
 
 	void Update() {
@@ -51,21 +48,12 @@ public class Enemy : MovingObject {
 		}
 		//Call the AttemptMove function and pass in the generic parameter Player,
 		// because Enemy is moving and expecting to potentially encounter a Player
-		AttemptMove <Player> (xDir, yDir);
-
-		// TODO: add avoiding the bomb
-	}
-
-	//OnCantMove is called if Enemy attempts to move into a space occupied by a Player, it overrides the OnCantMove function of MovingObject 
-	//and takes a generic parameter T which we use to pass in the component we expect to encounter, in this case Player
-	protected override void OnCantMove <T> (T component)
-	{
-		//Declare hitPlayer and set it to equal the encountered component.
-		Player hitPlayer = component as Player;
-
-		//Call the LoseFood function of hitPlayer passing it playerDamage, the amount of foodpoints to be subtracted.
-		hitPlayer.LoseLife (playerDamage);
-
-		// TODO: ADD ANIMATOR
-	}
+		
+        if (AttemptMove(xDir, yDir, gridRow + yDir, gridCol + xDir))
+        {
+            gridRow += yDir;
+            gridCol += xDir;
+        }
+        // TODO: add avoiding the bomb
+    }
 }

@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 namespace Assets.Scripts
 {
     public class BoardManager : SceneSingleton<BoardManager> {
-
+        // This is all the options in the board
         public enum GridPointObject {
             Empty,
             Wall,
@@ -18,11 +18,12 @@ namespace Assets.Scripts
             Bomb
         }
 		
+        // This is a single point on the grid
         public class GridPoint {
             public int row;
             public int column;
+            public bool isOnFile = false;
             public GridPointObject gridPointObject;
-            //public Transform gridPointTransform;
             public GameObject gameObject;
         }
 
@@ -41,8 +42,8 @@ namespace Assets.Scripts
 
         public int playerPositionRow;
         public int playerPositionCol;
-        public int columns = 9;
-        public int rows = 10;
+        public int columns;
+        public int rows;
         public Count wallCount = new Count (5, 9);
         public Count powerUpsCount = new Count (1, 5);
         public GameObject floorTiles;
@@ -54,18 +55,6 @@ namespace Assets.Scripts
         private List<GridPoint[]> m_board;
 
         private Transform boardHolder;
-        private List <Vector3> gridPositions = new List<Vector3> ();
-
-        public void InitializeList()
-        {
-            gridPositions.Clear ();
-
-            for (var x = 1; x < columns - 1; x++) {
-                for (var y = 1; y < rows - 1; y++) {
-                    gridPositions.Add (new Vector3 (x, y, 0f));
-                }
-            }
-        }
 
         private void BoardSetup () 
         {
@@ -76,15 +65,8 @@ namespace Assets.Scripts
                 m_board.Add(new GridPoint[columns]);
             }
 
-            m_board[1][1] = new GridPoint()
-            {
-                row = 1,
-                column = 1,
-                gridPointObject = GridPointObject.Player
-            };
-
             for (var column = 0; column < columns; column++) {
-                for (var row = 0; row < rows; row++) {
+               for (var row = 0; row < rows; row++) {
 				
                     GameObject toInstantiate = floorTiles;
                     m_board[row][column] = new GridPoint()
@@ -108,13 +90,15 @@ namespace Assets.Scripts
             }
         }
 
-        private void setupPlayer(int playerPositionRow, int playerPositionCol)
+        // Place the player in his default position
+        private void setupPlayer()
         {
             var gridPoint = m_board[playerPositionRow][playerPositionCol];
             gridPoint.gridPointObject = GridPointObject.Player;
             gridPoint.gameObject = Instantiate(Player, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
         }
 
+        // TODO: this function should be deleted
         public GridPoint RandomPosition()
         {
             var randomRowIndex = Random.Range (0, m_board.Count);
@@ -122,6 +106,7 @@ namespace Assets.Scripts
             return new GridPoint {row = randomRowIndex, column = randomColumnIndex};
         }
 
+        // TODO: This function should be deleted
         public void LayoutObjectAtRandom(GameObject obj, GridPointObject gridPointObjectToAdd, int minimum, int maximum)
         {
             var objectCount = Random.Range (minimum, maximum + 1);
@@ -133,7 +118,16 @@ namespace Assets.Scripts
                 if (gridPointObject != GridPointObject.Wall && gridPointObject != GridPointObject.Player)
                 {
                     gridPoint.gridPointObject = gridPointObjectToAdd;
-                    gridPoint.gameObject = Instantiate(obj, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+                    if (gridPointObjectToAdd == GridPointObject.Enemy)
+                    {
+                        var enemy = Instantiate(obj, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+                        enemy.GetComponent<Enemy>().gridRow = randomPosition.row;
+                        enemy.GetComponent<Enemy>().gridCol = randomPosition.column;
+                    }
+                    else
+                    {
+                        Instantiate(obj, gridPoint.gameObject.transform.position, Quaternion.identity);
+                    }
                 }
             }
         }
@@ -142,9 +136,6 @@ namespace Assets.Scripts
             //Creates the outer walls and floor.
             BoardSetup ();
 
-            //Reset our list of gridpositions.
-            InitializeList ();
-
             //Instantiate a random number of boxes tiles based on minimum and maximum, at randomized positions.
             LayoutObjectAtRandom (boxTiles, GridPointObject.Box, wallCount.minimum, wallCount.maximum);
 
@@ -152,7 +143,7 @@ namespace Assets.Scripts
             LayoutObjectAtRandom (powerUpsTiles, GridPointObject.PowerUp, powerUpsCount.minimum, powerUpsCount.maximum);
 
             // Setup player position on the map
-            setupPlayer(playerPositionRow, playerPositionCol);
+            setupPlayer();
 
             //Determine number of enemies based on current level number, based on a logarithmic progression
             var enemyCount = (int)Mathf.Log(level, 2f);
@@ -161,14 +152,14 @@ namespace Assets.Scripts
             LayoutObjectAtRandom (enemyTiles, GridPointObject.Enemy, enemyCount, enemyCount);
         }
 
-        public void updatePosition(int oldRow, int oldCol, int newRow, int newCol)
+        // This function should update the grid
+        public void updateMovementPosition(int oldRow, int oldCol, int newRow, int newCol)
         {
-            var gridPoint = m_board[oldRow][oldCol];
-            var gridPointNew = m_board[newRow][newCol];
-            gridPointNew.gridPointObject = gridPoint.gridPointObject;
-           // gridPointNew.gameObject = gridPoint.gameObject;
+            m_board[newRow][newCol].gridPointObject = m_board[oldRow][oldCol].gridPointObject;
+            m_board[oldRow][oldCol].gridPointObject = GridPointObject.Empty;
         }
 
+        // Checks if the next place is box or wall
         public bool CanMoveToGridPoint(int rowToMoveTo, int columnToMoveTo)
         {
             var gridPointObject = m_board[rowToMoveTo][columnToMoveTo].gridPointObject;

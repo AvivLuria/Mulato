@@ -26,6 +26,8 @@ public class Player : MovingObject {
 		// We take this parameters from the gameManager and store them in the end of the level
 		points = GameManager.main.playerPoints;
 		life = GameManager.main.playerLife;
+	    gridRow = BoardManager.main.playerPositionRow;
+	    gridCol = BoardManager.main.playerPositionCol;
 		base.Start ();
 	}
 
@@ -39,36 +41,51 @@ public class Player : MovingObject {
 	
 	// Update is called once per frame
 	void Update () {
-		playerMovementTimeToMove += Time.deltaTime;
-		if (playerMovementTimeToMove >= playerMovementDeylay) {
-			playerMovementTimeToMove = 0;
-			int horizontal = 0;
-			int vertical = 0;
-
-		
-			if (Mathf.Abs (JoyStick.main.inputVector.x) >= Mathf.Abs (JoyStick.main.inputVector.z)) {
-				if (JoyStick.main.inputVector.x > 0) {
-					horizontal = 1;
-				} else if (JoyStick.main.inputVector.x < 0) {
-					horizontal = -1;
-				}
-			} else {
-				
-				if (JoyStick.main.inputVector.z > 0) {
-					vertical = 1;
-				} else if (JoyStick.main.inputVector.z < 0) {
-					vertical = -1;
-				}
-			}
-
-			if (horizontal != 0 || vertical != 0)
-				AttemptMove<PowerUp> (horizontal, vertical);
-		}
+		MovePlayer();
 		if (Input.GetButton("Fire1")) {
 			SetBomb ();
-
 		}
 	}
+
+    private void MovePlayer()
+    {
+        playerMovementTimeToMove += Time.deltaTime;
+        if (playerMovementTimeToMove >= playerMovementDeylay)
+        {
+            playerMovementTimeToMove = 0;
+            int horizontal = 0;
+            int vertical = 0;
+
+            if (Mathf.Abs(JoyStick.main.inputVector.x) >= Mathf.Abs(JoyStick.main.inputVector.z))
+            {
+                if (JoyStick.main.inputVector.x > 0)
+                {
+                    horizontal = 1;
+                }
+                else if (JoyStick.main.inputVector.x < 0)
+                {
+                    horizontal = -1;
+                }
+            }
+            else {
+                if (JoyStick.main.inputVector.z > 0)
+                {
+                    vertical = 1;
+                }
+                else if (JoyStick.main.inputVector.z < 0)
+                {
+                    vertical = -1;
+                }
+            }
+
+            if (horizontal != 0 || vertical != 0)
+                if (AttemptMove(horizontal, vertical, gridRow + vertical, gridCol + horizontal))
+                {
+                    gridRow += vertical;
+                    gridCol += horizontal;
+                }
+        }
+    }
 
 	private void SetBomb() {
 		bombPrefab.GetComponent<BombManager> ().power = power;
@@ -92,24 +109,9 @@ public class Player : MovingObject {
 			GameManager.main.GameOver ();
 	}
 
-	protected override void OnCantMove <T> (T component)
-	{
-		// TODO: we need it?
-	}
-
 	public void LoseLife (int loss) {
 		// TODO: add animation of player got hit here
 		life -= loss;
 		CheckIfGameOver ();
-	}
-
-	//AttemptMove takes a generic parameter T which for Player will be of the type Wall,
-	// it also takes integers for row and column direction to move in.
-	protected override void AttemptMove <T> (int xDir, int yDir)
-	{
-		base.AttemptMove <T> (xDir, yDir);
-		RaycastHit2D hit;
-
-
 	}
 }

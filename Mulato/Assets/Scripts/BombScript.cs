@@ -1,15 +1,12 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class BombScript : MonoBehaviour {
+namespace Assets.Scripts
+{
+    public class BombScript : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+        // Use this for initialization
+        void Start () {
+            Destroy(this, 3f);
+        }
+    }
 }

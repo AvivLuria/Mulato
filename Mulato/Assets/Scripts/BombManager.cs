@@ -25,6 +25,8 @@ namespace Assets.Scripts
 
         private void Explode(GameObject curBomb, int row, int column)
         {
+            var hit1 = Physics2D.Linecast(curBomb.transform.position,
+                new Vector2(curBomb.transform.position.x + player.power, curBomb.transform.position.y));
             BoardManager.main.setFireOff(row, column, player.power);
         }
 

@@ -49,8 +49,9 @@ public class Enemy : MovingObject {
 		//Call the AttemptMove function and pass in the generic parameter Player,
 		// because Enemy is moving and expecting to potentially encounter a Player
 		
-        if (AttemptMove(xDir, yDir, gridRow + yDir, gridCol + xDir))
+        if (AttemptMove(xDir, yDir, gridRow + yDir, gridCol + xDir,0))
         {
+           
             gridRow += yDir;
             gridCol += xDir;
         }

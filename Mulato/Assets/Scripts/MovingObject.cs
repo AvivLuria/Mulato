@@ -32,7 +32,8 @@ namespace Assets.Scripts
 
         //Move returns true if it is able to move and false if not. 
         //Move takes parameters for row direction, column direction and a RaycastHit2D to check collision.
-        protected bool Move (int xDir, int yDir, int gridRow, int gridCol)
+        //TODO : added type
+        protected bool Move (int xDir, int yDir, int gridRow, int gridCol,int type)
         {
             //Store start position to move from, based on objects current transform position.
             Vector2 start = transform.position;
@@ -41,12 +42,13 @@ namespace Assets.Scripts
             Vector2 end = start + new Vector2 (xDir, yDir);
 
             //Check if anything was hit
-            if(BoardManager.main.CanMoveToGridPoint(gridRow, gridCol))
+            if(BoardManager.main.CanMoveToGridPoint(gridRow, gridCol,type))
             {
+               
                 BoardManager.main.updateMovementPosition(gridRow - yDir, gridCol - xDir, gridRow, gridCol);
                 //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
                 StartCoroutine (SmoothMovement (end));
-
+                
                 //Return true to say that Move was successful
                 return true;
             }
@@ -83,10 +85,11 @@ namespace Assets.Scripts
 
         //The virtual keyword means AttemptMove can be overridden by inheriting classes using the override keyword.
         //AttemptMove takes a generic parameter T to specify the type of component we expect our unit to interact with if blocked (Player for Enemies, Wall for Player).
-        protected virtual bool AttemptMove(int xDir, int yDir, int gridRow, int gridCol)
+        //TODO : added type - 1 for player , 0 for enemy
+        protected virtual bool AttemptMove(int xDir, int yDir, int gridRow, int gridCol,int type)
         {
-            //Set canMove to true if Move was successful, false if failed.
-            bool canMove = Move (xDir, yDir, gridRow, gridCol);
+            //Set canMove to true if Move was successful, false if failed.// gridRow = old gridRow + ydir , gridCol = old gridCol + xdir
+            bool canMove = Move (xDir, yDir, gridRow, gridCol,type);
 
             return canMove;
         }

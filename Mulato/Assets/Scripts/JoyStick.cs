@@ -11,7 +11,7 @@ public class JoyStick : SceneSingleton<JoyStick>, IDragHandler, IPointerUpHandle
 	public Vector3 inputVector;
 
 	private void Start () {
-
+  
 		bgImag = GetComponent<Image> ();
 		joystickImg = transform.GetChild (0).GetComponent<Image> ();
 

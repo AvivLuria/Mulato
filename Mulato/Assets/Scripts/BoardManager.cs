@@ -15,7 +15,8 @@ namespace Assets.Scripts
             Enemy,
             Player,
             PowerUp,
-            Bomb
+            Bomb,
+            MovingBox
         }
 		
         // This is a single point on the grid
@@ -39,7 +40,11 @@ namespace Assets.Scripts
                 maximum = max;
             }
         }
+        //TODO delete this vars later
+        public int moveableBoxPositionRow;
+        public int moveableBoxPositionCol;
 
+      
         public int playerPositionRow;
         public int playerPositionCol;
         public int columns;
@@ -52,6 +57,12 @@ namespace Assets.Scripts
         public GameObject powerUpsTiles;
         public GameObject enemyTiles;
         public GameObject Player;
+        public GameObject movingBox;
+
+        
+       
+       
+        
         private List<GridPoint[]> m_board;
 
         private Transform boardHolder;
@@ -87,7 +98,9 @@ namespace Assets.Scripts
                     instance.transform.SetParent(boardHolder);
 
                 }
+
             }
+            
         }
 
         // Place the player in his default position
@@ -97,13 +110,26 @@ namespace Assets.Scripts
             gridPoint.gridPointObject = GridPointObject.Player;
             gridPoint.gameObject = Instantiate(Player, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
         }
+        //TODO: this function should be deleted
+        private void setupMoveableBoxes()
+        {
+           
+            var gridPoint = m_board[moveableBoxPositionRow][moveableBoxPositionCol];
+            gridPoint.gridPointObject = GridPointObject.MovingBox;
+            gridPoint.gameObject = Instantiate(movingBox, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+        }
 
         // TODO: this function should be deleted
-        public GridPoint RandomPosition()
+        public int[] RandomPosition()
         {
-            var randomRowIndex = Random.Range (0, m_board.Count);
-            var randomColumnIndex = Random.Range(0, m_board[0].Length);
-            return new GridPoint {row = randomRowIndex, column = randomColumnIndex};
+            int randomRowIndex = Random.Range(0, m_board.Count);
+            int randomColumnIndex = Random.Range(0, m_board[0].Length);
+            int[] array = new int[] {randomRowIndex, randomColumnIndex};
+            return array;
+
+
+
+
         }
 
         // TODO: This function should be deleted
@@ -112,17 +138,21 @@ namespace Assets.Scripts
             var objectCount = Random.Range (minimum, maximum + 1);
 
             for (int i = 0; i < objectCount; i++) {
-                var randomPosition = RandomPosition();
-                var gridPoint = m_board[randomPosition.row][randomPosition.column];
+                //    var randomPosition = RandomPosition();
+                int randomRowIndex = Random.Range(0, m_board.Count);
+                int randomColumnIndex = Random.Range(0, m_board[0].Length);
+                var gridPoint = m_board[randomRowIndex][randomColumnIndex];
                 var gridPointObject = gridPoint.gridPointObject;
                 if (gridPointObject != GridPointObject.Wall && gridPointObject != GridPointObject.Player)
                 {
                     gridPoint.gridPointObject = gridPointObjectToAdd;
                     if (gridPointObjectToAdd == GridPointObject.Enemy)
                     {
+                        m_board[randomRowIndex][randomColumnIndex].gridPointObject = GridPointObject.Enemy;
                         var enemy = Instantiate(obj, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
-                        enemy.GetComponent<Enemy>().gridRow = randomPosition.row;
-                        enemy.GetComponent<Enemy>().gridCol = randomPosition.column;
+                        enemy.GetComponent<Enemy>().gridRow = randomRowIndex;
+                        enemy.GetComponent<Enemy>().gridCol = randomColumnIndex;
+
                     }
                     else
                     {
@@ -144,7 +174,8 @@ namespace Assets.Scripts
 
             // Setup player position on the map
             setupPlayer();
-
+            //TODO: this should be deleted
+            setupMoveableBoxes();
             //Determine number of enemies based on current level number, based on a logarithmic progression
             var enemyCount = (int)Mathf.Log(level, 2f);
 
@@ -158,12 +189,45 @@ namespace Assets.Scripts
             m_board[newRow][newCol].gridPointObject = m_board[oldRow][oldCol].gridPointObject;
             m_board[oldRow][oldCol].gridPointObject = GridPointObject.Empty;
         }
+        //TODO : added for moveableBox to check if can move
+        private bool checkMoveBox(int rowToMove, int colToMove,int curRow, int curCol)
+        {
+            var gridPointObject = m_board[rowToMove][colToMove].gridPointObject;
+            if (gridPointObject == GridPointObject.Empty)
+            {
+                updateMovementPosition(curRow, curCol, rowToMove, colToMove);
+                return true;
+            }
+            else return false;
+        }
 
+        public GridPointObject cc(int row, int col)
+        {
+            return m_board[row][col].gridPointObject;
+        }
         // Checks if the next place is box or wall
-        public bool CanMoveToGridPoint(int rowToMoveTo, int columnToMoveTo)
+        //TODO - changed for moveableBox
+        public bool CanMoveToGridPoint(int rowToMoveTo, int columnToMoveTo,int player)
         {
             var gridPointObject = m_board[rowToMoveTo][columnToMoveTo].gridPointObject;
-            return gridPointObject != GridPointObject.Wall && gridPointObject != GridPointObject.Box;
+            
+            if (gridPointObject == GridPointObject.MovingBox && player == 1)
+            {
+                //direction to check to move for moveable box
+                if (playerPositionCol == columnToMoveTo)
+                {
+                    return playerPositionRow > rowToMoveTo
+                        ? checkMoveBox(rowToMoveTo - 1, columnToMoveTo, rowToMoveTo, columnToMoveTo)
+                        : checkMoveBox(rowToMoveTo + 1, columnToMoveTo, rowToMoveTo, columnToMoveTo);
+                }
+                else
+                {
+                    return playerPositionCol > columnToMoveTo
+                        ? checkMoveBox(rowToMoveTo , columnToMoveTo - 1, rowToMoveTo, columnToMoveTo)
+                        : checkMoveBox(rowToMoveTo , columnToMoveTo + 1, rowToMoveTo, columnToMoveTo);
+                }
+            } else
+            return gridPointObject != GridPointObject.Wall && gridPointObject != GridPointObject.Box && gridPointObject != GridPointObject.MovingBox;
         }
 
         public void setFireOn(int row, int col, int power)
@@ -283,6 +347,12 @@ namespace Assets.Scripts
 
                 m_board[row][col - i].isOnFile = false;
             }
+        }
+
+        public GridPointObject checkGrid(int row, int col)
+        {
+
+            return m_board[row][col].gridPointObject;
         }
     }
 }

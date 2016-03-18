@@ -14,11 +14,11 @@ public class Player : MovingObject {
     public int gridCol;
 	private float playerMovementDeylay = 0.175f;
 	private float playerMovementTimeToMove = 1.0f;
-	public Transform bombPrefab;
+	public BombManager bombPrefab;
 
     [System.Serializable]
     public class PlayerDeployBombEvent : UnityEvent<int, int> { }
-    public PlayerDeployBombEvent onPlayerDeployedBomb;
+    public PlayerDeployBombEvent onPlayerDeployedBomb = new PlayerDeployBombEvent();
 
 	// Use this for initialization
 	protected override void Start () {
@@ -29,7 +29,9 @@ public class Player : MovingObject {
 	    gridRow = BoardManager.main.playerPositionRow;
 	    gridCol = BoardManager.main.playerPositionCol;
 		base.Start ();
-	}
+        /////////// ADDED TODO
+        onPlayerDeployedBomb.AddListener(BombManager.main.DeployBomb);
+    }
 
 
 	private void OnDisable()
@@ -42,7 +44,7 @@ public class Player : MovingObject {
 	// Update is called once per frame
 	void Update () {
 		MovePlayer();
-		if (Input.GetButton("Fire1")) {
+		if (Input.GetButtonDown("Fire1")) {
 			SetBomb ();
 		}
 	}
@@ -79,18 +81,23 @@ public class Player : MovingObject {
             }
 
             if (horizontal != 0 || vertical != 0)
-                if (AttemptMove(horizontal, vertical, gridRow + vertical, gridCol + horizontal))
+                if (AttemptMove(horizontal, vertical, gridRow + vertical, gridCol + horizontal,1))
                 {
+                    
                     gridRow += vertical;
                     gridCol += horizontal;
+                    /////////// TODO: added this
+                    BoardManager.main.playerPositionRow = gridRow;
+                    BoardManager.main.playerPositionCol = gridCol;
                 }
         }
     }
 
 	private void SetBomb() {
-		bombPrefab.GetComponent<BombManager> ().power = power;
-		Instantiate (bombPrefab, transform.position, Quaternion.identity);
-        onPlayerDeployedBomb.Invoke(0, 1);
+        //bombPrefab.GetComponent<BombManager> ().power = power;
+        //Instantiate (bombPrefab, transform.position, Quaternion.identity);
+        ///////////TODO : change invoke
+        onPlayerDeployedBomb.Invoke(BoardManager.main.playerPositionCol, BoardManager.main.playerPositionRow);
     }
 
 	private void OnTriggerEnter2D(Collider2D other) {
@@ -114,4 +121,5 @@ public class Player : MovingObject {
 		life -= loss;
 		CheckIfGameOver ();
 	}
+
 }

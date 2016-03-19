@@ -58,7 +58,7 @@ namespace Assets.Scripts
         public GameObject enemyTiles;
         public GameObject Player;
         public GameObject movingBox;
-
+        
         
        
        
@@ -116,7 +116,10 @@ namespace Assets.Scripts
            
             var gridPoint = m_board[moveableBoxPositionRow][moveableBoxPositionCol];
             gridPoint.gridPointObject = GridPointObject.MovingBox;
+            
             gridPoint.gameObject = Instantiate(movingBox, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+            gridPoint.gameObject.GetComponent<Box>().gridRow = moveableBoxPositionRow;
+            gridPoint.gameObject.GetComponent<Box>().gridCol = moveableBoxPositionCol;
         }
 
         // TODO: this function should be deleted
@@ -143,7 +146,7 @@ namespace Assets.Scripts
                 int randomColumnIndex = Random.Range(0, m_board[0].Length);
                 var gridPoint = m_board[randomRowIndex][randomColumnIndex];
                 var gridPointObject = gridPoint.gridPointObject;
-                if (gridPointObject != GridPointObject.Wall && gridPointObject != GridPointObject.Player)
+                if (gridPointObject == GridPointObject.Empty)
                 {
                     gridPoint.gridPointObject = gridPointObjectToAdd;
                     if (gridPointObjectToAdd == GridPointObject.Enemy)
@@ -154,7 +157,13 @@ namespace Assets.Scripts
                         enemy.GetComponent<Enemy>().gridCol = randomColumnIndex;
 
                     }
-                    else
+                    else if (gridPointObjectToAdd == GridPointObject.Box)
+                    {
+                        m_board[randomRowIndex][randomColumnIndex].gridPointObject = GridPointObject.Box;
+                        var box = Instantiate(obj, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+                        box.GetComponent<Box>().gridRow = randomRowIndex;
+                        box.GetComponent<Box>().gridCol = randomColumnIndex;
+                    } else
                     {
                         Instantiate(obj, gridPoint.gameObject.transform.position, Quaternion.identity);
                     }
@@ -194,9 +203,12 @@ namespace Assets.Scripts
         private bool checkMoveBox(int rowToMove, int colToMove,int curRow, int curCol)
         {
             var gridPointObject = m_board[rowToMove][colToMove].gridPointObject;
+            var box = m_board[curRow][curCol].gameObject;
             if (gridPointObject == GridPointObject.Empty)
             {
                 updateMovementPosition(curRow, curCol, rowToMove, colToMove);
+                box.GetComponent<Box>().gridRow = rowToMove;
+                box.GetComponent<Box>().gridCol = colToMove;
                 return true;
             }
             else return false;

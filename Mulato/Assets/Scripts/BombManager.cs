@@ -84,6 +84,7 @@ namespace Assets.Scripts
                 {
 
                     Debug.Log("box");
+                    colliderHits[i].rigidbody.GetComponent<Box>().DestroyMe();
                     //Destroy(colliderHits[i].rigidbody.gameObject);
                     break;
                 }

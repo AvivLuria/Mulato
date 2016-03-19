@@ -177,7 +177,8 @@ namespace Assets.Scripts
             //TODO: this should be deleted
             setupMoveableBoxes();
             //Determine number of enemies based on current level number, based on a logarithmic progression
-            var enemyCount = (int)Mathf.Log(level, 2f);
+            //TODO: should be changed
+            var enemyCount = 10;//(int)Mathf.Log(level, 2f);
 
             //Instantiate a random number of enemies based on minimum and maximum, at randomized positions.
             LayoutObjectAtRandom (enemyTiles, GridPointObject.Enemy, enemyCount, enemyCount);

@@ -80,6 +80,13 @@ namespace Assets.Scripts
                     Debug.Log("enemy");
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }
+                if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Box")
+                {
+
+                    Debug.Log("box");
+                    //Destroy(colliderHits[i].rigidbody.gameObject);
+                    break;
+                }
 
 
             }

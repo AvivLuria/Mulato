@@ -42,7 +42,7 @@ namespace Assets.Scripts
             Vector2 end = start + new Vector2 (xDir, yDir);
 
             //Check if anything was hit
-            if(BoardManager.main.CanMoveToGridPoint(gridRow, gridCol,type))
+            if(BoardManager.main.CanMoveToGridPoint(gridRow, gridCol))
             {
                
                 BoardManager.main.updateMovementPosition(gridRow - yDir, gridCol - xDir, gridRow, gridCol);

@@ -13,15 +13,7 @@ namespace Assets.Scripts
         public LayerMask wallLayer;
         public LayerMask layerMask = ~(1 << 9 | 1 << 11);
 
-        public Player player;
         public GameObject bomb;
-
-        void Start()
-        {
-            // SetTheBomb (explosionTime, powerOfExplosion);
-            // player.onPlayerDeployedBomb.AddListener(DeployBomb);
-            // player.onPlayerDeployedBomb.AddListener(DeployBomb);
-        }
 
         public void DeployBomb(int row, int column)
         {
@@ -70,22 +62,18 @@ namespace Assets.Scripts
             {
                 if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Wall")
                 {
-
                     Debug.Log("Wall");
                     break;
                 }
                 if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Enemy")
                 {
-
                     Debug.Log("enemy");
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }
                 if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Box")
                 {
-
                     Debug.Log("box");
-                    colliderHits[i].rigidbody.GetComponent<Box>().DestroyMe();
-                    //Destroy(colliderHits[i].rigidbody.gameObject);
+                    colliderHits[i].rigidbody.GetComponent<Box>().DestroyMe();              
                     break;
                 }
 

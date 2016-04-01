@@ -5,9 +5,7 @@ using UnityEngine;
 namespace Assets.Scripts
 {
     public class GameManager : SceneSingleton<GameManager> {
-        public int playerLife = 1;
-        public int playerPoints = 0;
-        private int level = 3;
+        private int level = 1;
 
         public override void Awake()
         {

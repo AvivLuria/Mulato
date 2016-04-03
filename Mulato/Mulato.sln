@@ -1,7 +1,7 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mulato.CSharp", "Mulato.CSharp.csproj", "{84E27540-675E-3F77-B4ED-129CFA30F6B7}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{284D5EDC-524A-1167-F6DA-2860B291559E}") = "Mulato", "Assembly-CSharp.csproj", "{EA16798A-BFAE-37CC-B5AD-E3CFE89C8C65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,12 +9,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{84E27540-675E-3F77-B4ED-129CFA30F6B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{84E27540-675E-3F77-B4ED-129CFA30F6B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{84E27540-675E-3F77-B4ED-129CFA30F6B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{84E27540-675E-3F77-B4ED-129CFA30F6B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA16798A-BFAE-37CC-B5AD-E3CFE89C8C65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA16798A-BFAE-37CC-B5AD-E3CFE89C8C65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA16798A-BFAE-37CC-B5AD-E3CFE89C8C65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA16798A-BFAE-37CC-B5AD-E3CFE89C8C65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
 	EndGlobalSection
 EndGlobal

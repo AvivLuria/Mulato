@@ -9,27 +9,18 @@ namespace Assets.Scripts
     {
         public float moveTime = 0.1f;			//Time it will take object to move, in seconds.
         public LayerMask blockingLayer;			//Layer on which collision will be checked.
-
-
-        private BoxCollider2D boxCollider; 		//The BoxCollider2D component attached to this object.
         private Rigidbody2D rb2D;				//The Rigidbody2D component attached to this object.
         private float inverseMoveTime;			//Used to make movement more efficient.
-
 
         //Protected, virtual functions can be overridden by inheriting classes.
         protected virtual void Start ()
         {
-            //Get a component reference to this object's BoxCollider2D
-            boxCollider = GetComponent <BoxCollider2D> ();
-
             //Get a component reference to this object's Rigidbody2D
             rb2D = GetComponent <Rigidbody2D> ();
 
             //By storing the reciprocal of the move time we can use it by multiplying instead of dividing, this is more efficient.
             inverseMoveTime = 1f / moveTime;
         }
-
-
         //Move returns true if it is able to move and false if not. 
         //Move takes parameters for row direction, column direction and a RaycastHit2D to check collision.
         //TODO : added type
@@ -43,8 +34,7 @@ namespace Assets.Scripts
 
             //Check if anything was hit
             if(BoardManager.main.CanMoveToGridPoint(gridRow, gridCol))
-            {
-               
+            {               
                 BoardManager.main.updateMovementPosition(gridRow - yDir, gridCol - xDir, gridRow, gridCol);
                 //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
                 StartCoroutine (SmoothMovement (end));
@@ -52,12 +42,9 @@ namespace Assets.Scripts
                 //Return true to say that Move was successful
                 return true;
             }
-
             //If something was hit, return false, Move was unsuccesful.
             return false;
         }
-
-
         //Co-routine for moving units from one space to next, takes a parameter end to specify where to move to.
         protected IEnumerator SmoothMovement (Vector3 end)
         {
@@ -81,8 +68,6 @@ namespace Assets.Scripts
                 yield return null;
             }
         }
-
-
         //The virtual keyword means AttemptMove can be overridden by inheriting classes using the override keyword.
         //AttemptMove takes a generic parameter T to specify the type of component we expect our unit to interact with if blocked (Player for Enemies, Wall for Player).
         //TODO : added type - 1 for player , 0 for enemy

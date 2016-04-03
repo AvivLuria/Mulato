@@ -133,7 +133,7 @@ namespace Assets.Scripts
             LayoutObjectAtRandom (boxTiles, GridPointObject.Box, numOfBoxs);
 
             //Instantiate a random number of powerUps tiles based on minimum and maximum, at randomized positions.
-            LayoutObjectAtRandom (powerUpsTiles, GridPointObject.PowerUp, numOfPowerUps);
+           // LayoutObjectAtRandom (powerUpsTiles, GridPointObject.PowerUp, numOfPowerUps);
 
             //Instantiate a random number of enemies based on minimum and maximum, at randomized positions.
             LayoutObjectAtRandom (enemyTiles, GridPointObject.Enemy, numOfEnemies);
@@ -150,7 +150,7 @@ namespace Assets.Scripts
         public bool CanMoveToGridPoint(int rowToMoveTo, int columnToMoveTo)
         {
             var gridPointObject = m_board[rowToMoveTo][columnToMoveTo].gridPointObject;
-            return gridPointObject != GridPointObject.Wall && gridPointObject != GridPointObject.Box;
+            return gridPointObject != GridPointObject.Wall && gridPointObject != GridPointObject.Box && gridPointObject != GridPointObject.Enemy;
         }
 
         public void setFireOn(int row, int col, int power)

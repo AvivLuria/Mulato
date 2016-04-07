@@ -3,6 +3,7 @@ using System.Collections;
 using Assets.Scripts.Utils;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using UnityEngine.UI;
 
 
 public class colorManager : SceneSingleton<colorManager> {
@@ -11,18 +12,36 @@ public class colorManager : SceneSingleton<colorManager> {
 	public int nextColor2;
 	public int numOfColors;
 
-	public int chooseColor(int range){
-		Random rnd = new Random();
-	int color = Random.Range(1, range);
-		return color;
-	}
+	public Image cur;
+	public Image next1;
+	public Image next2;
+
+	public Sprite red;
+	public Sprite yellow;
+	public Sprite blue;
+	public Sprite orange;
+	public Sprite pink;
+	public Sprite green;
+
+	public Sprite[] colors;
+
 
 	// Use this for initialization
 	void Start () {
+				colors = new Sprite[6];
+				colors[0] = red;
+				colors[1] = yellow;
+				colors[2] = blue;
+				colors[3] = orange;
+				colors[4] = pink;
+				colors[5] = green;
 		numOfColors = GameManager.main.levelNumColors;
 		curColor = chooseColor(numOfColors);
+		cur.Sprite = colors[curColor];
 		nextColor1 = chooseColor(numOfColors);
+				next1.Sprite = colors[nextColor1];
 		nextColor2 = chooseColor(numOfColors);
+				next2.Sprite = colors[nextColor2];
 	
 	}
 	
@@ -30,8 +49,11 @@ public class colorManager : SceneSingleton<colorManager> {
 	void Update () {
 	if(BombScript.main.flag == 0){
 		curColor = nextColor1;
+					cur.Sprite = colors[curColor];
 		nextColor1 = nextColor2;
+					next1.Sprite = colors[nextColor1];
 		nextColor2 = chooseColor(numOfColors);
+					next2.Sprite = colors[nextColor2];
 		BombScript.main.flag = 1;
 
 	}

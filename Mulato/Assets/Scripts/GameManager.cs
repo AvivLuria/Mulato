@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections;
 using Assets.Scripts.Utils;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
     public class GameManager : SceneSingleton<GameManager> {
-        private int level = 1;
+        public int level = 1;
+		public int levelNumColors = 2;
 
         public override void Awake()
         {
@@ -22,5 +25,7 @@ namespace Assets.Scripts
         {
             enabled = false;
         }
+
     }
+
 }

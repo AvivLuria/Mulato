@@ -7,14 +7,30 @@ namespace Assets.Scripts
 {
     public class BombManager : SceneSingleton<BombManager>
     {
+		
         public float explosionTime = 3;
         public int powerOfExplosion;
         public LayerMask layerMask = ~(1 << 9 | 1 << 11); //all exept bomb and floor
-        public GameObject bomb;
+        public GameObject bombRed;
+		public GameObject bombYellow;
+		public GameObject bombBlue;
+		public GameObject bombOrange;
+		public GameObject bombPink;
+		public GameObject bombPurple;
+		public GameObject[] bombs;
 
+		void Start () {
+		bombs = new GameObject[6];
+		bombs [0] = bombRed;
+		bombs [1] = bombYellow;
+		bombs [2] = bombBlue;
+		bombs [3] = bombOrange;
+		bombs [4] = bombPink;
+		bombs [5] = bombPurple;
+		}
         public void DeployBomb(int row, int column)
         {
-            var curBomb = Instantiate(bomb, new Vector3(row, column, 0), Quaternion.identity) as GameObject;
+			var curBomb = Instantiate(bombs[colorManager.main.curColor], new Vector3(row, column, 0), Quaternion.identity) as GameObject;
             BoardManager.main.setFireOn(row, column, powerOfExplosion);
             StartCoroutine(DelayedExecution(curBomb,row,column));            
         }

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Assets.Scripts
 {
 	public class BombScript : SceneSingleton<BombScript> {
-		int flag;
+		public int flag;
 
         // Use this for initialization
         void Start () {

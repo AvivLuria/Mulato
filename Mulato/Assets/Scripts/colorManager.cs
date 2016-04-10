@@ -25,7 +25,6 @@ namespace Assets.Scripts
 
         public Sprite[] colors;
 
-
         // Use this for initialization
         void Start()
         {
@@ -37,13 +36,14 @@ namespace Assets.Scripts
             colors[4] = pink;
             colors[5] = green;
             numOfColors = GameManager.main.levelNumColors;
+            /*
             curColor = chooseColor(numOfColors);
             cur.Sprite = colors[curColor];
             nextColor1 = chooseColor(numOfColors);
             next1.Sprite = colors[nextColor1];
             nextColor2 = chooseColor(numOfColors);
             next2.Sprite = colors[nextColor2];
-
+            */
         }
 
         // Update is called once per frame
@@ -52,13 +52,14 @@ namespace Assets.Scripts
             if (BombScript.main.flag == 0)
             {
                 curColor = nextColor1;
+                /*
                 cur.Sprite = colors[curColor];
                 nextColor1 = nextColor2;
                 next1.Sprite = colors[nextColor1];
                 nextColor2 = chooseColor(numOfColors);
                 next2.Sprite = colors[nextColor2];
                 BombScript.main.flag = 1;
-
+                */
             }
 
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Assets.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,27 +13,47 @@ namespace Assets.Scripts
         public float explosionTime = 3;
         public int powerOfExplosion;
         public LayerMask layerMask = ~(1 << 9 | 1 << 11); //all exept bomb and floor
-        public GameObject bombRed;
-		public GameObject bombYellow;
 		public GameObject bombBlue;
-		public GameObject bombOrange;
 		public GameObject bombPink;
 		public GameObject bombPurple;
-		public GameObject[] bombs;
+        private GameObject[] bombsPosibilities;
+		public Queue<GameObject> bombs;
 
-		void Start () {
-		bombs = new GameObject[6];
-		bombs [0] = bombRed;
-		bombs [1] = bombYellow;
-		bombs [2] = bombBlue;
-		bombs [3] = bombOrange;
-		bombs [4] = bombPink;
-		bombs [5] = bombPurple;
-		}
-        public void DeployBomb(int row, int column)
+        void Start()
         {
-			var curBomb = Instantiate(bombs[colorManager.main.curColor], new Vector3(row, column, 0), Quaternion.identity) as GameObject;
-            BoardManager.main.setFireOn(row, column, powerOfExplosion);
+            
+            bombs = new Queue<GameObject>();
+            bombsPosibilities = new GameObject[3];
+            bombsPosibilities = getBombPosibilities(bombsPosibilities);
+            bombs.Enqueue(drawNextBomb());
+            bombs.Enqueue(drawNextBomb());
+            bombs.Enqueue(drawNextBomb());
+        }
+
+        private GameObject drawNextBomb()
+        {
+            int randomColorNumber = UnityEngine.Random.Range(0, 3);
+            return bombsPosibilities[randomColorNumber];
+        }
+
+        
+        private GameObject[] getBombPosibilities(GameObject[] bombsPosibilities)
+        {
+            // TODO: fix the 3
+            bombsPosibilities = new GameObject[3];
+            bombsPosibilities[0] = bombBlue;
+            bombsPosibilities[1] = bombPink;
+            bombsPosibilities[2] = bombPurple;
+            return bombsPosibilities;
+
+        }
+
+        public void DeployBomb(int row, int column, int gridRow, int gridColumn)
+        {
+			var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row, column, 0), Quaternion.identity) as GameObject;
+            bombs.Enqueue(drawNextBomb());
+            BoardManager.main.setBombPosition(gridRow, gridColumn);
+            //BoardManager.main.setFireOn(row, column, powerOfExplosion);
             StartCoroutine(DelayedExecution(curBomb,row,column));            
         }
         //TODO : added raycasting + destory
@@ -48,35 +69,47 @@ namespace Assets.Scripts
             RaycastHit2D[] colliderHitsDown = Physics2D.RaycastAll(curBomb.transform.position, Vector2.down,
                 powerOfExplosion, layerMask);
            
-            colliderHitsAction(colliderHitsDown);
-            colliderHitsAction(colliderHitsRight);
-            colliderHitsAction(colliderHitsUp);
-            colliderHitsAction(colliderHitsLeft);
+            colliderHitsAction(colliderHitsDown, curBomb.tag);
+            colliderHitsAction(colliderHitsRight, curBomb.tag);
+            colliderHitsAction(colliderHitsUp, curBomb.tag);
+            colliderHitsAction(colliderHitsLeft, curBomb.tag);
 
             Destroy(curBomb);         
             BoardManager.main.setFireOff(row, column, powerOfExplosion);
         }
         //TODO : destroy for bomb , need to delete later
         //handle raycasting colliders
-        private void colliderHitsAction(RaycastHit2D[] colliderHits)
+        private void colliderHitsAction(RaycastHit2D[] colliderHits, String bombTag)
         {
             for (int i = 0; i < colliderHits.Length; i++)
             {
                 if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Wall")
                 {
-                    Debug.Log("Wall");
                     break;
                 }
-                if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Enemy")
+                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyBlue" && bombTag == "BombBlue")
                 {
-                    Debug.Log("enemy");
+                    Debug.Log("enemy blue");
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }
-                if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Box")
+                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPink" && bombTag == "BombPink")
                 {
-                    Debug.Log("box");
-                    colliderHits[i].rigidbody.GetComponent<Box>().DestroyMe();              
+                    Debug.Log("enemy pink");
+                    Destroy(colliderHits[i].rigidbody.gameObject);
+                }
+                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPurple" && bombTag == "BombPurple")
+                {
+                    Debug.Log("enemy purple");
+                    Destroy(colliderHits[i].rigidbody.gameObject);
+                }
+                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Box")
+                {
+                    colliderHits[i].rigidbody.GetComponent<Box>().DestroyMe();
                     break;
+                }
+                else
+                {
+                    Debug.Log("You Lost!");
                 }
             }
         }

@@ -55,6 +55,7 @@ namespace Assets.Scripts
                for (var row = 0; row < rows; row++) {
 				
                     GameObject toInstantiate = floorTiles;
+                    
                     m_board[row][column] = new GridPoint()
                     {
                         row = row,
@@ -69,7 +70,12 @@ namespace Assets.Scripts
                         }
 
                     var instance = Instantiate (toInstantiate, new Vector3 (column, row, 0f), Quaternion.identity) as GameObject;
-                    m_board[row][column].gameObject = instance;
+                   if (instance.GetComponent<floor>() != null)
+                   {
+                        instance.GetComponent<floor>().gridRow = row;
+                        instance.GetComponent<floor>().gridCol = column;
+                    }
+                   m_board[row][column].gameObject = instance;
                     instance.transform.SetParent(boardHolder);
 
                 }
@@ -116,7 +122,7 @@ namespace Assets.Scripts
                         var box = Instantiate(obj, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
                         box.GetComponent<Box>().gridRow = randomRowIndex;
                         box.GetComponent<Box>().gridCol = randomColumnIndex;
-                    }
+                    } 
                     else
                     {
                         Instantiate(obj, gridPoint.gameObject.transform.position, Quaternion.identity);
@@ -146,11 +152,19 @@ namespace Assets.Scripts
             m_board[oldRow][oldCol].gridPointObject = GridPointObject.Empty;
         }
 
+        public void setBombPosition(int row, int column)
+        {
+            m_board[row][column].gridPointObject = GridPointObject.Bomb;
+        }
+
         // Checks if the next place is box or wall
         public bool CanMoveToGridPoint(int rowToMoveTo, int columnToMoveTo)
         {
             var gridPointObject = m_board[rowToMoveTo][columnToMoveTo].gridPointObject;
-            return gridPointObject != GridPointObject.Wall && gridPointObject != GridPointObject.Box && gridPointObject != GridPointObject.Enemy;
+            return gridPointObject != GridPointObject.Wall && 
+                    gridPointObject != GridPointObject.Box && 
+                    gridPointObject != GridPointObject.Enemy && 
+                    gridPointObject != GridPointObject.Bomb;
         }
 
         public void setFireOn(int row, int col, int power)

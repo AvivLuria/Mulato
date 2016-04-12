@@ -17,7 +17,9 @@ namespace Assets.Scripts
 		public GameObject bombPink;
 		public GameObject bombPurple;
         private GameObject[] bombsPosibilities;
-		public Queue<GameObject> bombs;
+		public Queue<GameObject> bombs;       
+        public ParticleSystem ExplodParticleSystem;
+
 
         void Start()
         {
@@ -45,12 +47,12 @@ namespace Assets.Scripts
             bombsPosibilities[1] = bombPink;
             bombsPosibilities[2] = bombPurple;
             return bombsPosibilities;
-
         }
 
         public void DeployBomb(int row, int column, int gridRow, int gridColumn)
         {
-			var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row, column, 0), Quaternion.identity) as GameObject;
+            Instantiate(ExplodParticleSystem, new Vector3(row, column, 0), ExplodParticleSystem.transform.rotation);
+            var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row, column, 0), Quaternion.identity) as GameObject;
             bombs.Enqueue(drawNextBomb());
             BoardManager.main.setBombPosition(gridRow, gridColumn);
             //BoardManager.main.setFireOn(row, column, powerOfExplosion);

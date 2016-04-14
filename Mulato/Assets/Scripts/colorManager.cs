@@ -38,12 +38,13 @@ namespace Assets.Scripts
             numOfColors = GameManager.main.levelNumColors;
             
 			curColor = BombManager.main.cur;
-            cur.sprite = colors[curColor];
+			cur.sprite = colors[BombManager.main.cur];
 			nextColor1 = BombManager.main.next1;
-            next1.sprite = colors[nextColor1];
-       
+			next1.sprite = colors[BombManager.main.next1];
+
 			nextColor2 = BombManager.main.next2;
-			next2.sprite = colors[nextColor2];
+			next2.sprite = colors[BombManager.main.next2];
+
 
         }
 
@@ -52,12 +53,12 @@ namespace Assets.Scripts
         {
            
 			curColor = BombManager.main.cur;
-			cur.sprite = colors[curColor];
+			cur.sprite = colors[BombManager.main.cur];
 			nextColor1 = BombManager.main.next1;
-			next1.sprite = colors[nextColor1];
+			next1.sprite = colors[BombManager.main.next1];
 
 			nextColor2 = BombManager.main.next2;
-			next2.sprite = colors[nextColor2];
+			next2.sprite = colors[BombManager.main.next2];
               
             
 

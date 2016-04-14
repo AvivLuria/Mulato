@@ -111,9 +111,9 @@ namespace Assets.Scripts
                     Debug.Log("enemy pink");
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }
-                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPurple" && bombTag == "BombPurple")
+                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyYellow" && bombTag == "BombYellow")
                 {
-                    Debug.Log("enemy purple");
+                    Debug.Log("enemy yellow");
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Box")

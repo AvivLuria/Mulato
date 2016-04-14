@@ -57,7 +57,7 @@ namespace Assets.Scripts
                 nextColor1 = nextColor2;
                 next1.sprite = colors[nextColor1];
 				nextColor2 = BombManager.main.next2;
-			next2.sprite = colors [nextColor2];
+				next2.sprite = colors [nextColor2];
                
               
             

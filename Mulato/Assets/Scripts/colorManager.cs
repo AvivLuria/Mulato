@@ -29,10 +29,10 @@ namespace Assets.Scripts
         void Start()
         {
             colors = new Sprite[6];
-            colors[0] = red;
-            colors[1] = blue;
-            colors[2] = pink;
-            colors[3] = yellow;
+            colors[3] = red;
+            colors[0] = blue;
+            colors[1] = pink;
+            colors[2] = yellow;
             colors[4] = green;
             colors[5] = yellow;
             numOfColors = GameManager.main.levelNumColors;
@@ -51,14 +51,13 @@ namespace Assets.Scripts
         void Update()
         {
            
-                curColor = nextColor1;
-                
-                cur.sprite = colors[curColor];
-                nextColor1 = nextColor2;
-                next1.sprite = colors[nextColor1];
-				nextColor2 = BombManager.main.next2;
-				next2.sprite = colors [nextColor2];
-               
+			curColor = BombManager.main.cur;
+			cur.sprite = colors[curColor];
+			nextColor1 = BombManager.main.next1;
+			next1.sprite = colors[nextColor1];
+
+			nextColor2 = BombManager.main.next2;
+			next2.sprite = colors[nextColor2];
               
             
 

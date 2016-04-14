@@ -30,37 +30,37 @@ namespace Assets.Scripts
         {
             colors = new Sprite[6];
             colors[0] = red;
-            colors[1] = yellow;
-            colors[2] = blue;
-            colors[3] = orange;
-            colors[4] = pink;
-            colors[5] = green;
+            colors[1] = blue;
+            colors[2] = pink;
+            colors[3] = yellow;
+            colors[4] = green;
+            colors[5] = yellow;
             numOfColors = GameManager.main.levelNumColors;
-            /*
-            curColor = chooseColor(numOfColors);
-            cur.Sprite = colors[curColor];
-            nextColor1 = chooseColor(numOfColors);
-            next1.Sprite = colors[nextColor1];
-            nextColor2 = chooseColor(numOfColors);
-            next2.Sprite = colors[nextColor2];
-            */
+            
+			curColor = BombManager.main.cur;
+            cur.sprite = colors[curColor];
+			nextColor1 = BombManager.main.next1;
+            next1.sprite = colors[nextColor1];
+       
+			nextColor2 = BombManager.main.next2;
+			next2.sprite = colors[nextColor2];
+
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (BombScript.main.flag == 0)
-            {
+           
                 curColor = nextColor1;
-                /*
-                cur.Sprite = colors[curColor];
+                
+                cur.sprite = colors[curColor];
                 nextColor1 = nextColor2;
-                next1.Sprite = colors[nextColor1];
-                nextColor2 = chooseColor(numOfColors);
-                next2.Sprite = colors[nextColor2];
-                BombScript.main.flag = 1;
-                */
-            }
+                next1.sprite = colors[nextColor1];
+				nextColor2 = BombManager.main.next2;
+			next2.sprite = colors [nextColor2];
+               
+              
+            
 
         }
     }

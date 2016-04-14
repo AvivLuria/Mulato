@@ -15,10 +15,13 @@ namespace Assets.Scripts
         public LayerMask layerMask = ~(1 << 9 | 1 << 11); //all exept bomb and floor
 		public GameObject bombBlue;
 		public GameObject bombPink;
-		public GameObject bombPurple;
+		public GameObject bombYellow;
         private GameObject[] bombsPosibilities;
 		public Queue<GameObject> bombs;       
         public ParticleSystem ExplodParticleSystem;
+		public int cur;
+		public int next1;
+		public int next2;
 
 
         void Start()
@@ -27,15 +30,19 @@ namespace Assets.Scripts
             bombs = new Queue<GameObject>();
             bombsPosibilities = new GameObject[3];
             bombsPosibilities = getBombPosibilities(bombsPosibilities);
-            bombs.Enqueue(drawNextBomb());
-            bombs.Enqueue(drawNextBomb());
-            bombs.Enqueue(drawNextBomb());
+			cur = drawNextBomb ();
+			bombs.Enqueue(bombsPosibilities[cur]);
+			next1 = drawNextBomb ();
+			bombs.Enqueue(bombsPosibilities[next1]);
+			next2 = drawNextBomb ();
+			bombs.Enqueue(bombsPosibilities[next2]);
+
         }
 
-        private GameObject drawNextBomb()
+        private int drawNextBomb()
         {
             int randomColorNumber = UnityEngine.Random.Range(0, 3);
-            return bombsPosibilities[randomColorNumber];
+            return randomColorNumber;
         }
 
         
@@ -45,7 +52,7 @@ namespace Assets.Scripts
             bombsPosibilities = new GameObject[3];
             bombsPosibilities[0] = bombBlue;
             bombsPosibilities[1] = bombPink;
-            bombsPosibilities[2] = bombPurple;
+            bombsPosibilities[2] = bombYellow;
             return bombsPosibilities;
         }
 
@@ -53,7 +60,12 @@ namespace Assets.Scripts
         {
             Instantiate(ExplodParticleSystem, new Vector3(row, column, 0), ExplodParticleSystem.transform.rotation);
             var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row, column, 0), Quaternion.identity) as GameObject;
-            bombs.Enqueue(drawNextBomb());
+			cur = next1;
+			next1 = next2;
+			next2 = drawNextBomb ();
+			bombs.Enqueue(bombsPosibilities[next2]);
+
+            
             BoardManager.main.setBombPosition(gridRow, gridColumn);
             //BoardManager.main.setFireOn(row, column, powerOfExplosion);
             StartCoroutine(DelayedExecution(curBomb,row,column));            

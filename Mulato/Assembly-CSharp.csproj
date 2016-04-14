@@ -59,6 +59,8 @@
      <Compile Include="Assets\Scripts\Utils\DelayedExecute.cs" />
      <Compile Include="Assets\Scripts\Utils\SceneSingleton.cs" />
      <Compile Include="Assets\Scripts\colorManager.cs" />
+     <Compile Include="Assets\Scripts\floor.cs" />
+     <Compile Include="Assets\Scripts\particalesystem.cs" />
      <None Include="Assets\Fonts\OFL.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

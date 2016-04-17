@@ -68,7 +68,7 @@ namespace Assets.Scripts
             
             BoardManager.main.setBombPosition(gridRow, gridColumn);
             //BoardManager.main.setFireOn(row, column, powerOfExplosion);
-            StartCoroutine(DelayedExecution(curBomb,row,column));            
+            StartCoroutine(DelayedExecution(curBomb, gridRow, gridColumn));            
         }
         //TODO : added raycasting + destory
         private void Explode(GameObject curBomb, int row, int column)
@@ -88,7 +88,8 @@ namespace Assets.Scripts
             colliderHitsAction(colliderHitsUp, curBomb.tag);
             colliderHitsAction(colliderHitsLeft, curBomb.tag);
 
-            Destroy(curBomb);         
+            Destroy(curBomb);
+            BoardManager.main.updateMovementPosition(row, column, row, column);
             BoardManager.main.setFireOff(row, column, powerOfExplosion);
         }
         //TODO : destroy for bomb , need to delete later

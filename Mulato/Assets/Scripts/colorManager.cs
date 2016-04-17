@@ -44,8 +44,6 @@ namespace Assets.Scripts
 
 			nextColor2 = BombManager.main.next2;
 			next2.sprite = colors[BombManager.main.next2];
-
-
         }
 
         // Update is called once per frame

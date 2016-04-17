@@ -10,7 +10,7 @@ namespace Assets.Scripts
     public class BombManager : SceneSingleton<BombManager>
     {
 		
-        public float explosionTime = 3;
+        public float explosionTime = 2;
         public int powerOfExplosion;
         public LayerMask layerMask = ~(1 << 9 | 1 << 11); //all exept bomb and floor
 		public GameObject bombBlue;
@@ -56,9 +56,11 @@ namespace Assets.Scripts
             return bombsPosibilities;
         }
 
+
+
         public void DeployBomb(int row, int column, int gridRow, int gridColumn)
         {
-            var toDestroy = Instantiate(ExplodParticleSystem, new Vector3(row, column, 0), ExplodParticleSystem.transform.rotation) as GameObject;
+         //   var toDestroy = Instantiate(ExplodParticleSystem, new Vector3(row, column, 0), ExplodParticleSystem.transform.rotation) as GameObject;
             var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row, column, 0), Quaternion.identity) as GameObject;
 			cur = next1;
 			next1 = next2;
@@ -67,7 +69,7 @@ namespace Assets.Scripts
 
             
             BoardManager.main.setBombPosition(gridRow, gridColumn);
-            StartCoroutine(DelayedExecution(curBomb, gridRow, gridColumn, toDestroy));            
+            StartCoroutine(DelayedExecution(curBomb, gridRow, gridColumn));            
         }
         //TODO : added raycasting + destory
         private void Explode(GameObject curBomb, int row, int column)
@@ -132,12 +134,12 @@ namespace Assets.Scripts
         }
         //TODO : delete this later
         //delay bomb action
-        IEnumerator DelayedExecution(GameObject curBomb,int row, int column, GameObject partical)
+        IEnumerator DelayedExecution(GameObject curBomb,int row, int column)
         {
             yield return new WaitForSeconds(3f);
             Explode(curBomb, row, column);
             yield return new WaitForSeconds(1f);
-            Destroy(partical);
+           
         }
         
     }

@@ -40,12 +40,17 @@ namespace Assets.Scripts
 
         public int numOfBoxs;
         public int numOfPowerUps;
-        public int numOfEnemies;
+        private int numOfEnemies;
 
         public override void Awake()
         {
             base.Awake();
            // DontDestroyOnLoad(gameObject);
+        }
+
+        public void setNumberOfEnemies(int numberOfEnemies)
+        {
+            numOfEnemies = numberOfEnemies;
         }
 
         private void BoardSetup () 
@@ -133,6 +138,9 @@ namespace Assets.Scripts
                     {
                         Instantiate(obj, gridPoint.gameObject.transform.position, Quaternion.identity);
                     }
+                } else
+                {
+                    i--;
                 }
             }
         }

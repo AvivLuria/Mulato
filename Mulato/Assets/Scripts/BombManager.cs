@@ -104,16 +104,19 @@ namespace Assets.Scripts
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyBlue" && bombTag == "BombBlue")
                 {
                     Debug.Log("enemy blue");
+                    GameManager.main.EnemyKilled();
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPink" && bombTag == "BombPink")
                 {
                     Debug.Log("enemy pink");
+                    GameManager.main.EnemyKilled();
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyYellow" && bombTag == "BombYellow")
                 {
                     Debug.Log("enemy yellow");
+                    GameManager.main.EnemyKilled();
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Box")

@@ -8,9 +8,10 @@ using UnityEngine.SceneManagement;
 namespace Assets.Scripts
 {
     public class GameManager : SceneSingleton<GameManager> {
-        public int level = 1;
+        public int level;
 		public int levelNumColors = 2;
         public int life = 3;
+        public int numberOFEnemiesInTheLevel;
 
         public override void Awake()
         {
@@ -24,6 +25,19 @@ namespace Assets.Scripts
             {
                 case 1:
                     {
+                        BoardManager.main.setNumberOfEnemies(numberOFEnemiesInTheLevel);
+                        BoardManager.main.SetupScene(level);
+                        break;
+                    }
+                case 2:
+                    {
+                        BoardManager.main.setNumberOfEnemies(numberOFEnemiesInTheLevel);
+                        BoardManager.main.SetupScene(level);
+                        break;
+                    }
+                case 3:
+                    {
+                        BoardManager.main.setNumberOfEnemies(numberOFEnemiesInTheLevel);
                         BoardManager.main.SetupScene(level);
                         break;
                     }
@@ -40,22 +54,31 @@ namespace Assets.Scripts
             life -= damage;
             if (life <= 0)
             {
+                SceneManager.LoadScene("StartScene", LoadSceneMode.Single);
+            }
+        }
 
+        public void EnemyKilled()
+        {
+            numberOFEnemiesInTheLevel--;
+            if (numberOFEnemiesInTheLevel == 0)
+            {
+                changeLevel();
             }
         }
 
         public void changeLevel()
         {
             level++;
-            InitGame();
+            SceneManager.LoadScene("Scene" + level, LoadSceneMode.Single);
+          
         }
 
         public void StartGame()
         {
             level = 1;
             SceneManager.LoadScene("Scene1", LoadSceneMode.Single);
-            
-            //InitGame();
+
         }
     }
 

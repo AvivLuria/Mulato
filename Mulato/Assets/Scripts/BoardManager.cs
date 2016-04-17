@@ -42,6 +42,12 @@ namespace Assets.Scripts
         public int numOfPowerUps;
         public int numOfEnemies;
 
+        public override void Awake()
+        {
+            base.Awake();
+           // DontDestroyOnLoad(gameObject);
+        }
+
         private void BoardSetup () 
         {
             boardHolder = new GameObject ("Board").transform;

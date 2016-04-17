@@ -22,6 +22,7 @@ namespace Assets.Scripts
         public Sprite orange;
         public Sprite pink;
         public Sprite green;
+        public Sprite purple;
 
         public Sprite[] colors;
 
@@ -29,10 +30,10 @@ namespace Assets.Scripts
         void Start()
         {
             colors = new Sprite[6];
-            colors[3] = red;
             colors[0] = blue;
             colors[1] = pink;
-            colors[2] = yellow;
+            colors[2] = purple;
+            colors[3] = red;
             colors[4] = green;
             colors[5] = yellow;
             numOfColors = GameManager.main.levelNumColors;

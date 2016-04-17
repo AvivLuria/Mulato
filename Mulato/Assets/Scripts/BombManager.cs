@@ -15,7 +15,7 @@ namespace Assets.Scripts
         public LayerMask layerMask = ~(1 << 9 | 1 << 11); //all exept bomb and floor
 		public GameObject bombBlue;
 		public GameObject bombPink;
-		public GameObject bombYellow;
+		public GameObject bombPurple;
         private GameObject[] bombsPosibilities;
 		public Queue<GameObject> bombs;       
         public ParticleSystem ExplodParticleSystem;
@@ -52,13 +52,13 @@ namespace Assets.Scripts
             bombsPosibilities = new GameObject[3];
             bombsPosibilities[0] = bombBlue;
             bombsPosibilities[1] = bombPink;
-            bombsPosibilities[2] = bombYellow;
+            bombsPosibilities[2] = bombPurple;
             return bombsPosibilities;
         }
 
         public void DeployBomb(int row, int column, int gridRow, int gridColumn)
         {
-            Instantiate(ExplodParticleSystem, new Vector3(row, column, 0), ExplodParticleSystem.transform.rotation);
+            var toDestroy = Instantiate(ExplodParticleSystem, new Vector3(row, column, 0), ExplodParticleSystem.transform.rotation) as GameObject;
             var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row, column, 0), Quaternion.identity) as GameObject;
 			cur = next1;
 			next1 = next2;
@@ -67,8 +67,7 @@ namespace Assets.Scripts
 
             
             BoardManager.main.setBombPosition(gridRow, gridColumn);
-            //BoardManager.main.setFireOn(row, column, powerOfExplosion);
-            StartCoroutine(DelayedExecution(curBomb, gridRow, gridColumn));            
+            StartCoroutine(DelayedExecution(curBomb, gridRow, gridColumn, toDestroy));            
         }
         //TODO : added raycasting + destory
         private void Explode(GameObject curBomb, int row, int column)
@@ -124,16 +123,19 @@ namespace Assets.Scripts
                 }
                 else
                 {
-                    Debug.Log("You Lost!");
+                    GameManager.main.GameOver(1);
                 }
             }
         }
         //TODO : delete this later
         //delay bomb action
-        IEnumerator DelayedExecution(GameObject curBomb,int row, int column)
+        IEnumerator DelayedExecution(GameObject curBomb,int row, int column, GameObject partical)
         {
             yield return new WaitForSeconds(3f);
             Explode(curBomb, row, column);
+            yield return new WaitForSeconds(1f);
+            Destroy(partical);
         }
+        
     }
 }

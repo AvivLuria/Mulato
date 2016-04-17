@@ -20,7 +20,6 @@ public class Enemy : MovingObject {
     // TODO: Needs to be change
 	public void MoveEnemey()
 	{
-        try {
         countTryTimes--;
         int xDir = 0;
         int yDir = 0;
@@ -51,10 +50,7 @@ public class Enemy : MovingObject {
             if (countTryTimes >= 0)
                 MoveEnemey();
 	    }
-        } catch (System.Exception e)
-        {
-            Debug.Log("Attemps number: " + countTryTimes);
-        }
+        
         // TODO: add avoiding the bomb
     }
 }

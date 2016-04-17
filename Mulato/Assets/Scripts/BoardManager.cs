@@ -32,8 +32,11 @@ namespace Assets.Scripts
         public GameObject wallTiles;
         public GameObject boxTiles;
         public GameObject powerUpsTiles;
-        public GameObject enemyTiles;
- 
+
+        public GameObject enemyBlue;
+        public GameObject enemyPink;
+        public GameObject enemyPurple;
+
         private List<GridPoint[]> m_board;
 
         private Transform boardHolder;
@@ -42,9 +45,9 @@ namespace Assets.Scripts
         public int numOfPowerUps;
         private int numOfEnemies;
 
-        public override void Awake()
+        public void Start()
         {
-            base.Awake();
+            //base.Awake();
            // DontDestroyOnLoad(gameObject);
         }
 
@@ -153,10 +156,67 @@ namespace Assets.Scripts
             LayoutObjectAtRandom (boxTiles, GridPointObject.Box, numOfBoxs);
 
             //Instantiate a random number of powerUps tiles based on minimum and maximum, at randomized positions.
-           // LayoutObjectAtRandom (powerUpsTiles, GridPointObject.PowerUp, numOfPowerUps);
+            // LayoutObjectAtRandom (powerUpsTiles, GridPointObject.PowerUp, numOfPowerUps);
 
-            //Instantiate a random number of enemies based on minimum and maximum, at randomized positions.
-            LayoutObjectAtRandom (enemyTiles, GridPointObject.Enemy, numOfEnemies);
+            setEnemiesOnTheBoard();
+        }
+
+        private void setEnemiesOnTheBoard()
+        {
+            for (int i = 0; i < colorManager.main.levelNumberOfColors; i++)
+            {
+                numOfEnemies--;
+                switch (i)
+                {
+                    case colorManager.colorsOptions.Blue:
+                        {
+                            GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue]++;
+                            LayoutObjectAtRandom(enemyBlue, GridPointObject.Enemy, 1);
+                            break;
+                        }
+                    case colorManager.colorsOptions.Pink:
+                        {
+                            GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink]++;
+                            LayoutObjectAtRandom(enemyPink, GridPointObject.Enemy, 1);
+                            break;
+                        }
+                    case colorManager.colorsOptions.Purple:
+                        {
+                            GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple]++;
+                            LayoutObjectAtRandom(enemyPurple, GridPointObject.Enemy, 1);
+                            break;
+                        }
+                }
+            }
+            
+            while (numOfEnemies > 0) {
+                int colorOfEnemy = (int)UnityEngine.Random.Range(0, colorManager.main.levelNumberOfColors);
+                int currentNumberOfEnemy = (int)UnityEngine.Random.Range(1, numOfEnemies);
+
+                switch (colorOfEnemy)
+                {
+                    case colorManager.colorsOptions.Blue:
+                        {
+                            GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue] += currentNumberOfEnemy;
+                            LayoutObjectAtRandom(enemyBlue, GridPointObject.Enemy, currentNumberOfEnemy);
+                            break;
+                        }
+                    case colorManager.colorsOptions.Pink:
+                        {
+                            GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink] += currentNumberOfEnemy;
+                            LayoutObjectAtRandom(enemyPink, GridPointObject.Enemy, currentNumberOfEnemy);
+                            break;
+                        }
+                    case colorManager.colorsOptions.Purple:
+                        {
+                            GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple] += currentNumberOfEnemy;
+                            LayoutObjectAtRandom(enemyPurple, GridPointObject.Enemy, currentNumberOfEnemy);
+                            break;
+                        }
+                }
+                
+                numOfEnemies -= currentNumberOfEnemy;
+            }
         }
 
         // This function should update the grid

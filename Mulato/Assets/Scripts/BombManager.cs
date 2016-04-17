@@ -16,58 +16,44 @@ namespace Assets.Scripts
 		public GameObject bombBlue;
 		public GameObject bombPink;
 		public GameObject bombPurple;
-        private GameObject[] bombsPosibilities;
 		public Queue<GameObject> bombs;       
         public ParticleSystem ExplodParticleSystem;
-		public int cur;
-		public int next1;
-		public int next2;
+		public int currentBombColor;
+		public int nextBombColor;
+		public int thirdBombColor;
 
 
         void Start()
         {
             
             bombs = new Queue<GameObject>();
-            bombsPosibilities = new GameObject[3];
-            bombsPosibilities = getBombPosibilities(bombsPosibilities);
-			cur = drawNextBomb ();
-			bombs.Enqueue(bombsPosibilities[cur]);
-			next1 = drawNextBomb ();
-			bombs.Enqueue(bombsPosibilities[next1]);
-			next2 = drawNextBomb ();
-			bombs.Enqueue(bombsPosibilities[next2]);
+           
+            
+			currentBombColor = drawNextBomb ();
+			bombs.Enqueue(colorManager.main.currentColorPosibilities[currentBombColor]);
+			nextBombColor = drawNextBomb ();
+			bombs.Enqueue(colorManager.main.currentColorPosibilities[nextBombColor]);
+			thirdBombColor = drawNextBomb ();
+			bombs.Enqueue(colorManager.main.currentColorPosibilities[thirdBombColor]);
 
         }
 
         private int drawNextBomb()
         {
-            int randomColorNumber = UnityEngine.Random.Range(0, 3);
+            int randomColorNumber = UnityEngine.Random.Range(0, colorManager.main.levelNumberOfColors);
             return randomColorNumber;
         }
-
-        
-        private GameObject[] getBombPosibilities(GameObject[] bombsPosibilities)
-        {
-            // TODO: fix the 3
-            bombsPosibilities = new GameObject[3];
-            bombsPosibilities[0] = bombBlue;
-            bombsPosibilities[1] = bombPink;
-            bombsPosibilities[2] = bombPurple;
-            return bombsPosibilities;
-        }
-
-
 
         public void DeployBomb(int row, int column, int gridRow, int gridColumn)
         {
          //   var toDestroy = Instantiate(ExplodParticleSystem, new Vector3(row, column, 0), ExplodParticleSystem.transform.rotation) as GameObject;
             var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row, column, 0), Quaternion.identity) as GameObject;
-			cur = next1;
-			next1 = next2;
-			next2 = drawNextBomb ();
-			bombs.Enqueue(bombsPosibilities[next2]);
+			currentBombColor = nextBombColor;
+			nextBombColor = thirdBombColor;
+			thirdBombColor = drawNextBomb ();
+			bombs.Enqueue(colorManager.main.currentColorPosibilities[thirdBombColor]);
 
-            
+            colorManager.main.changeColors();
             BoardManager.main.setBombPosition(gridRow, gridColumn);
             StartCoroutine(DelayedExecution(curBomb, gridRow, gridColumn));            
         }
@@ -106,18 +92,21 @@ namespace Assets.Scripts
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyBlue" && bombTag == "BombBlue")
                 {
                     Debug.Log("enemy blue");
+                    GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue]--;
                     GameManager.main.EnemyKilled();
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPink" && bombTag == "BombPink")
                 {
+                    GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink]--;
                     Debug.Log("enemy pink");
                     GameManager.main.EnemyKilled();
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }
-                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyYellow" && bombTag == "BombYellow")
+                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPurple" && bombTag == "BombPurple")
                 {
-                    Debug.Log("enemy yellow");
+                    Debug.Log("enemy Purple");
+                    GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple]--;
                     GameManager.main.EnemyKilled();
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }

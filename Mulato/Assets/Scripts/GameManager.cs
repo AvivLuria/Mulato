@@ -21,10 +21,12 @@ namespace Assets.Scripts
         }
 
         private void InitGame () {
-            enemiesOnTheBoard = new int[colorManager.main.levelNumberOfColors];
-            BoardManager.main.setNumberOfEnemies(numberOFEnemiesInTheLevel);
-            BoardManager.main.SetupScene(level);         
-
+            if (level != 0)
+            {
+                enemiesOnTheBoard = new int[colorManager.main.levelNumberOfColors];
+                BoardManager.main.setNumberOfEnemies(numberOFEnemiesInTheLevel);
+                BoardManager.main.SetupScene(level);
+            }
         }
 
         public void GameOver(int damage)

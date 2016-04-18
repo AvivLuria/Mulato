@@ -40,7 +40,12 @@ namespace Assets.Scripts
 
         private int drawNextBomb()
         {
+            
             int randomColorNumber = UnityEngine.Random.Range(0, colorManager.main.levelNumberOfColors);
+            if (GameManager.main.enemiesOnTheBoard[randomColorNumber] == 0)
+            {
+                randomColorNumber = drawNextBomb();
+            }
             return randomColorNumber;
         }
 

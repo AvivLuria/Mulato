@@ -243,7 +243,7 @@ namespace Assets.Scripts
                     gridPointObject != GridPointObject.Enemy && 
                     gridPointObject != GridPointObject.Bomb;
         }
-
+        /*
         public void setFireOn(int row, int col, int power)
         {
             for (int i = 0; i <= power; i++)
@@ -362,7 +362,7 @@ namespace Assets.Scripts
                 m_board[row][col - i].isOnFile = false;
             }
         }
-
+        */
         public GridPointObject checkGrid(int row, int col)
         {
             return m_board[row][col].gridPointObject;

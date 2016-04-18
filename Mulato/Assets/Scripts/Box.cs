@@ -23,7 +23,8 @@ public class Box : MonoBehaviour {
 
     private void addSpecialColorBombToTheStack()
     {
-        BombManager.main.bombs.Enqueue(BombManager.main.SpecialBomb);
-        BombManager.main.thirdBombColor = colorManager.colorsOptions.Special;
+        
+        BombManager.main.forthBombColor = colorManager.colorsOptions.Special;
+        
     }
 }

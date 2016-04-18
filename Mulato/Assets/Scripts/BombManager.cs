@@ -22,6 +22,7 @@ namespace Assets.Scripts
 		public int currentBombColor;
 		public int nextBombColor;
 		public int thirdBombColor;
+        public int forthBombColor;
 
 
         void Start()
@@ -37,6 +38,7 @@ namespace Assets.Scripts
 			thirdBombColor = drawNextBomb ();
 			bombs.Enqueue(colorManager.main.currentColorPosibilities[thirdBombColor]);
             colorManager.main.changeColors();
+            forthBombColor = drawNextBomb();
         }
 
         private int drawNextBomb()
@@ -56,8 +58,15 @@ namespace Assets.Scripts
             var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row, column, 0), Quaternion.identity) as GameObject;
 			currentBombColor = nextBombColor;
 			nextBombColor = thirdBombColor;
-			thirdBombColor = drawNextBomb ();
-			bombs.Enqueue(colorManager.main.currentColorPosibilities[thirdBombColor]);
+            thirdBombColor = forthBombColor;
+			forthBombColor = drawNextBomb ();
+            if (thirdBombColor == colorManager.colorsOptions.Special)
+            {
+                bombs.Enqueue(SpecialBomb);
+            } else
+            {
+			    bombs.Enqueue(colorManager.main.currentColorPosibilities[thirdBombColor]);
+            }
 
             colorManager.main.changeColors();
             BoardManager.main.setBombPosition(gridRow, gridColumn);
@@ -83,7 +92,7 @@ namespace Assets.Scripts
 
             Destroy(curBomb);
             BoardManager.main.updateMovementPosition(row, column, row, column);
-            BoardManager.main.setFireOff(row, column, powerOfExplosion);
+            //BoardManager.main.setFireOff(row, column, powerOfExplosion);
         }
         //TODO : destroy for bomb , need to delete later
         //handle raycasting colliders

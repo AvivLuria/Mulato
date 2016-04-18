@@ -38,7 +38,7 @@ namespace Assets.Scripts
         {
             currentColorPosibilities = new GameObject[levelNumberOfColors];
             setBombColorPosibilities();
-            changeColors();
+            
         }
 
         public void changeColors()

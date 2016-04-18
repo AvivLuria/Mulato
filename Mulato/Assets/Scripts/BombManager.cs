@@ -35,7 +35,7 @@ namespace Assets.Scripts
 			bombs.Enqueue(colorManager.main.currentColorPosibilities[nextBombColor]);
 			thirdBombColor = drawNextBomb ();
 			bombs.Enqueue(colorManager.main.currentColorPosibilities[thirdBombColor]);
-
+            colorManager.main.changeColors();
         }
 
         private int drawNextBomb()

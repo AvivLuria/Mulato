@@ -14,6 +14,7 @@ namespace Assets.Scripts
             public const int Blue = 0;
             public const int Pink = 1;
             public const int Purple = 2;
+            public const int Special = -1;
         }
 
         public int currentBombColor;
@@ -38,19 +39,36 @@ namespace Assets.Scripts
         {
             currentColorPosibilities = new GameObject[levelNumberOfColors];
             setBombColorPosibilities();
-            
         }
 
         public void changeColors()
         {
             currentBombColor = BombManager.main.currentBombColor;
-            currentBombColorImage.sprite = currentColorPosibilities[BombManager.main.currentBombColor].GetComponent<SpriteRenderer>().sprite;
-
             nextBombColor = BombManager.main.nextBombColor;
-            nextBombColorImage.sprite = currentColorPosibilities[BombManager.main.nextBombColor].GetComponent<SpriteRenderer>().sprite;
-
             thirdBombColor = BombManager.main.thirdBombColor;
-            thirdBombColorImage.sprite = currentColorPosibilities[BombManager.main.thirdBombColor].GetComponent<SpriteRenderer>().sprite;
+            
+            if (currentBombColor == colorsOptions.Special)
+            {
+                currentBombColorImage.sprite = BombManager.main.SpecialBomb.GetComponent<SpriteRenderer>().sprite;
+            } else
+            {
+                currentBombColorImage.sprite = currentColorPosibilities[BombManager.main.currentBombColor].GetComponent<SpriteRenderer>().sprite;
+            }
+            if (nextBombColor == colorsOptions.Special)
+            {
+                nextBombColorImage.sprite = BombManager.main.SpecialBomb.GetComponent<SpriteRenderer>().sprite;
+            } else
+            {
+                nextBombColorImage.sprite = currentColorPosibilities[BombManager.main.nextBombColor].GetComponent<SpriteRenderer>().sprite;
+            }
+            if (thirdBombColor == colorsOptions.Special)
+            {
+                thirdBombColorImage.sprite = BombManager.main.SpecialBomb.GetComponent<SpriteRenderer>().sprite;
+            } else
+            {
+                thirdBombColorImage.sprite = currentColorPosibilities[BombManager.main.thirdBombColor].GetComponent<SpriteRenderer>().sprite;
+            }
+
         }
 
         public void setBombColorPosibilities()

@@ -16,7 +16,8 @@ namespace Assets.Scripts
 		public GameObject bombBlue;
 		public GameObject bombPink;
 		public GameObject bombPurple;
-		public Queue<GameObject> bombs;       
+        public GameObject SpecialBomb;
+        public Queue<GameObject> bombs;       
         public ParticleSystem ExplodParticleSystem;
 		public int currentBombColor;
 		public int nextBombColor;
@@ -94,21 +95,21 @@ namespace Assets.Scripts
                 {
                     break;
                 }
-                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyBlue" && bombTag == "BombBlue")
+                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyBlue" && (bombTag == "BombBlue" || bombTag == "SpecialBomb"))
                 {
                     Debug.Log("enemy blue");
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue]--;
                     GameManager.main.EnemyKilled();
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }
-                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPink" && bombTag == "BombPink")
+                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPink" && (bombTag == "BombPink" || bombTag == "SpecialBomb"))
                 {
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink]--;
                     Debug.Log("enemy pink");
                     GameManager.main.EnemyKilled();
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }
-                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPurple" && bombTag == "BombPurple")
+                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPurple" && (bombTag == "BombPurple" || bombTag == "SpecialBomb"))
                 {
                     Debug.Log("enemy Purple");
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple]--;

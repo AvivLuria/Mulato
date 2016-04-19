@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mulato.CSharp.Plugins", "Mulato.CSharp.Plugins.csproj", "{BD7585D3-5ECB-8AB9-7C05-B5B35B9745F2}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mulato.CSharp", "Mulato.CSharp.csproj", "{84E27540-675E-3F77-B4ED-129CFA30F6B7}"
 EndProject
 Global
@@ -9,6 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD7585D3-5ECB-8AB9-7C05-B5B35B9745F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD7585D3-5ECB-8AB9-7C05-B5B35B9745F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD7585D3-5ECB-8AB9-7C05-B5B35B9745F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD7585D3-5ECB-8AB9-7C05-B5B35B9745F2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{84E27540-675E-3F77-B4ED-129CFA30F6B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{84E27540-675E-3F77-B4ED-129CFA30F6B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84E27540-675E-3F77-B4ED-129CFA30F6B7}.Release|Any CPU.ActiveCfg = Release|Any CPU

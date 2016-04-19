@@ -12,6 +12,7 @@ namespace Assets.Scripts
         public int color;
         public int timeToSet;
         public int difficulty;
+        public bool disappearingMission = false;
 
 
         public void setTimerMission(int time)
@@ -45,6 +46,9 @@ namespace Assets.Scripts
                         //sets up mode to check win condition
                         BombManager.main.missionMultipleKilled = true;
                         setTimerMission();
+                        BombManager.main.onMission = true;
+                        BoardManager.main.setNumberOfEnemies(numberOfEnemies);
+                        BoardManager.main.SetupScene(input_level);
                         break;
                     }
                 //kill the same color
@@ -56,11 +60,14 @@ namespace Assets.Scripts
                         BombManager.main.onMission = true;
                         BombManager.main.setNumberOfColors(difficulty);
                         setTimerMission();
+                        BombManager.main.onMission = true;
+                        BoardManager.main.setNumberOfEnemies(numberOfEnemies);
+                        BoardManager.main.SetupScene(input_level);
                         break;
                     }
                  //Timer
                 case (4):
-                    {                      
+                    {
                         if (difficulty > 3)
                         {
                             colorManager.main.init(2);
@@ -71,14 +78,40 @@ namespace Assets.Scripts
                             colorManager.main.init(1);
                             BombManager.main.setNumberOfColors(1);
                         }
-
+                        BombManager.main.onMission = true;
+                        BoardManager.main.setNumberOfEnemies(numberOfEnemies);
+                        BoardManager.main.SetupScene(input_level);
                         setTimerMission(60 - difficulty * 5);
                         break;
                     }
+                //disappearing enemies
+                case (5):
+                    {
+                        if (difficulty <= 0 || difficulty > 3) difficulty = 2;
+                        colorManager.main.init(difficulty);
+                        BoardManager.main.setNumberOfColors(difficulty);
+                        BombManager.main.setNumberOfColors(difficulty);
+                        disappearingMission = true;
+                        setTimerMission();
+                        BombManager.main.onMission = true;
+                        BoardManager.main.setNumberOfEnemies(numberOfEnemies);
+                        BoardManager.main.SetupScene(input_level);
+                        break;
+                    }
+                case (6):
+                    {                        
+                        colorManager.main.init(difficulty);
+                        BoardManager.main.setNumberOfColors(difficulty);
+                        BombManager.main.setNumberOfColors(difficulty);
+                        setTimerMission();
+                        BombManager.main.onMission = true;
+                        BoardManager.main.setNumberOfEnemies(numberOfEnemies);
+                        BoardManager.main.SetupScene(input_level);
+                        checkMissionStatus();
+                        break;
+                    }
             }
-            BombManager.main.onMission = true;
-            BoardManager.main.setNumberOfEnemies(numberOfEnemies);
-            BoardManager.main.SetupScene(input_level);
+        
         }
 
         public void checkMissionStatus()
@@ -116,7 +149,35 @@ namespace Assets.Scripts
                         }
                         break;
                     }
-
+                case (5):
+                    {
+                        if (GameManager.main.numberOFEnemiesInTheLevel == 0)
+                        {
+                            disappearingMission = false;
+                            GameManager.main.changeLevel();
+                        }
+                        break;
+                    }
+                case (6):
+                    {
+                        if (GameManager.main.numberOFEnemiesInTheLevel >= 0)
+                        {
+                            if (GameManager.main.enemiesOnTheBoard[0] >= 0)
+                            {
+                                GameObject.FindGameObjectWithTag("EnemyBlue").GetComponent<Enemy>().onTargetMission = true;
+                            } else if (GameManager.main.enemiesOnTheBoard[1] >= 0)
+                            {
+                                GameObject.FindGameObjectWithTag("EnemyPink").GetComponent<Enemy>().onTargetMission =
+                                    true;
+                            }
+                            else
+                            {
+                                GameObject.FindGameObjectWithTag("EnemyPurple").GetComponent<Enemy>().onTargetMission =
+                                    true;
+                            }
+                        }
+                        break;
+                    }
             }
         }
 
@@ -127,6 +188,8 @@ namespace Assets.Scripts
             GameManager.main.numberOFEnemiesInTheLevel = numberOfEnemies;
             initMission(currMission, numberOfEnemies, difficulty + 1);
         }
+
+
 
     }
 }

@@ -6,19 +6,52 @@ public class Enemy : MovingObject {
 
 	public float EnemySpeedSlow = 1.0f;
 	private float m_timeToMove = 1.0f;
+    private bool onDisappearingMission = false;
+    private bool scaleUp = true;
+    public bool onTargetMission = false;
     public int gridRow;
     public int gridCol;
     private int countTryTimes = 10;
-
+     
 	void Update() {
 		m_timeToMove += Time.deltaTime;
 		if (m_timeToMove >= EnemySpeedSlow) {
 			MoveEnemey ();
+		    if (Missions.main.disappearingMission)
+		    {
+		        disappearing();
+		    } else if (onTargetMission)
+		    {
+		        scale();
+		    }
 			m_timeToMove = 0f;
 		}
-	}		
+
+	}
+
+    private void disappearing()
+    {
+        onDisappearingMission = !onDisappearingMission;
+        this.GetComponent<Renderer>().enabled = onDisappearingMission;
+      
+    }
+
+    private void scale()
+    {
+        
+        if (scaleUp)
+        {
+            iTween.ScaleTo(this.gameObject, transform.localScale += new Vector3(1f, 1f, 0), 1f);
+        }
+        else
+        {
+            iTween.ScaleTo(this.gameObject, transform.localScale -= new Vector3(1f, 1f, 0), 1f);
+        }
+        scaleUp = !scaleUp;
+    }
+
     // TODO: Needs to be change
-	public void MoveEnemey()
+    public void MoveEnemey()
 	{
         countTryTimes--;
         int xDir = 0;

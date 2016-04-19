@@ -61,12 +61,6 @@
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
-      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.iOS.Extensions.Common">
-      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Mulato.CSharp.Plugins.csproj">
@@ -92,7 +86,6 @@
     <Compile Include="Assets\Scripts\Utils\SceneSingleton.cs" />
     <Compile Include="Assets\Scripts\colorManager.cs" />
     <Compile Include="Assets\Scripts\floor.cs" />
-    <Compile Include="Assets\Scripts\particalesystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Fonts\OFL.txt" />

@@ -2,9 +2,12 @@
 using System.Collections;
 using Assets.Scripts;
 using System;
+using Assets.Scripts.Utils;
 
-public class Box : MonoBehaviour {
+public class Box : MonoBehaviour
+{
 
+    private float enemySpeed;
     public int gridRow;
     public int gridCol;
     public bool isSpecialColorBombBox = false;
@@ -32,29 +35,14 @@ public class Box : MonoBehaviour {
     private void freezeEnemies()
     {
         Enemy[] enemies = UnityEngine.Object.FindObjectsOfType<Enemy>();
-        float temp = 0;
+        enemySpeed = 0;
         foreach (Enemy enemy in enemies)
         {
-            temp = enemy.gameObject.GetComponent<Enemy>().EnemySpeedSlow;
+            enemySpeed = enemy.gameObject.GetComponent<Enemy>().EnemySpeedSlow;
             enemy.EnemySpeedSlow = float.MaxValue;
-            
+            enemy.gameObject.GetComponent<Enemy>().activeDelay(enemySpeed);
         }
-
-        StartCoroutine(DelayedExecution(temp));
-
         
-    }
-
-    private void returnFromFreezing(float enemiesMovement)
-    {
-        Enemy[] enemies = UnityEngine.Object.FindObjectsOfType<Enemy>();
-
-        foreach (Enemy enemy in enemies)
-        {
-
-            enemy.EnemySpeedSlow = enemiesMovement;
-
-        }
     }
 
     private void addMoreLife()
@@ -69,10 +57,5 @@ public class Box : MonoBehaviour {
         
     }
 
-    IEnumerator DelayedExecution(float enemiesMovement)
-    {
-        yield return new WaitForSeconds(3f);
-        returnFromFreezing(enemiesMovement);
-        yield return new WaitForSeconds(1f);
-    }
+    
 }

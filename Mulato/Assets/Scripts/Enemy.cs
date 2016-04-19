@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Assets.Scripts;
+using JetBrains.Annotations;
 
 public class Enemy : MovingObject {
 
@@ -52,38 +53,50 @@ public class Enemy : MovingObject {
 
     // TODO: Needs to be change
     public void MoveEnemey()
-	{
+    {
         countTryTimes--;
         int xDir = 0;
         int yDir = 0;
-	    float random = Random.value;
+        float random = Random.value;
 
-	    if (random < 0.25)
-	    {
-	        xDir = 1;
-	    } else if (random >= 0.25 && random < 0.5)
-	    {
-	        xDir = -1;
-	    } else if (random >= 0.5 && random < 0.75)
-	    {
-	        yDir = 1;
-	    }
-	    else
-	    {
-	        yDir = -1;
-	    }
+        if (random < 0.25)
+        {
+            xDir = 1;
+        }
+        else if (random >= 0.25 && random < 0.5)
+        {
+            xDir = -1;
+        }
+        else if (random >= 0.5 && random < 0.75)
+        {
+            yDir = 1;
+        }
+        else
+        {
+            yDir = -1;
+        }
         if (AttemptMove(xDir, yDir, gridRow + yDir, gridCol + xDir, 0))
-	    {
+        {
             countTryTimes = 10;
-	        gridRow += yDir;
-	        gridCol += xDir;
-	    }
-	    else
-	    {
+            gridRow += yDir;
+            gridCol += xDir;
+        }
+        else
+        {
             if (countTryTimes >= 0)
                 MoveEnemey();
-	    }
-        
-        // TODO: add avoiding the bomb
+        }
+    }
+
+    public void activeDelay(float speed)
+	{
+        StartCoroutine(delayedExecution(speed));
+    }
+
+    IEnumerator delayedExecution(float speed)
+    {
+        yield return new WaitForSeconds(3f);
+        EnemySpeedSlow = speed;
     }
 }
+

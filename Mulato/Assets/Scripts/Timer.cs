@@ -21,8 +21,9 @@ namespace Assets.Scripts {
             float seconds = Mathf.RoundToInt(myTimer % 60);
         
             timerText.text = minute.ToString() + ":" + (seconds < 10 ? "0" + seconds.ToString() : seconds.ToString());
-            if (myTimer == 0)
+            if (myTimer <= 0)
             {
+                myTimer = 0;
                 GameManager.main.GameOver(int.MaxValue);
             }
 	    }

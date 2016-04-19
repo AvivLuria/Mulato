@@ -20,9 +20,8 @@ namespace Assets.Scripts
         public int currentBombColor;
         public int nextBombColor;
         public int thirdBombColor;
-
-        public int levelNumberOfColors;
-
+        private int numOfColors;
+      
         public Image currentBombColorImage;
         public Image nextBombColorImage;
         public Image thirdBombColorImage;
@@ -35,8 +34,9 @@ namespace Assets.Scripts
         public GameObject[] currentColorPosibilities;
 
         // Use this for initialization
-        void Start()
+        public void init(int levelNumberOfColors)
         {
+            numOfColors = levelNumberOfColors;
             currentColorPosibilities = new GameObject[levelNumberOfColors];
             setBombColorPosibilities();
         }
@@ -73,7 +73,7 @@ namespace Assets.Scripts
 
         public void setBombColorPosibilities()
         {
-            for (int i = 0; i < colorManager.main.levelNumberOfColors; i++)
+            for (int i = 0; i < numOfColors; i++)
             {
                 switch (i) {
                     case colorsOptions.Blue:

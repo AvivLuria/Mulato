@@ -12,20 +12,33 @@ namespace Assets.Scripts
         public int life = 3;
         public int numberOFEnemiesInTheLevel;
         public int[] enemiesOnTheBoard;
+        public int numberOfColors;
+        private bool onAMission = false;
+        public int difficulty;
 
         public override void Awake()
         {
             base.Awake();
             //DontDestroyOnLoad (gameObject);
-            InitGame ();
+            InitGame (numberOFEnemiesInTheLevel, 0);         
         }
 
-        private void InitGame () {
-            if (level != 0)
+        private void InitGame (int numOfEnemies, int color) {
+            //TODO : Fix start level
+            enemiesOnTheBoard = new int[numberOfColors];
+
+            if (level == 1)
             {
-                enemiesOnTheBoard = new int[colorManager.main.levelNumberOfColors];
+                colorManager.main.init(numberOfColors);
                 BoardManager.main.setNumberOfEnemies(numberOFEnemiesInTheLevel);
+                BoardManager.main.setNumberOfColors(numberOfColors);
+                BombManager.main.setNumberOfColors(numberOfColors);
                 BoardManager.main.SetupScene(level);
+            }
+            else
+            {
+                onAMission = true;
+                Missions.main.initMission(level, numOfEnemies, difficulty);
             }
         }
 
@@ -38,21 +51,31 @@ namespace Assets.Scripts
             }
         }
 
+
+
         public void EnemyKilled()
         {
             numberOFEnemiesInTheLevel--;
-            if (numberOFEnemiesInTheLevel == 0)
+            if (numberOFEnemiesInTheLevel == 0 && !onAMission)
             {
                 changeLevel();
             }
+            else
+            {
+                Missions.main.checkMissionStatus();
+            } 
         }
+
+       
 
         public void changeLevel()
         {
             level++;
-            SceneManager.LoadScene("Scene" + level, LoadSceneMode.Single);
+            SceneManager.LoadScene("Scene" + level);
           
         }
+
+
 
         public void StartGame()
         {

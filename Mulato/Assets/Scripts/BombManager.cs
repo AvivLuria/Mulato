@@ -23,14 +23,19 @@ namespace Assets.Scripts
 		public int nextBombColor;
 		public int thirdBombColor;
         public int forthBombColor;
+        private int numOfColors;
+
+        public bool onMission = false;
+        public bool missionMultipleKilled = false;
+        public bool wonMissionMultipleKilled;
+        public int combo;
+        public int comboCounter;
 
 
         void Start()
-        {
-            
+        {            
             bombs = new Queue<GameObject>();
-           
-            
+                   
 			currentBombColor = drawNextBomb ();
 			bombs.Enqueue(colorManager.main.currentColorPosibilities[currentBombColor]);
 			nextBombColor = drawNextBomb ();
@@ -41,14 +46,20 @@ namespace Assets.Scripts
             forthBombColor = drawNextBomb();
         }
 
+        public void setNumberOfColors(int numberOfColors)
+        {
+            numOfColors = numberOfColors;
+        }
+
         private int drawNextBomb()
         {
+            int randomColorNumber = UnityEngine.Random.Range(0, numOfColors);
+             
+                 if (!onMission && GameManager.main.enemiesOnTheBoard[randomColorNumber] == 0)
+                  {
+                    randomColorNumber = drawNextBomb();
+                  }         
             
-            int randomColorNumber = UnityEngine.Random.Range(0, colorManager.main.levelNumberOfColors);
-            if (GameManager.main.enemiesOnTheBoard[randomColorNumber] == 0)
-            {
-                randomColorNumber = drawNextBomb();
-            }
             return randomColorNumber;
         }
 
@@ -74,7 +85,7 @@ namespace Assets.Scripts
         }
         //TODO : added raycasting + destory
         private void Explode(GameObject curBomb, int row, int column)
-        {           
+        {
             //raycast from bomb to right,left,up,down
             RaycastHit2D[] colliderHitsRight = Physics2D.RaycastAll(curBomb.transform.position, Vector2.right,
                 powerOfExplosion, layerMask);
@@ -84,7 +95,8 @@ namespace Assets.Scripts
                 powerOfExplosion, layerMask);
             RaycastHit2D[] colliderHitsDown = Physics2D.RaycastAll(curBomb.transform.position, Vector2.down,
                 powerOfExplosion, layerMask);
-           
+
+             comboCounter = combo;
             colliderHitsAction(colliderHitsDown, curBomb.tag);
             colliderHitsAction(colliderHitsRight, curBomb.tag);
             colliderHitsAction(colliderHitsUp, curBomb.tag);
@@ -98,6 +110,7 @@ namespace Assets.Scripts
         //handle raycasting colliders
         private void colliderHitsAction(RaycastHit2D[] colliderHits, String bombTag)
         {
+          
             for (int i = 0; i < colliderHits.Length; i++)
             {
                 if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Wall")
@@ -106,6 +119,7 @@ namespace Assets.Scripts
                 }
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyBlue" && (bombTag == "BombBlue" || bombTag == "SpecialBomb"))
                 {
+                    comboCounter--;
                     Debug.Log("enemy blue");
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue]--;
                     GameManager.main.EnemyKilled();
@@ -113,6 +127,7 @@ namespace Assets.Scripts
                 }
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPink" && (bombTag == "BombPink" || bombTag == "SpecialBomb"))
                 {
+                    comboCounter--;
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink]--;
                     Debug.Log("enemy pink");
                     GameManager.main.EnemyKilled();
@@ -120,6 +135,7 @@ namespace Assets.Scripts
                 }
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPurple" && (bombTag == "BombPurple" || bombTag == "SpecialBomb"))
                 {
+                    comboCounter--;
                     Debug.Log("enemy Purple");
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple]--;
                     GameManager.main.EnemyKilled();
@@ -127,6 +143,7 @@ namespace Assets.Scripts
                 }
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Box")
                 {
+
                     colliderHits[i].rigidbody.GetComponent<Box>().DestroyMe();
                     break;
                 }
@@ -135,7 +152,14 @@ namespace Assets.Scripts
                     GameManager.main.GameOver(1);
                 }
             }
+            //check if two enemies killed mission
+            if (comboCounter <= 0 && missionMultipleKilled)
+            {
+                GameManager.main.EnemyKilled();
+                wonMissionMultipleKilled = true;
+            }
         }
+
         //TODO : delete this later
         //delay bomb action
         IEnumerator DelayedExecution(GameObject curBomb,int row, int column)

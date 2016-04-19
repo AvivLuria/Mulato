@@ -34,6 +34,8 @@ namespace Assets.Scripts
         public GameObject boxTiles;
         public GameObject powerUpsTiles;
         public GameObject specialBoxTiles;
+        public GameObject specialLifeBoxTiles;
+        public GameObject specialEnemyFreezeTiles;
 
         public GameObject enemyBlue;
         public GameObject enemyPink;
@@ -166,8 +168,9 @@ namespace Assets.Scripts
             //Instantiate a random number of boxes tiles based on minimum and maximum, at randomized positions.
             LayoutObjectAtRandom (boxTiles, GridPointObject.Box, numOfBoxs);
             LayoutObjectAtRandom(specialBoxTiles, GridPointObject.Box, 1);
-
-
+            LayoutObjectAtRandom(specialLifeBoxTiles, GridPointObject.Box, 1);
+            LayoutObjectAtRandom(specialEnemyFreezeTiles, GridPointObject.Box, 1);
+            
             //Instantiate a random number of powerUps tiles based on minimum and maximum, at randomized positions.
             // LayoutObjectAtRandom (powerUpsTiles, GridPointObject.PowerUp, numOfPowerUps);
 

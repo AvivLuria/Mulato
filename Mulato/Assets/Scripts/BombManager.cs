@@ -145,6 +145,7 @@ namespace Assets.Scripts
                 {
 
                     colliderHits[i].rigidbody.GetComponent<Box>().DestroyMe();
+                    hit(colliderHits[i].rigidbody.gameObject);
                     break;
                 }
                 else
@@ -170,5 +171,10 @@ namespace Assets.Scripts
            
         }
         
+        public void hit( GameObject obj)
+        {
+            Debug.Log("destroy");
+            Destroy(obj.gameObject);
+        }
     }
 }

@@ -29,7 +29,7 @@ public class Box : MonoBehaviour
             freezeEnemies();
         }
 
-        Destroy(gameObject);
+     //   Destroy(gameObject);
     }
 
     private void freezeEnemies()

@@ -4,13 +4,13 @@
     <Files>
       <File FileName="Assets/Scripts/BombManager.cs" Line="114" Column="108" />
       <File FileName="Assets/Scripts/GameManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/colorManager.cs" Line="60" Column="4" />
       <File FileName="Assets/Scripts/Enemy.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/BombScript.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/BoardManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/particalesystem.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/MovingObject.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/floor.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/colorManager.cs" Line="47" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

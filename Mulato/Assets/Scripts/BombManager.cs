@@ -123,6 +123,7 @@ namespace Assets.Scripts
                     Debug.Log("enemy blue");
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue]--;
                     GameManager.main.EnemyKilled();
+					colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPink" && (bombTag == "BombPink" || bombTag == "SpecialBomb"))
@@ -131,6 +132,7 @@ namespace Assets.Scripts
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink]--;
                     Debug.Log("enemy pink");
                     GameManager.main.EnemyKilled();
+					colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPurple" && (bombTag == "BombPurple" || bombTag == "SpecialBomb"))
@@ -139,6 +141,7 @@ namespace Assets.Scripts
                     Debug.Log("enemy Purple");
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple]--;
                     GameManager.main.EnemyKilled();
+					colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
                     Destroy(colliderHits[i].rigidbody.gameObject);
                 }
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Box")

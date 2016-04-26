@@ -11,7 +11,7 @@ namespace Assets.Scripts
         public LayerMask blockingLayer;			//Layer on which collision will be checked.
         private Rigidbody2D rb2D;				//The Rigidbody2D component attached to this object.
         private float inverseMoveTime;			//Used to make movement more efficient.
-
+		public Animator animator;
         //Protected, virtual functions can be overridden by inheriting classes.
         protected virtual void Start ()
         {
@@ -26,6 +26,7 @@ namespace Assets.Scripts
         //TODO : added type
         protected bool Move (int xDir, int yDir, int gridRow, int gridCol,int type)
         {
+			
             //Store start position to move from, based on objects current transform position.
             Vector2 start = transform.position;
 

@@ -66,7 +66,7 @@ namespace Assets.Scripts
         public void DeployBomb(int row, int column, int gridRow, int gridColumn)
         {
          //   var toDestroy = Instantiate(ExplodParticleSystem, new Vector3(row, column, 0), ExplodParticleSystem.transform.rotation) as GameObject;
-            var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row, column, 0), Quaternion.identity) as GameObject;
+            var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row, column, -1), Quaternion.identity) as GameObject;
 			currentBombColor = nextBombColor;
 			nextBombColor = thirdBombColor;
             thirdBombColor = forthBombColor;

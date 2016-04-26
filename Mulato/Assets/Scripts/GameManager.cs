@@ -15,12 +15,17 @@ namespace Assets.Scripts
         public int numberOfColors;
         private bool onAMission = false;
         public int difficulty;
+        public GameObject Memory;
 
         public override void Awake()
         {
             base.Awake();
             //DontDestroyOnLoad (gameObject);
             InitGame (numberOFEnemiesInTheLevel, 0);         
+        }
+        void Start()
+        {
+            life = Memory.GetComponent<GameMemory>().returnLives();
         }
 
         private void InitGame (int numOfEnemies, int color) {

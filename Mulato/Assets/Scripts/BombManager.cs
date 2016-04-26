@@ -63,10 +63,12 @@ namespace Assets.Scripts
             return randomColorNumber;
         }
 
-        public void DeployBomb(int row, int column, int gridRow, int gridColumn)
+        public void DeployBomb(float row, float column, int gridRow, int gridColumn)
         {
-         //   var toDestroy = Instantiate(ExplodParticleSystem, new Vector3(row, column, 0), ExplodParticleSystem.transform.rotation) as GameObject;
-            var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row, column, -1), Quaternion.identity) as GameObject;
+            Debug.Log("row " + row + ",  col " + column );
+            
+            //   var toDestroy = Instantiate(ExplodParticleSystem, new Vector3(row, column, 0), ExplodParticleSystem.transform.rotation) as GameObject;
+            var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row , column  , -1), Quaternion.identity) as GameObject;
 			currentBombColor = nextBombColor;
 			nextBombColor = thirdBombColor;
             thirdBombColor = forthBombColor;
@@ -122,27 +124,30 @@ namespace Assets.Scripts
                     comboCounter--;
                     Debug.Log("enemy blue");
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue]--;
-                    GameManager.main.EnemyKilled();
-					colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
                     Destroy(colliderHits[i].rigidbody.gameObject);
+                    GameManager.main.EnemyKilled();
+					//colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
+                    
                 }
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPink" && (bombTag == "BombPink" || bombTag == "SpecialBomb"))
                 {
                     comboCounter--;
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink]--;
                     Debug.Log("enemy pink");
-                    GameManager.main.EnemyKilled();
-					colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
                     Destroy(colliderHits[i].rigidbody.gameObject);
+                    GameManager.main.EnemyKilled();
+					//colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
+                    
                 }
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPurple" && (bombTag == "BombPurple" || bombTag == "SpecialBomb"))
                 {
                     comboCounter--;
                     Debug.Log("enemy Purple");
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple]--;
-                    GameManager.main.EnemyKilled();
-					colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
                     Destroy(colliderHits[i].rigidbody.gameObject);
+                    GameManager.main.EnemyKilled();
+					//colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
+                    
                 }
                 else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Box")
                 {

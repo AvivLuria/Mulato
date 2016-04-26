@@ -40,7 +40,7 @@ namespace Assets.Scripts
                 BombManager.main.setNumberOfColors(numberOfColors);
                 BoardManager.main.SetupScene(level);
             }
-            else
+            else if (level != 0)
             {
                 onAMission = true;
                 Missions.main.initMission(level, numOfEnemies, difficulty);
@@ -76,7 +76,7 @@ namespace Assets.Scripts
         public void changeLevel()
         {
             level++;
-            SceneManager.LoadScene("Scene" + level);
+            SceneManager.LoadScene("Scene" + level, LoadSceneMode.Single);
           
         }
 

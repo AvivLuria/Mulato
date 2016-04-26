@@ -11,7 +11,6 @@ namespace Assets.Scripts
         public LayerMask blockingLayer;			//Layer on which collision will be checked.
         private Rigidbody2D rb2D;				//The Rigidbody2D component attached to this object.
         private float inverseMoveTime;			//Used to make movement more efficient.
-		public Animator animator;
         //Protected, virtual functions can be overridden by inheriting classes.
         protected virtual void Start ()
         {
@@ -31,7 +30,7 @@ namespace Assets.Scripts
             Vector2 start = transform.position;
 
             // Calculate end position based on the direction parameters passed in when calling Move.
-            Vector2 end = start + new Vector2 (xDir, yDir);
+            Vector2 end = start + new Vector2 (xDir * 1.5f, yDir * 1.5f);
 
             //Check if anything was hit
             if(BoardManager.main.CanMoveToGridPoint(gridRow, gridCol))

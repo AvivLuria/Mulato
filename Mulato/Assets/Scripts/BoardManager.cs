@@ -66,19 +66,21 @@ namespace Assets.Scripts
             numOfColors = numberOfColors;
         }
 
-        private void BoardSetup () 
+        private void BoardSetup()
         {
-            boardHolder = new GameObject ("Board").transform;
+            boardHolder = new GameObject("Board").transform;
             m_board = new List<GridPoint[]>();
-            for (var i = 0; i < rows; i++) {
+            for (var i = 0; i < rows; i++)
+            {
                 m_board.Add(new GridPoint[columns]);
             }
 
-                for (var column = 0; column < columns; column++)
+            for (var column = 0; column < columns; column++)
+            {
+                for (var row = 0; row < rows; row++)
                 {
-                    for (var row = 0; row < rows; row++)
+                   
                     {
-
                         GameObject toInstantiate = floorTiles;
 
                         m_board[row][column] = new GridPoint()
@@ -88,15 +90,15 @@ namespace Assets.Scripts
                             gridPointObject = GridPointObject.Empty
                         };
                         // If a wall
-                        if ((row == 0 || column == columns - 1 || column == 0 || row == rows - 1) ||
+                       /* if ((row == 0 || column == columns - 1 || column == 0 || row == rows - 1) ||
                             ((row%2 == 0) && (column%2 == 0)))
                         {
                             toInstantiate = wallTiles;
                             m_board[row][column].gridPointObject = GridPointObject.Wall;
-                        }
+                        }*/
 
                         var instance =
-                            Instantiate(toInstantiate, new Vector3(column, row, 0f), Quaternion.identity) as GameObject;
+                            Instantiate(toInstantiate, new Vector3(column * 1.5f +0.2f, row * 1.5f - 3.2f, 0f), Quaternion.identity) as GameObject;
                         if (instance.GetComponent<floor>() != null)
                         {
                             instance.GetComponent<floor>().gridRow = row;
@@ -106,11 +108,11 @@ namespace Assets.Scripts
                         instance.transform.SetParent(boardHolder);
 
                     }
-                
+
+                }
+
             }
-            
         }
-       
 
         // TODO: this function should be deleted
         public int[] RandomPosition()
@@ -140,7 +142,7 @@ namespace Assets.Scripts
                         var enemy = Instantiate(obj, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
                         enemy.GetComponent<Enemy>().gridRow = randomRowIndex;
                         enemy.GetComponent<Enemy>().gridCol = randomColumnIndex;
-
+                        //new Vector3(gridPoint.gameObject.transform.position.x, gridPoint.gameObject.transform.position.y,-1)
                     }
                     else if (gridPointObjectToAdd == GridPointObject.Box)
                     {

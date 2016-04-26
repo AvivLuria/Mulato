@@ -79,8 +79,8 @@ public class Enemy : MovingObject {
             yDir = -1;
         }
 
-		animator.SetInteger ("X", xDir);
-		animator.SetInteger ("Y", yDir);	
+		//animator.SetInteger ("X", xDir);
+		//animator.SetInteger ("Y", yDir);	
 
         if (AttemptMove(xDir, yDir, gridRow + yDir, gridCol + xDir, 0))
         {

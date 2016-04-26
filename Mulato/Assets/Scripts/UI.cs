@@ -14,7 +14,9 @@ public class UI : MonoBehaviour
             var hit = Physics2D.Raycast(m_inputMouse, Vector2.zero);
             if (hit.collider != null && hit.collider.tag.Equals("floor")) //we have a hit!!!
             {                
-                BombManager.main.DeployBomb((int)hit.transform.position.x,(int)hit.transform.position.y, hit.collider.gameObject.GetComponent<floor>().gridRow, hit.collider.gameObject.GetComponent<floor>().gridCol);            
+                BombManager.main.DeployBomb(hit.transform.position.x ,hit.transform.position.y,
+                    hit.collider.gameObject.GetComponent<floor>().gridRow, 
+                    hit.collider.gameObject.GetComponent<floor>().gridCol);            
             }
         }
     }

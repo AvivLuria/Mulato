@@ -13,6 +13,8 @@ public class Enemy : MovingObject {
     public int gridRow;
     public int gridCol;
     private int countTryTimes = 10;
+
+	public Animator animator;
      
 	void Update() {
 		m_timeToMove += Time.deltaTime;
@@ -62,6 +64,7 @@ public class Enemy : MovingObject {
         if (random < 0.25)
         {
             xDir = 1;
+
         }
         else if (random >= 0.25 && random < 0.5)
         {
@@ -75,6 +78,10 @@ public class Enemy : MovingObject {
         {
             yDir = -1;
         }
+
+		animator.SetInteger ("X", xDir);
+		animator.SetInteger ("Y", yDir);	
+
         if (AttemptMove(xDir, yDir, gridRow + yDir, gridCol + xDir, 0))
         {
             countTryTimes = 10;

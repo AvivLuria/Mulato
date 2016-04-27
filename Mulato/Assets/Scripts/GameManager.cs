@@ -16,6 +16,7 @@ namespace Assets.Scripts
         private bool onAMission = false;
         public int difficulty;
         public GameObject Memory;
+		public Transform mainMenu, exitMenu;
 
         public override void Awake()
         {
@@ -88,6 +89,22 @@ namespace Assets.Scripts
             SceneManager.LoadScene("Scene1", LoadSceneMode.Single);
 
         }
+		public void ExitMenu(bool clicked){
+			if (clicked == true) {
+				exitMenu.gameObject.SetActive (clicked);
+				mainMenu.gameObject.SetActive (false);
+			} else {
+				exitMenu.gameObject.SetActive (clicked);
+				mainMenu.gameObject.SetActive (true);
+			}
+
+		}
+
+		public void Exit(){
+
+		}
+				
+			
     }
 
 }

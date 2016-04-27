@@ -45,6 +45,12 @@ namespace Assets.Scripts
             {
                 onAMission = true;
                 Missions.main.initMission(level, numOfEnemies, difficulty);
+            } else
+            {
+                colorManager.main.init(numberOfColors);
+                BoardManager.main.setNumberOfEnemies(numberOFEnemiesInTheLevel);
+                BoardManager.main.setNumberOfColors(numberOfColors);
+                BombManager.main.setNumberOfColors(numberOfColors);
             }
         }
 

@@ -90,15 +90,14 @@ namespace Assets.Scripts
                             gridPointObject = GridPointObject.Empty
                         };
                         // If a wall
-                       /* if ((row == 0 || column == columns - 1 || column == 0 || row == rows - 1) ||
-                            ((row%2 == 0) && (column%2 == 0)))
+                        if ((row == 0 || column == columns - 1 || column == 0 || row == rows - 1))
                         {
                             toInstantiate = wallTiles;
                             m_board[row][column].gridPointObject = GridPointObject.Wall;
-                        }*/
+                        }
 
                         var instance =
-                            Instantiate(toInstantiate, new Vector3(column * 1.5f +0.2f, row * 1.5f - 3.2f, 0f), Quaternion.identity) as GameObject;
+                            Instantiate(toInstantiate, new Vector3(column * 1.5f -1.25f, row * 1.5f - 4.8f, 0f), Quaternion.identity) as GameObject;
                         if (instance.GetComponent<floor>() != null)
                         {
                             instance.GetComponent<floor>().gridRow = row;
@@ -269,126 +268,7 @@ namespace Assets.Scripts
                     gridPointObject != GridPointObject.Enemy && 
                     gridPointObject != GridPointObject.Bomb;
         }
-        /*
-        public void setFireOn(int row, int col, int power)
-        {
-            for (int i = 0; i <= power; i++)
-            {
-                if (m_board[row + i][col].gridPointObject == GridPointObject.Wall)
-                {
-                    break;
-                } else if (m_board[row + i][col].gridPointObject == GridPointObject.Box)
-                {
-                    m_board[row + i][col].isOnFile = true;
-                    break;
-                }
-
-                m_board[row + i][col].isOnFile = true;
-            }
-            for (int i = 0; i <= power; i++)
-            {
-                if (m_board[row - i][col].gridPointObject == GridPointObject.Wall)
-                {
-                    break;
-                }
-                else if (m_board[row - i][col].gridPointObject == GridPointObject.Box)
-                {
-                    m_board[row - i][col].isOnFile = true;
-                    break;
-                }
-
-                m_board[row - i][col].isOnFile = true;
-            }
-            for (int i = 0; i <= power; i++)
-            {
-                if (m_board[row][col + i].gridPointObject == GridPointObject.Wall)
-                {
-                    break;
-                }
-                else if (m_board[row][col + i].gridPointObject == GridPointObject.Box)
-                {
-                    m_board[row][col + i].isOnFile = true;
-                    break;
-                }
-
-                m_board[row][col + i].isOnFile = true;
-            }
-            for (int i = 0; i <= power; i++)
-            {
-                if (m_board[row][col - i].gridPointObject == GridPointObject.Wall)
-                {
-                    break;
-                }
-                else if (m_board[row][col - i].gridPointObject == GridPointObject.Box)
-                {
-                    m_board[row][col - i].isOnFile = true;
-                    break;
-                }
-
-                m_board[row][col - i].isOnFile = true;
-            }
-        }
-
-        public void setFireOff(int row, int col, int power)
-        {
-            for (int i = 0; i <= power; i++)
-            {
-                if (m_board[row + i][col].gridPointObject == GridPointObject.Wall)
-                {
-                    break;
-                }
-                else if (m_board[row + i][col].gridPointObject == GridPointObject.Box)
-                {
-                    m_board[row + i][col].isOnFile = false;
-                    break;
-                }
-
-                m_board[row + i][col].isOnFile = false;
-            }
-            for (int i = 0; i <= power; i++)
-            {
-                if (m_board[row - i][col].gridPointObject == GridPointObject.Wall)
-                {
-                    break;
-                }
-                else if (m_board[row - i][col].gridPointObject == GridPointObject.Box)
-                {
-                    m_board[row - i][col].isOnFile = false;
-                    break;
-                }
-
-                m_board[row - i][col].isOnFile = false;
-            }
-            for (int i = 0; i <= power; i++)
-            {
-                if (m_board[row][col + i].gridPointObject == GridPointObject.Wall)
-                {
-                    break;
-                }
-                else if (m_board[row][col + i].gridPointObject == GridPointObject.Box)
-                {
-                    m_board[row][col + i].isOnFile = false;
-                    break;
-                }
-
-                m_board[row][col + i].isOnFile = false;
-            }
-            for (int i = 0; i <= power; i++)
-            {
-                if (m_board[row][col - i].gridPointObject == GridPointObject.Wall)
-                {
-                    break;
-                }
-                else if (m_board[row][col - i].gridPointObject == GridPointObject.Box)
-                {
-                    m_board[row][col - i].isOnFile = false;
-                    break;
-                }
-
-                m_board[row][col - i].isOnFile = false;
-            }
-        }
-        */
+        
         public GridPointObject checkGrid(int row, int col)
         {
             return m_board[row][col].gridPointObject;

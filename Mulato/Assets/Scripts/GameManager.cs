@@ -17,7 +17,8 @@ namespace Assets.Scripts
         public int difficulty;
         public GameObject Memory;
 		public bool timer = true;
-		public Transform mainMenu, exitMenu, pauseMenu;
+		public bool nextLevel = false;
+		public Transform mainMenu, exitMenu, pauseMenu, startLevel2;
 
         public override void Awake()
         {
@@ -84,9 +85,17 @@ namespace Assets.Scripts
         public void changeLevel()
         {
             level++;
-            SceneManager.LoadScene("Scene" + level, LoadSceneMode.Single);
+			nextLevel = true;
+			startLevel2.gameObject.SetActive (nextLevel);
+            
           
         }
+		public void StartLevel2(bool clicked){
+			if (clicked == true) {
+				SceneManager.LoadScene ("Scene" + level, LoadSceneMode.Single);
+			}
+		}
+
 
 
 

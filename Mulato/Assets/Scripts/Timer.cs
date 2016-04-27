@@ -16,16 +16,17 @@ namespace Assets.Scripts {
 	
 	    // Update is called once per frame
 	    void Update () {
-            myTimer -= Time.deltaTime;
-            float minute = Mathf.Floor(myTimer / 60);
-            float seconds = Mathf.RoundToInt(myTimer % 60);
+			if (GameManager.main.timer) {
+				myTimer -= Time.deltaTime;
+				float minute = Mathf.Floor (myTimer / 60);
+				float seconds = Mathf.RoundToInt (myTimer % 60);
         
-            timerText.text = minute.ToString() + ":" + (seconds < 10 ? "0" + seconds.ToString() : seconds.ToString());
-            if (myTimer <= 0)
-            {
-                myTimer = 0;
-                GameManager.main.GameOver(int.MaxValue);
-            }
+				timerText.text = minute.ToString () + ":" + (seconds < 10 ? "0" + seconds.ToString () : seconds.ToString ());
+				if (myTimer <= 0) {
+					myTimer = 0;
+					GameManager.main.GameOver (int.MaxValue);
+				}
+			}
 	    }
     }
 }

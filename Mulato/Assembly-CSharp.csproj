@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\NotForUsing\JoyStickUnused.cs" />
      <Compile Include="Assets\Scripts\NotForUsing\SmoothCameraUnused.cs" />
      <Compile Include="Assets\Scripts\PowerUp.cs" />
+     <Compile Include="Assets\Scripts\TextLife.cs" />
      <Compile Include="Assets\Scripts\Timer.cs" />
      <Compile Include="Assets\Scripts\UI.cs" />
      <Compile Include="Assets\Scripts\Utils\DelayedExecute.cs" />

@@ -273,5 +273,10 @@ namespace Assets.Scripts
         {
             return m_board[row][col].gridPointObject;
         }
+
+        public GameObject getGameObject(int gridRowBomb, int gridColBomb)
+        {
+            return m_board[gridRowBomb][gridColBomb].gameObject;
+        }
     }
 }

@@ -15,15 +15,7 @@ namespace Assets.Scripts
         public bool disappearingMission = false;
 
 
-        public void setTimerMission(int time)
-        {
-            Timer.main.myTimer = time;
-        }
-
-        public void setTimerMission()
-        {
-            Timer.main.myTimer = timeToSet;
-        }
+       
 
         public void initMission(int input_level, int input_numberOfEnemies, int input_difficulty)
         {
@@ -39,13 +31,13 @@ namespace Assets.Scripts
                         //sets up the color array to choose from
                         colorManager.main.init(difficulty);
                         //sets how much to kill at once
-                        BombManager.main.combo = difficulty;                        
+                        BombManager.main.comboMission = difficulty;                        
                         BombManager.main.setNumberOfColors(difficulty);
                         //for the draw next bomb, to select all types of bomb
                         BombManager.main.onMission = true;
                         //sets up mode to check win condition
                         BombManager.main.missionMultipleKilled = true;
-                        setTimerMission();
+                        Timer.main.setTimerMission(timeToSet);
                         BombManager.main.onMission = true;
                         BoardManager.main.setNumberOfEnemies(numberOfEnemies);
                         BoardManager.main.SetupScene(input_level);
@@ -59,7 +51,7 @@ namespace Assets.Scripts
                         colorManager.main.init(difficulty);
                         BombManager.main.onMission = true;
                         BombManager.main.setNumberOfColors(difficulty);
-                        setTimerMission();
+                        Timer.main.setTimerMission(timeToSet);
                         BombManager.main.onMission = true;
                         BoardManager.main.setNumberOfEnemies(numberOfEnemies);
                         BoardManager.main.SetupScene(input_level);
@@ -81,7 +73,7 @@ namespace Assets.Scripts
                         BombManager.main.onMission = true;
                         BoardManager.main.setNumberOfEnemies(numberOfEnemies);
                         BoardManager.main.SetupScene(input_level);
-                        setTimerMission(60 - difficulty * 5);
+                        Timer.main.setTimerMission(60 - difficulty * 5);
                         break;
                     }
                 //disappearing enemies
@@ -92,7 +84,7 @@ namespace Assets.Scripts
                         BoardManager.main.setNumberOfColors(difficulty);
                         BombManager.main.setNumberOfColors(difficulty);
                         disappearingMission = true;
-                        setTimerMission();
+                        Timer.main.setTimerMission(timeToSet);
                         BombManager.main.onMission = true;
                         BoardManager.main.setNumberOfEnemies(numberOfEnemies);
                         BoardManager.main.SetupScene(input_level);
@@ -103,7 +95,7 @@ namespace Assets.Scripts
                         colorManager.main.init(difficulty);
                         BoardManager.main.setNumberOfColors(difficulty);
                         BombManager.main.setNumberOfColors(difficulty);
-                        setTimerMission();
+                        Timer.main.setTimerMission(timeToSet);
                         BombManager.main.onMission = true;
                         BoardManager.main.setNumberOfEnemies(numberOfEnemies);
                         BoardManager.main.SetupScene(input_level);
@@ -144,7 +136,7 @@ namespace Assets.Scripts
                     {
                         if (GameManager.main.numberOFEnemiesInTheLevel == 0)
                         {
-                            setTimerMission(5);
+                            Timer.main.setTimerMission(5);
                             StartCoroutine("DelayedExecution");
                         }
                         break;

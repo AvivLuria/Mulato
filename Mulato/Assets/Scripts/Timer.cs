@@ -28,5 +28,11 @@ namespace Assets.Scripts {
 				}
 			}
 	    }
+
+        public void setTimerMission(int time)
+        {
+            myTimer = time;
+        }
+
     }
 }

@@ -9,39 +9,45 @@ namespace Assets.Scripts
 {
     public class BombManager : SceneSingleton<BombManager>
     {
-		
-        public float explosionTime = 2;
+
+        public float explosionTime;
         public int powerOfExplosion;
         public LayerMask layerMask = ~(1 << 9 | 1 << 11); //all exept bomb and floor
-		public GameObject bombBlue;
-		public GameObject bombPink;
-		public GameObject bombPurple;
+        public GameObject bombBlue;
+        public GameObject bombPink;
+        public GameObject bombPurple;
         public GameObject SpecialBomb;
-        public Queue<GameObject> bombs;       
+        public Queue<GameObject> bombs;
         public ParticleSystem ExplodParticleSystem;
-		public int currentBombColor;
-		public int nextBombColor;
-		public int thirdBombColor;
+        public int currentBombColor;
+        public int nextBombColor;
+        public int thirdBombColor;
         public int forthBombColor;
         private int numOfColors;
 
+        // for missions
         public bool onMission = false;
         public bool missionMultipleKilled = false;
         public bool wonMissionMultipleKilled;
-        public int combo;
-        public int comboCounter;
+        public int comboMission;
+        public int comboKillBouns;
+        public int comboCounterKill;
+
+        // for bouns bomb
+        private float gridRowBomb;
+        private float gridColBomb;
 
 
         void Start()
-        {            
+        {
             bombs = new Queue<GameObject>();
-                   
-			currentBombColor = drawNextBomb ();
-			bombs.Enqueue(colorManager.main.currentColorPosibilities[currentBombColor]);
-			nextBombColor = drawNextBomb ();
-			bombs.Enqueue(colorManager.main.currentColorPosibilities[nextBombColor]);
-			thirdBombColor = drawNextBomb ();
-			bombs.Enqueue(colorManager.main.currentColorPosibilities[thirdBombColor]);
+
+            currentBombColor = drawNextBomb();
+            bombs.Enqueue(colorManager.main.currentColorPosibilities[currentBombColor]);
+            nextBombColor = drawNextBomb();
+            bombs.Enqueue(colorManager.main.currentColorPosibilities[nextBombColor]);
+            thirdBombColor = drawNextBomb();
+            bombs.Enqueue(colorManager.main.currentColorPosibilities[thirdBombColor]);
             colorManager.main.changeColors();
             forthBombColor = drawNextBomb();
         }
@@ -54,106 +60,121 @@ namespace Assets.Scripts
         private int drawNextBomb()
         {
             int randomColorNumber = UnityEngine.Random.Range(0, numOfColors);
-             
-                 if (!onMission && GameManager.main.enemiesOnTheBoard[randomColorNumber] == 0)
-                  {
-                    randomColorNumber = drawNextBomb();
-                  }         
-            
+
+            if (!onMission && GameManager.main.enemiesOnTheBoard[randomColorNumber] == 0)
+            {
+                randomColorNumber = drawNextBomb();
+            }
+
             return randomColorNumber;
         }
 
         public void DeployBomb(float row, float column, int gridRow, int gridColumn)
         {
-            Debug.Log("row " + row + ",  col " + column );
-            
-            //   var toDestroy = Instantiate(ExplodParticleSystem, new Vector3(row, column, 0), ExplodParticleSystem.transform.rotation) as GameObject;
-            var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row , column  , -1), Quaternion.identity) as GameObject;
-			currentBombColor = nextBombColor;
-			nextBombColor = thirdBombColor;
+
+            var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row, column, -1), Quaternion.identity) as GameObject;
+            currentBombColor = nextBombColor;
+            nextBombColor = thirdBombColor;
             thirdBombColor = forthBombColor;
-			forthBombColor = drawNextBomb ();
+            forthBombColor = drawNextBomb();
+
             if (thirdBombColor == colorManager.colorsOptions.Special)
             {
                 bombs.Enqueue(SpecialBomb);
-            } else
+            }
+            else
             {
-			    bombs.Enqueue(colorManager.main.currentColorPosibilities[thirdBombColor]);
+                bombs.Enqueue(colorManager.main.currentColorPosibilities[thirdBombColor]);
             }
 
             colorManager.main.changeColors();
             BoardManager.main.setBombPosition(gridRow, gridColumn);
-            StartCoroutine(DelayedExecution(curBomb, gridRow, gridColumn));            
+            StartCoroutine(DelayedExecution(curBomb, gridRow, gridColumn));
         }
-        //TODO : added raycasting + destory
+
         private void Explode(GameObject curBomb, int row, int column)
         {
             //raycast from bomb to right,left,up,down
-            RaycastHit2D[] colliderHitsRight = Physics2D.RaycastAll(curBomb.transform.position, Vector2.right,
+            RaycastHit2D[] colliderHitsRight = Physics2D.RaycastAll(new Vector3(0.6f, 0, 0) + curBomb.transform.position, Vector2.right,
                 powerOfExplosion, layerMask);
-            RaycastHit2D[] colliderHitsLeft = Physics2D.RaycastAll(curBomb.transform.position, Vector2.left,
+            RaycastHit2D[] colliderHitsLeft = Physics2D.RaycastAll(new Vector3(-0.6f, 0, 0) + curBomb.transform.position, Vector2.left,
                 powerOfExplosion, layerMask);
             RaycastHit2D[] colliderHitsUp = Physics2D.RaycastAll(curBomb.transform.position, Vector2.up,
                 powerOfExplosion, layerMask);
-            RaycastHit2D[] colliderHitsDown = Physics2D.RaycastAll(curBomb.transform.position, Vector2.down,
+            RaycastHit2D[] colliderHitsDown = Physics2D.RaycastAll(new Vector3(0, -0.6f, 0) + curBomb.transform.position, Vector2.down,
                 powerOfExplosion, layerMask);
 
-             comboCounter = combo;
+            comboCounterKill = missionMultipleKilled ? comboMission : comboKillBouns;
+
             colliderHitsAction(colliderHitsDown, curBomb.tag);
             colliderHitsAction(colliderHitsRight, curBomb.tag);
             colliderHitsAction(colliderHitsUp, curBomb.tag);
             colliderHitsAction(colliderHitsLeft, curBomb.tag);
 
+            //check if two enemies killed mission
+            if (comboCounterKill <= 0)
+            {
+                comboCounterKill = missionMultipleKilled ? comboMission : comboKillBouns;
+                //Timer.main.setTimerMission(Timer.main.myTimer + 5f);
+               
+                // GameManager.main.EnemyKilled();
+                if (missionMultipleKilled)
+                {
+                    wonMissionMultipleKilled = true;
+                }
+                else
+                {
+                    deploySpecialBomb();
+                }
+            }
+
             Destroy(curBomb);
             BoardManager.main.updateMovementPosition(row, column, row, column);
             //BoardManager.main.setFireOff(row, column, powerOfExplosion);
         }
-        //TODO : destroy for bomb , need to delete later
+
         //handle raycasting colliders
         private void colliderHitsAction(RaycastHit2D[] colliderHits, String bombTag)
         {
-          
+            Rigidbody2D currCollider = null;
+
             for (int i = 0; i < colliderHits.Length; i++)
             {
-                if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Wall")
+                currCollider = colliderHits[i].rigidbody;
+                if (currCollider.tag == "Wall")
                 {
                     break;
                 }
-                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyBlue" && (bombTag == "BombBlue" || bombTag == "SpecialBomb"))
+                else if (currCollider.tag == "EnemyBlue" && (bombTag == "BombBlue" || bombTag == "SpecialBomb"))
                 {
-                    comboCounter--;
-                    Debug.Log("enemy blue");
+                    comboCounterKill--;
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue]--;
-                    Destroy(colliderHits[i].rigidbody.gameObject);
+                    Destroy(currCollider.gameObject);
                     GameManager.main.EnemyKilled();
-					//colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
-                    
-                }
-                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPink" && (bombTag == "BombPink" || bombTag == "SpecialBomb"))
-                {
-                    comboCounter--;
-                    GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink]--;
-                    Debug.Log("enemy pink");
-                    Destroy(colliderHits[i].rigidbody.gameObject);
-                    GameManager.main.EnemyKilled();
-					//colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
-                    
-                }
-                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "EnemyPurple" && (bombTag == "BombPurple" || bombTag == "SpecialBomb"))
-                {
-                    comboCounter--;
-                    Debug.Log("enemy Purple");
-                    GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple]--;
-                    Destroy(colliderHits[i].rigidbody.gameObject);
-                    GameManager.main.EnemyKilled();
-					//colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
-                    
-                }
-                else if (colliderHits[i].rigidbody != null && colliderHits[i].rigidbody.tag == "Box")
-                {
+                    //colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
 
-                    colliderHits[i].rigidbody.GetComponent<Box>().DestroyMe();
-                    hit(colliderHits[i].rigidbody.gameObject);
+                }
+                else if (currCollider.tag == "EnemyPink" && (bombTag == "BombPink" || bombTag == "SpecialBomb"))
+                {
+                    comboCounterKill--;
+                    GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink]--;
+                    Destroy(currCollider.gameObject);
+                    GameManager.main.EnemyKilled();
+                    //colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
+
+                }
+                else if (currCollider.tag == "EnemyPurple" && (bombTag == "BombPurple" || bombTag == "SpecialBomb"))
+                {
+                    comboCounterKill--;
+                    GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple]--;
+                    Destroy(currCollider.gameObject);
+                    GameManager.main.EnemyKilled();
+                    //colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
+
+                }
+                else if (currCollider.tag == "Box")
+                {
+                    currCollider.GetComponent<Box>().DestroyMe();
                     break;
                 }
                 else
@@ -161,28 +182,39 @@ namespace Assets.Scripts
                     GameManager.main.GameOver(1);
                 }
             }
-            //check if two enemies killed mission
-            if (comboCounter <= 0 && missionMultipleKilled)
-            {
-                GameManager.main.EnemyKilled();
-                wonMissionMultipleKilled = true;
-            }
+
+
         }
 
-        //TODO : delete this later
         //delay bomb action
-        IEnumerator DelayedExecution(GameObject curBomb,int row, int column)
+        IEnumerator DelayedExecution(GameObject curBomb, int row, int column)
         {
             yield return new WaitForSeconds(3f);
             Explode(curBomb, row, column);
             yield return new WaitForSeconds(1f);
-           
+
         }
-        
-        public void hit( GameObject obj)
+        //for bouns combo
+        private void deploySpecialBomb()
         {
-            Debug.Log("destroy");
-            Destroy(obj.gameObject);
+            comboCounterKill = missionMultipleKilled ? comboMission : comboKillBouns;
+            gridColBomb = UnityEngine.Random.Range(0, BoardManager.main.columns);
+            gridRowBomb = UnityEngine.Random.Range(0, BoardManager.main.rows);
+            GameObject floor = BoardManager.main.getGameObject((int)gridRowBomb, (int)gridColBomb);
+
+            if (BoardManager.main.checkGrid((int)gridRowBomb, (int)gridColBomb) == BoardManager.GridPointObject.Empty)
+            {
+                var curBomb =
+                    Instantiate(SpecialBomb, new Vector3(floor.transform.position.x, floor.transform.position.y, -1), Quaternion.identity) as GameObject;
+                StartCoroutine(DelayedExecution(curBomb, (int)gridRowBomb, (int)gridColBomb));
+                BoardManager.main.setBombPosition((int)gridRowBomb, (int)gridColBomb);
+            }
+            else
+            {
+                deploySpecialBomb();
+            }
         }
+
     }
 }
+

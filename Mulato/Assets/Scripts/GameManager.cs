@@ -18,7 +18,8 @@ namespace Assets.Scripts
         public GameObject Memory;
 		public bool timer = true;
 		public bool nextLevel = false;
-		public Transform mainMenu, exitMenu, pauseMenu, startLevel2;
+		public Transform mainMenu, exitMenu, pauseMenu, startLevel2, startLevel3, startLevel4;
+		//public Transform[] startLevel = { startLevel2, startLevel3, startLevel4 };
 
         public override void Awake()
         {
@@ -87,11 +88,13 @@ namespace Assets.Scripts
             level++;
 			nextLevel = true;
 			startLevel2.gameObject.SetActive (nextLevel);
+
             
           
         }
 		public void StartLevel2(bool clicked){
 			if (clicked == true) {
+				//startLevel2 = startLevel3;
 				SceneManager.LoadScene ("Scene" + level, LoadSceneMode.Single);
 			}
 		}

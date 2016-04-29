@@ -18,8 +18,9 @@ namespace Assets.Scripts
         public GameObject Memory;
 		public bool timer = true;
 		public bool nextLevel = false;
-		public Transform mainMenu, exitMenu, pauseMenu, startLevel2, startLevel3, startLevel4;
-		//public Transform[] startLevel = { startLevel2, startLevel3, startLevel4 };
+		public Transform mainMenu, exitMenu, pauseMenu, startLevel2, startLevel3, startLevel4, startLevel5;
+		public Transform[] startLevel;
+
 
         public override void Awake()
         {
@@ -30,6 +31,11 @@ namespace Assets.Scripts
         void Start()
         {
             life = Memory.GetComponent<GameMemory>().returnLives();
+			startLevel = new Transform[4];
+			startLevel [0] = startLevel2;
+			startLevel [1] = startLevel3;
+			startLevel [2] = startLevel4;
+			startLevel [3] = startLevel5;
         }
 
         private void InitGame (int numOfEnemies) {
@@ -86,14 +92,14 @@ namespace Assets.Scripts
         {
             level++;
 			nextLevel = true;
-			startLevel2.gameObject.SetActive (nextLevel);
+			startLevel [level - 1].gameObject.SetActive (nextLevel);
 
             
           
         }
 		public void StartLevel2(bool clicked){
 			if (clicked == true) {
-				//startLevel2 = startLevel3;
+				
 				SceneManager.LoadScene ("Scene" + level, LoadSceneMode.Single);
 			}
 		}

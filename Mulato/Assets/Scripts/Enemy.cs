@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 
 public class Enemy : MovingObject {
 
-	public float EnemySpeedSlow = 1.0f;
+	public float EnemySpeedSlow = 1f;
 	private float m_timeToMove = 1.0f;
     private bool onDisappearingMission = false;
     private bool scaleUp = true;

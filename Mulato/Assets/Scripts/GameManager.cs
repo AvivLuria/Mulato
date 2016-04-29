@@ -25,17 +25,16 @@ namespace Assets.Scripts
         {
             base.Awake();
             //DontDestroyOnLoad (gameObject);
-            InitGame (numberOFEnemiesInTheLevel, 0);         
+            InitGame (numberOFEnemiesInTheLevel);         
         }
         void Start()
         {
             life = Memory.GetComponent<GameMemory>().returnLives();
         }
 
-        private void InitGame (int numOfEnemies, int color) {
+        private void InitGame (int numOfEnemies) {
             //TODO : Fix start level
             enemiesOnTheBoard = new int[numberOfColors];
-
             if (level == 1)
             {
                 colorManager.main.init(numberOfColors);

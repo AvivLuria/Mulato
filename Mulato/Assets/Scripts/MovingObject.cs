@@ -7,7 +7,7 @@ namespace Assets.Scripts
 {
     public abstract class MovingObject : MonoBehaviour
     {
-        private float moveTime = 0.1f;			//Time it will take object to move, in seconds.
+        public float moveTime = 0.1f;			//Time it will take object to move, in seconds.
         public LayerMask blockingLayer;			//Layer on which collision will be checked.
         private Rigidbody2D rb2D;				//The Rigidbody2D component attached to this object.
         private float inverseMoveTime;			//Used to make movement more efficient.
@@ -34,10 +34,11 @@ namespace Assets.Scripts
 
             //Check if anything was hit
             if(BoardManager.main.CanMoveToGridPoint(gridRow, gridCol))
-            {               
-                BoardManager.main.updateMovementPosition(gridRow - yDir, gridCol - xDir, gridRow, gridCol);
+            {
+                 BoardManager.main.updateMovementPosition(gridRow - yDir, gridCol - xDir, gridRow, gridCol);
                 //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-                StartCoroutine (SmoothMovement (end));
+                StartCoroutine(SmoothMovement(end));
+               
                 
                 //Return true to say that Move was successful
                 return true;
@@ -67,6 +68,8 @@ namespace Assets.Scripts
                 //Return and loop until sqrRemainingDistance is close enough to zero to end the function
                 yield return null;
             }
+
+
         }
         //The virtual keyword means AttemptMove can be overridden by inheriting classes using the override keyword.
         //AttemptMove takes a generic parameter T to specify the type of component we expect our unit to interact with if blocked (Player for Enemies, Wall for Player).

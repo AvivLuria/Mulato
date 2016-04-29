@@ -92,7 +92,7 @@ namespace Assets.Scripts
         {
             level++;
 			nextLevel = true;
-			startLevel [level - 1].gameObject.SetActive (nextLevel);
+			startLevel [level - 2].gameObject.SetActive (nextLevel);
 
             
           

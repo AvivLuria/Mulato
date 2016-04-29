@@ -54,6 +54,7 @@ public class Box : MonoBehaviour
     {
         
         BombManager.main.forthBombColor = colorManager.colorsOptions.Special;
+        colorManager.main.changeColors();
         
     }
 

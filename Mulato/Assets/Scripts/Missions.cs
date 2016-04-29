@@ -45,15 +45,18 @@ namespace Assets.Scripts
                     }
                 //kill the same color
                 case (3):
-                    {     
+                    {
                         //choose which color to destory
+
                         color = UnityEngine.Random.Range(0, difficulty);
                         colorManager.main.init(difficulty);
+                        BombManager.main.startIndexBombColor = color;
+                        BombManager.main.setNumberOfColors(color);
                         BombManager.main.onMission = true;
-                        BombManager.main.setNumberOfColors(difficulty);
                         Timer.main.setTimerMission(timeToSet);
                         BombManager.main.onMission = true;
-                        BoardManager.main.setNumberOfEnemies(numberOfEnemies);
+                        BoardManager.main.setNumberOfColors(difficulty);
+                        BoardManager.main.setNumberOfEnemies(numberOfEnemies * difficulty);
                         BoardManager.main.SetupScene(input_level);
                         break;
                     }

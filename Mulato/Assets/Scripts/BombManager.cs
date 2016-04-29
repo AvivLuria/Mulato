@@ -17,6 +17,7 @@ namespace Assets.Scripts
         public GameObject bombPink;
         public GameObject bombPurple;
         public GameObject SpecialBomb;
+        public GameObject Combo;
         public Queue<GameObject> bombs;
         public ParticleSystem ExplodParticleSystem;
         public int currentBombColor;
@@ -32,6 +33,7 @@ namespace Assets.Scripts
         public int comboMission;
         public int comboKillBouns;
         public int comboCounterKill;
+        public int startIndexBombColor = 0;
 
         // for bouns bomb
         private float gridRowBomb;
@@ -59,7 +61,7 @@ namespace Assets.Scripts
 
         private int drawNextBomb()
         {
-            int randomColorNumber = UnityEngine.Random.Range(0, numOfColors);
+            int randomColorNumber = UnityEngine.Random.Range(startIndexBombColor, numOfColors);
 
             if (!onMission && GameManager.main.enemiesOnTheBoard[randomColorNumber] == 0)
             {
@@ -124,6 +126,7 @@ namespace Assets.Scripts
                 }
                 else
                 {
+                    Instantiate(Combo, curBomb.transform.position, Quaternion.identity);
                     deploySpecialBomb();
                 }
             }

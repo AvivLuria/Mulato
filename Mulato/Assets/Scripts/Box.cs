@@ -6,6 +6,7 @@ using Assets.Scripts.Utils;
 
 public class Box : MonoBehaviour
 {
+    public GameObject heartBouns;
 
     private float enemySpeed;
     public int gridRow;
@@ -47,6 +48,7 @@ public class Box : MonoBehaviour
 
     private void addMoreLife()
     {
+        Instantiate(heartBouns, this.transform.position, Quaternion.identity);
         GameManager.main.life++;
     }
 

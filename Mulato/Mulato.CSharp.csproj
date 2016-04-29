@@ -77,6 +77,7 @@
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GameMemory.cs" />
+    <Compile Include="Assets\Scripts\Indicators.cs" />
     <Compile Include="Assets\Scripts\Missions.cs" />
     <Compile Include="Assets\Scripts\MovingObject.cs" />
     <Compile Include="Assets\Scripts\NotForUsing\JoyStickUnused.cs" />

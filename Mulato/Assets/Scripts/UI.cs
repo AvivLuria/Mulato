@@ -4,6 +4,7 @@ using Assets.Scripts;
 
 public class UI : MonoBehaviour
 {
+    private bool click = true;
     private Vector2 m_inputMouse;
     // Update is called once per frame
     void Update () {
@@ -19,5 +20,25 @@ public class UI : MonoBehaviour
                     hit.collider.gameObject.GetComponent<floor>().gridCol);            
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            GameManager.main.PauseMenu(click);
+            click = !click;
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            if (Time.timeScale == 1.0F)
+            {
+                Time.timeScale = 0.5F;
+            }
+            else
+            {
+                Time.timeScale = 1.0F;
+                Time.fixedDeltaTime = 0.02F*Time.timeScale;
+            }
+        }
+
     }
 }

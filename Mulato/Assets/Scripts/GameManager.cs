@@ -40,9 +40,10 @@ namespace Assets.Scripts
 
         private void InitGame (int numOfEnemies) {
             //TODO : Fix start level
-            enemiesOnTheBoard = new int[numberOfColors];
+           
             if (level == 1)
             {
+                enemiesOnTheBoard = new int[numberOfColors];
                 colorManager.main.init(numberOfColors);
                 BoardManager.main.setNumberOfEnemies(numberOFEnemiesInTheLevel);
                 BoardManager.main.setNumberOfColors(numberOfColors);
@@ -52,6 +53,7 @@ namespace Assets.Scripts
             else if (level != 0)
             {
                 onAMission = true;
+                enemiesOnTheBoard = new int[difficulty];
                 Missions.main.initMission(level, numOfEnemies, difficulty);
             } else
             {

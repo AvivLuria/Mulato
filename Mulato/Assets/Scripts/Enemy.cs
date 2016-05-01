@@ -100,10 +100,21 @@ public class Enemy : MovingObject {
         StartCoroutine(delayedExecution(speed));
     }
 
+    public void activeDelay()
+    {
+        StartCoroutine(delayedDestory());
+    }
+
     IEnumerator delayedExecution(float speed)
     {
         yield return new WaitForSeconds(3f);
         EnemySpeedSlow = speed;
+    }
+
+    IEnumerator delayedDestory()
+    {
+        yield return new WaitForSeconds(0.2f);
+       Destroy(this.gameObject);
     }
 }
 

@@ -29,6 +29,7 @@ namespace Assets.Scripts
         // for missions
         public bool onMission = false;
         public bool missionMultipleKilled = false;
+        public bool missionSurvival = false;
         public bool wonMissionMultipleKilled;
         public int comboMission;
         public int comboKillBouns;
@@ -116,10 +117,8 @@ namespace Assets.Scripts
             //check if two enemies killed mission
             if (comboCounterKill <= 0)
             {
+                StartCoroutine(slowMotion());
                 comboCounterKill = missionMultipleKilled ? comboMission : comboKillBouns;
-                //Timer.main.setTimerMission(Timer.main.myTimer + 5f);
-               
-                // GameManager.main.EnemyKilled();
                 if (missionMultipleKilled)
                 {
                     wonMissionMultipleKilled = true;
@@ -127,11 +126,13 @@ namespace Assets.Scripts
                 else
                 {
                     Instantiate(Combo, curBomb.transform.position, Quaternion.identity);
+                    
                     deploySpecialBomb();
                 }
             }
 
-            Destroy(curBomb);
+          
+           
             BoardManager.main.updateMovementPosition(row, column, row, column);
             //BoardManager.main.setFireOff(row, column, powerOfExplosion);
         }
@@ -152,8 +153,12 @@ namespace Assets.Scripts
                 {
                     comboCounterKill--;
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue]--;
-                    Destroy(currCollider.gameObject);
+                    currCollider.GetComponent<Enemy>().activeDelay();
                     GameManager.main.EnemyKilled();
+                    if (missionSurvival)
+                    {
+                        Timer.main.setTimerMission((int)Timer.main.myTimer + 5);
+                    }
                     //colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
 
                 }
@@ -161,8 +166,12 @@ namespace Assets.Scripts
                 {
                     comboCounterKill--;
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink]--;
-                    Destroy(currCollider.gameObject);
+                    currCollider.GetComponent<Enemy>().activeDelay();
                     GameManager.main.EnemyKilled();
+                    if (missionSurvival)
+                    {
+                        Timer.main.setTimerMission((int)Timer.main.myTimer + 5);
+                    }
                     //colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
 
                 }
@@ -170,8 +179,12 @@ namespace Assets.Scripts
                 {
                     comboCounterKill--;
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple]--;
-                    Destroy(currCollider.gameObject);
+                    currCollider.GetComponent<Enemy>().activeDelay();
                     GameManager.main.EnemyKilled();
+                    if (missionSurvival)
+                    {
+                        Timer.main.setTimerMission((int)Timer.main.myTimer + 5);
+                    }
                     //colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
 
                 }
@@ -192,9 +205,11 @@ namespace Assets.Scripts
         //delay bomb action
         IEnumerator DelayedExecution(GameObject curBomb, int row, int column)
         {
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(2.8f);
             Explode(curBomb, row, column);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.2f);
+            Destroy(curBomb);
+
 
         }
         //for bouns combo
@@ -207,6 +222,7 @@ namespace Assets.Scripts
 
             if (BoardManager.main.checkGrid((int)gridRowBomb, (int)gridColBomb) == BoardManager.GridPointObject.Empty)
             {
+                
                 var curBomb =
                     Instantiate(SpecialBomb, new Vector3(floor.transform.position.x, floor.transform.position.y, -1), Quaternion.identity) as GameObject;
                 StartCoroutine(DelayedExecution(curBomb, (int)gridRowBomb, (int)gridColBomb));
@@ -216,6 +232,14 @@ namespace Assets.Scripts
             {
                 deploySpecialBomb();
             }
+        }
+
+        IEnumerator slowMotion()
+        {
+            Time.timeScale = 0.2F;
+            yield return new WaitForSeconds(0.2f);
+            Time.timeScale = 1F;
+
         }
 
     }

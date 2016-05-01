@@ -93,16 +93,17 @@ namespace Assets.Scripts
                         BoardManager.main.SetupScene(input_level);
                         break;
                     }
+                //survival
                 case (6):
                     {                        
                         colorManager.main.init(difficulty);
-                        BoardManager.main.setNumberOfColors(difficulty);
-                        BombManager.main.setNumberOfColors(difficulty);
-                        Timer.main.setTimerMission(timeToSet);
+                        BombManager.main.missionSurvival = true;
+                        BombManager.main.setNumberOfColors(difficulty);                 
                         BombManager.main.onMission = true;
+                        BoardManager.main.setNumberOfColors(difficulty);
                         BoardManager.main.setNumberOfEnemies(numberOfEnemies);
                         BoardManager.main.SetupScene(input_level);
-                        checkMissionStatus();
+                        Timer.main.setTimerMission(35 - difficulty * 5);
                         break;
                     }
             }
@@ -155,21 +156,12 @@ namespace Assets.Scripts
                     }
                 case (6):
                     {
-                        if (GameManager.main.numberOFEnemiesInTheLevel >= 0)
+                        if (GameManager.main.numberOFEnemiesInTheLevel <= 1)
                         {
-                            if (GameManager.main.enemiesOnTheBoard[0] >= 0)
-                            {
-                                GameObject.FindGameObjectWithTag("EnemyBlue").GetComponent<Enemy>().onTargetMission = true;
-                            } else if (GameManager.main.enemiesOnTheBoard[1] >= 0)
-                            {
-                                GameObject.FindGameObjectWithTag("EnemyPink").GetComponent<Enemy>().onTargetMission =
-                                    true;
-                            }
-                            else
-                            {
-                                GameObject.FindGameObjectWithTag("EnemyPurple").GetComponent<Enemy>().onTargetMission =
-                                    true;
-                            }
+                            GameManager.main.numberOFEnemiesInTheLevel = numberOfEnemies + 1;
+                            GameManager.main.life += 1;
+                            BoardManager.main.setNumberOfEnemies(numberOfEnemies);
+                            BoardManager.main.setEnemiesOnTheBoard();
                         }
                         break;
                     }

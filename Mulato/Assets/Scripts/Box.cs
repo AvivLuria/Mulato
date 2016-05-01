@@ -30,7 +30,7 @@ public class Box : MonoBehaviour
             freezeEnemies();
         }
 
-       Destroy(gameObject);
+        StartCoroutine(delayedDestory());
     }
 
     private void freezeEnemies()
@@ -60,5 +60,11 @@ public class Box : MonoBehaviour
         
     }
 
-    
+   
+    IEnumerator delayedDestory()
+    {
+        yield return new WaitForSeconds(0.2f);
+        Destroy(this.gameObject);
+    }
+
 }

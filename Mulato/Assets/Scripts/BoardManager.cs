@@ -189,7 +189,7 @@ namespace Assets.Scripts
         }
 
         
-        private void setEnemiesOnTheBoard()
+        public void setEnemiesOnTheBoard()
         {
             for (int i = 0; i < numOfColors; i++)
             {

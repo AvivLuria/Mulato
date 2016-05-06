@@ -28,19 +28,18 @@ namespace Assets.Scripts
                 //kill up to number
                 case (2):
                     {
+ 
                         //sets up the color array to choose from
-                        colorManager.main.init(difficulty);
+                        colorManager.main.init(GameManager.main.numberOfColors);
                         //sets how much to kill at once
                         BombManager.main.comboMission = difficulty;                        
-                        BombManager.main.setNumberOfColors(difficulty);
+                        BombManager.main.setNumberOfColors(GameManager.main.numberOfColors);
                         //for the draw next bomb, to select all types of bomb
                         BombManager.main.onMission = true;
                         //sets up mode to check win condition
                         BombManager.main.missionMultipleKilled = true;
                         Timer.main.setTimerMission(timeToSet);
-                        BombManager.main.onMission = true;
-                        BoardManager.main.setNumberOfEnemies(numberOfEnemies);
-                        BoardManager.main.SetupScene(input_level);
+                      
                         break;
                     }
                 //kill the same color
@@ -49,15 +48,13 @@ namespace Assets.Scripts
                         //choose which color to destory
 
                         color = UnityEngine.Random.Range(0, difficulty);
-                        colorManager.main.init(difficulty);
+                        colorManager.main.init(difficulty + 1);
                         BombManager.main.startIndexBombColor = color;
-                        BombManager.main.setNumberOfColors(color);
+                        BombManager.main.setNumberOfColors(difficulty + 1);
                         BombManager.main.onMission = true;
                         Timer.main.setTimerMission(timeToSet);
-                        BombManager.main.onMission = true;
                         BoardManager.main.setNumberOfColors(difficulty);
-                        BoardManager.main.setNumberOfEnemies(numberOfEnemies * difficulty);
-                        BoardManager.main.SetupScene(input_level);
+                        
                         break;
                     }
                  //Timer
@@ -121,7 +118,7 @@ namespace Assets.Scripts
                             BombManager.main.missionMultipleKilled = false;
                             GameManager.main.changeLevel();
                         }
-                        else if (GameManager.main.numberOFEnemiesInTheLevel == 0)
+                        else if (GameManager.main.numberOFEnemiesInTheLevel < difficulty)
                         {
                             initMission(currMission, numberOfEnemies, color);
                         }

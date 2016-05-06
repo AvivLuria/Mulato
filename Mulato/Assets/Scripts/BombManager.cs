@@ -122,17 +122,17 @@ namespace Assets.Scripts
                 if (missionMultipleKilled)
                 {
                     wonMissionMultipleKilled = true;
+                    Missions.main.checkMissionStatus();
                 }
                 else
                 {
-                    Instantiate(Combo, curBomb.transform.position, Quaternion.identity);
+                   // Instantiate(Combo, curBomb.transform.position, Quaternion.identity);
                     
                     deploySpecialBomb();
                 }
             }
-
           
-           
+
             BoardManager.main.updateMovementPosition(row, column, row, column);
             //BoardManager.main.setFireOff(row, column, powerOfExplosion);
         }
@@ -199,6 +199,7 @@ namespace Assets.Scripts
                 }
             }
 
+           
 
         }
 

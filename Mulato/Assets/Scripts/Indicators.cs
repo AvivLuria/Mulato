@@ -7,11 +7,7 @@ public class Indicators : MonoBehaviour
 
     // Use this for initialization
     Rigidbody2D currObj;
-    private float m_timeToMove = 1f;
-    private float moveSlow = 0.02f;
     private bool comboBlink;
-    private bool scaleUp = true;
-
 
     void Start()
     {

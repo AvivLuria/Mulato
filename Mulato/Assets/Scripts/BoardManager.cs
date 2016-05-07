@@ -32,6 +32,7 @@ namespace Assets.Scripts
 
         public int columns;
         public int rows;
+
         public GameObject floorTiles;
         public GameObject wallTiles;
         public GameObject boxWallTiles;
@@ -40,7 +41,6 @@ namespace Assets.Scripts
         public GameObject specialBoxTiles;
         public GameObject specialLifeBoxTiles;
         public GameObject specialEnemyFreezeTiles;
-
         public GameObject enemyBlue;
         public GameObject enemyPink;
         public GameObject enemyPurple;
@@ -50,10 +50,10 @@ namespace Assets.Scripts
         private Transform boardHolder;
 
         public int[] wallPostions;
-        public int numOfBoxs;
-        public int numOfLifeBox;
-        public int numOfSpecialBombBox;
-        public int numOfFreezeBox;
+        public int numOfNomralBoxes;
+        public int numOfLifeBoxes;
+        public int numOfSpecialBombBoxes;
+        public int numOfFreezeBoxes;
         private int numOfEnemies;
         private int numOfColors;
 
@@ -73,19 +73,99 @@ namespace Assets.Scripts
             numOfColors = numberOfColors;
         }
 
+        public void setUpEnemiesOnTheBoard()
+        {
+            for (int i = 0; i < numOfColors; i++)
+            {
+                numOfEnemies--;
+                switch (i)
+                {
+                    case colorManager.colorsOptions.Blue:
+                        {
+                            GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue]++;
+                            LayoutObjectAtRandom(enemyBlue, GridPointObject.Enemy, 1);
+                            break;
+                        }
+                    case colorManager.colorsOptions.Pink:
+                        {
+                            GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink]++;
+                            LayoutObjectAtRandom(enemyPink, GridPointObject.Enemy, 1);
+                            break;
+                        }
+                    case colorManager.colorsOptions.Purple:
+                        {
+                            GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple]++;
+                            LayoutObjectAtRandom(enemyPurple, GridPointObject.Enemy, 1);
+                            break;
+                        }
+                }
+            }
+
+            while (numOfEnemies > 0)
+            {
+                int colorOfEnemy = (int)UnityEngine.Random.Range(0, numOfColors);
+                int currentNumberOfEnemy = (int)UnityEngine.Random.Range(1, numOfEnemies);
+
+                switch (colorOfEnemy)
+                {
+                    case colorManager.colorsOptions.Blue:
+                        {
+                            GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue] += currentNumberOfEnemy;
+                            LayoutObjectAtRandom(enemyBlue, GridPointObject.Enemy, currentNumberOfEnemy);
+                            break;
+                        }
+                    case colorManager.colorsOptions.Pink:
+                        {
+                            GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink] += currentNumberOfEnemy;
+                            LayoutObjectAtRandom(enemyPink, GridPointObject.Enemy, currentNumberOfEnemy);
+                            break;
+                        }
+                    case colorManager.colorsOptions.Purple:
+                        {
+                            GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple] += currentNumberOfEnemy;
+                            LayoutObjectAtRandom(enemyPurple, GridPointObject.Enemy, currentNumberOfEnemy);
+                            break;
+                        }
+                }
+
+                numOfEnemies -= currentNumberOfEnemy;
+            }
+        }
+
+        public void setBombOnGrid(int row, int column)
+        {
+            m_board[row][column].gridPointObject = GridPointObject.Bomb;
+        }
+        //creates Box Wall in game in the int array postions
+        private void setUpWallsOnBoard(int[] wallPos)
+        {
+            for (int i = 0; i < wallPos.Length; i++)
+            {
+                int randomRowIndex = wallPos[i] / 10;
+                int randomColumnIndex = wallPos[i] % 10;
+                var gridPoint = m_board[randomRowIndex][randomColumnIndex];
+                m_board[randomRowIndex][randomColumnIndex].gridPointObject = GridPointObject.Wall;
+                Instantiate(boxWallTiles, gridPoint.gameObject.transform.position, Quaternion.identity);
+            }
+        }
+
+        //Scene Builder <><>
         public void SetupScene(int level)
         {
             // Initialize the board
             if (m_board == null)
                 BoardSetup();
-            setUpWallBoard(wallPostions);
-            //Instantiate a random number of boxes tiles based on minimum and maximum, at randomized positions.
-            LayoutObjectAtRandom(boxTiles, GridPointObject.Box, numOfBoxs);
-            LayoutObjectAtRandom(specialBoxTiles, GridPointObject.Box, numOfSpecialBombBox);
-            LayoutObjectAtRandom(specialLifeBoxTiles, GridPointObject.Box, numOfLifeBox);
-            LayoutObjectAtRandom(specialEnemyFreezeTiles, GridPointObject.Box, numOfFreezeBox);
 
-            setEnemiesOnTheBoard();
+            // Initialize the walls in the board
+            setUpWallsOnBoard(wallPostions);
+
+            //Instantiate a random number of boxes tiles based on minimum and maximum, at randomized positions.
+            LayoutObjectAtRandom(boxTiles, GridPointObject.Box, numOfNomralBoxes);
+            LayoutObjectAtRandom(specialBoxTiles, GridPointObject.Box, numOfSpecialBombBoxes);
+            LayoutObjectAtRandom(specialLifeBoxTiles, GridPointObject.Box, numOfLifeBoxes);
+            LayoutObjectAtRandom(specialEnemyFreezeTiles, GridPointObject.Box, numOfFreezeBoxes);
+
+            setUpEnemiesOnTheBoard();
         }
 
         private void BoardSetup()
@@ -136,7 +216,7 @@ namespace Assets.Scripts
             }
         }
 
-        // TODO: this function should be deleted
+       
         public int[] RandomPosition()
         {
             int randomRowIndex = Random.Range(0, m_board.Count);
@@ -145,7 +225,7 @@ namespace Assets.Scripts
             return array;
         }
 
-        // TODO: This function should be deleted
+      
         public void LayoutObjectAtRandom(GameObject obj, GridPointObject gridPointObjectToAdd, int numberOfOccurences)
         {
 
@@ -188,124 +268,51 @@ namespace Assets.Scripts
             }
         }
 
-       
-
         public void clearScene()
         {
-            var clones = GameObject.FindGameObjectsWithTag("Box");
-            foreach (var clone in clones)
-            {
-                Destroy(clone);
-                m_board[clone.GetComponent<Box>().gridRow][clone.GetComponent<Box>().gridCol].gridPointObject =
-                    GridPointObject.Empty;
-            }
-            clones = GameObject.FindGameObjectsWithTag("EnemyBlue");
-            
-            foreach (var clone in clones)
-            {
-                Destroy(clone);
-                m_board[clone.GetComponent<Enemy>().gridRow][clone.GetComponent<Enemy>().gridCol].gridPointObject =
-                    GridPointObject.Empty;
-            }
-            clones = GameObject.FindGameObjectsWithTag("EnemyPink");
+            String[] tagsToDelete = new[] {"Box", "EnemyBlue", "EnemyPurple", "EnemyPink", "Wall"};
 
-            foreach (var clone in clones)
+            for (int i = 0; i < tagsToDelete.Length; i++)
             {
-                Destroy(clone);
-                m_board[clone.GetComponent<Enemy>().gridRow][clone.GetComponent<Enemy>().gridCol].gridPointObject =
-                    GridPointObject.Empty;
-            }
-            clones = GameObject.FindGameObjectsWithTag("EnemyPurple");
+                var clones = GameObject.FindGameObjectsWithTag(tagsToDelete[i].ToString());
 
-            foreach (var clone in clones)
-            {
-                Destroy(clone);
-                m_board[clone.GetComponent<Enemy>().gridRow][clone.GetComponent<Enemy>().gridCol].gridPointObject =
-                    GridPointObject.Empty;
-            }
-            clones = GameObject.FindGameObjectsWithTag("Wall");
-            foreach (var clone in clones)
-            {
-                Destroy(clone);
-            }
-            for (int i = 0; i < wallPostions.Length; i++)
-            {
-                m_board[wallPostions[i]/10][wallPostions[i] % 10].gridPointObject =
-                   GridPointObject.Empty;
-            }
-           
-        }
-
-
-        public void setEnemiesOnTheBoard()
-        {
-            for (int i = 0; i < numOfColors; i++)
-            {
-                numOfEnemies--;
-                switch (i)
+                if (tagsToDelete[i].ToString() == "Box")
                 {
-                    case colorManager.colorsOptions.Blue:
+                    foreach (var clone in clones)
                     {
-                        GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue]++;
-                        LayoutObjectAtRandom(enemyBlue, GridPointObject.Enemy, 1);
-                        break;
+                        Destroy(clone);
+                        m_board[clone.GetComponent<Box>().gridRow][clone.GetComponent<Box>().gridCol].gridPointObject =
+                            GridPointObject.Empty;
                     }
-                    case colorManager.colorsOptions.Pink:
+                } else if (tagsToDelete[i].ToString() == "Wall")
+                {
+                    foreach (var clone in clones)
                     {
-                        GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink]++;
-                        LayoutObjectAtRandom(enemyPink, GridPointObject.Enemy, 1);
-                        break;
+                        Destroy(clone);
                     }
-                    case colorManager.colorsOptions.Purple:
+                    for (int j = 0; j < wallPostions.Length; j++)
                     {
-                        GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple]++;
-                        LayoutObjectAtRandom(enemyPurple, GridPointObject.Enemy, 1);
-                        break;
+                        m_board[wallPostions[j]/10][wallPostions[j]%10].gridPointObject =
+                            GridPointObject.Empty;
                     }
                 }
-            }
-
-            while (numOfEnemies > 0)
-            {
-                int colorOfEnemy = (int) UnityEngine.Random.Range(0, numOfColors);
-                int currentNumberOfEnemy = (int) UnityEngine.Random.Range(1, numOfEnemies);
-
-                switch (colorOfEnemy)
+                else
                 {
-                    case colorManager.colorsOptions.Blue:
+                    foreach (var clone in clones)
                     {
-                        GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue] += currentNumberOfEnemy;
-                        LayoutObjectAtRandom(enemyBlue, GridPointObject.Enemy, currentNumberOfEnemy);
-                        break;
+                        Destroy(clone);
+                        m_board[clone.GetComponent<Enemy>().gridRow][clone.GetComponent<Enemy>().gridCol].gridPointObject =
+                            GridPointObject.Empty;
                     }
-                    case colorManager.colorsOptions.Pink:
-                    {
-                        GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink] += currentNumberOfEnemy;
-                        LayoutObjectAtRandom(enemyPink, GridPointObject.Enemy, currentNumberOfEnemy);
-                        break;
-                    }
-                    case colorManager.colorsOptions.Purple:
-                    {
-                        GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple] += currentNumberOfEnemy;
-                        LayoutObjectAtRandom(enemyPurple, GridPointObject.Enemy, currentNumberOfEnemy);
-                        break;
-                    }
-                }
-
-                numOfEnemies -= currentNumberOfEnemy;
-            }
+                }              
+            }           
         }
 
         // This function should update the grid
-        public void updateMovementPosition(int oldRow, int oldCol, int newRow, int newCol)
+        public void updateGridPointObject(int oldRow, int oldCol, int newRow, int newCol)
         {
             m_board[newRow][newCol].gridPointObject = m_board[oldRow][oldCol].gridPointObject;
             m_board[oldRow][oldCol].gridPointObject = GridPointObject.Empty;
-        }
-
-        public void setBombPosition(int row, int column)
-        {
-            m_board[row][column].gridPointObject = GridPointObject.Bomb;
         }
 
         // Checks if the next place is box or wall
@@ -318,27 +325,17 @@ namespace Assets.Scripts
                    gridPointObject != GridPointObject.Bomb;
         }
 
-        public GridPointObject checkGrid(int row, int col)
+        public GridPointObject getGridPointObject(int row, int col)
         {
             return m_board[row][col].gridPointObject;
         }
 
-        public GameObject getGameObject(int gridRowBomb, int gridColBomb)
+        public GameObject getGameObjectOnGridPoint(int gridRowBomb, int gridColBomb)
         {
             return m_board[gridRowBomb][gridColBomb].gameObject;
         }
-        //creates Box Wall in game in the int array postions
-        private void setUpWallBoard(int[] wallPos)
-        {
-            for (int i = 0; i < wallPos.Length; i++)
-            {
-                int randomRowIndex = wallPos[i]/10;
-                int randomColumnIndex = wallPos[i]%10;
-                var gridPoint = m_board[randomRowIndex][randomColumnIndex];
-                m_board[randomRowIndex][randomColumnIndex].gridPointObject = GridPointObject.Wall;
-                Instantiate(boxWallTiles, gridPoint.gameObject.transform.position, Quaternion.identity);
-            }
-        }
+       
+        
 
        
     }

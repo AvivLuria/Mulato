@@ -20,7 +20,6 @@ namespace Assets.Scripts
         public void initMission(int input_level, int input_numberOfEnemies, int input_difficulty)
         {
             difficulty = input_difficulty;
-            //if (difficulty <= 0 || difficulty > 3) difficulty = 2;
             currMission = input_level;
             numberOfEnemies = input_numberOfEnemies;
             switch (input_level)
@@ -28,12 +27,10 @@ namespace Assets.Scripts
                 //kill up to number
                 case (2):
                     {
- 
-                        //sets up the color array to choose from
-                        colorManager.main.init(GameManager.main.numberOfColors);
+                        //2 <= difficulty < 4
                         //sets how much to kill at once
-                        BombManager.main.comboMission = difficulty;                        
-                        BombManager.main.setNumberOfColors(GameManager.main.numberOfColors);
+                        BombManager.main.numOfKillesToWinComboMission = difficulty;                        
+                      
                         //for the draw next bomb, to select all types of bomb
                         BombManager.main.onMission = true;
                         //sets up mode to check win condition
@@ -46,14 +43,13 @@ namespace Assets.Scripts
                 case (3):
                     {
                         //choose which color to destory
-
                         color = UnityEngine.Random.Range(0, difficulty);
-                        colorManager.main.init(difficulty + 1);
+
+                        colorManager.main.init(difficulty);
                         BombManager.main.startIndexBombColor = color;
-                        BombManager.main.setNumberOfColors(difficulty + 1);
+                        BombManager.main.setNumberOfColors(color);
                         BombManager.main.onMission = true;
                         Timer.main.setTimerMission(timeToSet);
-                        BoardManager.main.setNumberOfColors(difficulty);
                         
                         break;
                     }
@@ -81,13 +77,10 @@ namespace Assets.Scripts
                     {
                         if (difficulty <= 0 || difficulty > 3) difficulty = 2;
                         colorManager.main.init(difficulty);
-                        BoardManager.main.setNumberOfColors(difficulty);
                         BombManager.main.setNumberOfColors(difficulty);
                         disappearingMission = true;
-                        Timer.main.setTimerMission(timeToSet);
                         BombManager.main.onMission = true;
-                        BoardManager.main.setNumberOfEnemies(numberOfEnemies);
-                        BoardManager.main.SetupScene(input_level);
+                        Timer.main.setTimerMission(timeToSet);
                         break;
                     }
                 //survival
@@ -97,9 +90,7 @@ namespace Assets.Scripts
                         BombManager.main.missionSurvival = true;
                         BombManager.main.setNumberOfColors(difficulty);                 
                         BombManager.main.onMission = true;
-                        BoardManager.main.setNumberOfColors(difficulty);
-                        BoardManager.main.setNumberOfEnemies(numberOfEnemies);
-                        BoardManager.main.SetupScene(input_level);
+                       
                         Timer.main.setTimerMission(35 - difficulty * 5);
                         break;
                     }
@@ -120,7 +111,7 @@ namespace Assets.Scripts
                         }
                         else if (GameManager.main.numberOFEnemiesInTheLevel < difficulty)
                         {
-                            initMission(currMission, numberOfEnemies, color);
+                            GameManager.main.InitGame(GameManager.main.level);
                         }
                         break;
                     }
@@ -158,7 +149,7 @@ namespace Assets.Scripts
                             GameManager.main.numberOFEnemiesInTheLevel = numberOfEnemies + 1;
                             GameManager.main.life += 1;
                             BoardManager.main.setNumberOfEnemies(numberOfEnemies);
-                            BoardManager.main.setEnemiesOnTheBoard();
+                            BoardManager.main.setUpEnemiesOnTheBoard();
                         }
                         break;
                     }

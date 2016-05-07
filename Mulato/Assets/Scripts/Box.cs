@@ -17,7 +17,7 @@ public class Box : MonoBehaviour
 
     public void DestroyMe()
     {
-        BoardManager.main.updateMovementPosition(gridRow,gridCol,gridRow,gridCol);
+        BoardManager.main.updateGridPointObject(gridRow,gridCol,gridRow,gridCol);
         if (isSpecialColorBombBox)
         {
             // TODO: add special effect here

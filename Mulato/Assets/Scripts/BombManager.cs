@@ -12,14 +12,18 @@ namespace Assets.Scripts
 
         public float explosionTime;
         public int powerOfExplosion;
+
         public LayerMask layerMask = ~(1 << 9 | 1 << 11); //all exept bomb and floor
+
         public GameObject bombBlue;
         public GameObject bombPink;
         public GameObject bombPurple;
         public GameObject SpecialBomb;
         public GameObject Combo;
         public Queue<GameObject> bombs;
+
         public ParticleSystem ExplodParticleSystem;
+
         public int currentBombColor;
         public int nextBombColor;
         public int thirdBombColor;
@@ -31,8 +35,8 @@ namespace Assets.Scripts
         public bool missionMultipleKilled = false;
         public bool missionSurvival = false;
         public bool wonMissionMultipleKilled;
-        public int comboMission;
-        public int comboKillBouns;
+        public int numOfKillesToWinComboMission;
+        private int numOfKillesForCombo = 2;
         public int comboCounterKill;
         public int startIndexBombColor = 0;
 
@@ -91,7 +95,7 @@ namespace Assets.Scripts
             }
 
             colorManager.main.changeColors();
-            BoardManager.main.setBombPosition(gridRow, gridColumn);
+            BoardManager.main.setBombOnGrid(gridRow, gridColumn);
             StartCoroutine(DelayedExecution(curBomb, gridRow, gridColumn));
         }
 
@@ -107,18 +111,18 @@ namespace Assets.Scripts
             RaycastHit2D[] colliderHitsDown = Physics2D.RaycastAll(new Vector3(0, -0.6f, 0) + curBomb.transform.position, Vector2.down,
                 powerOfExplosion, layerMask);
 
-            comboCounterKill = missionMultipleKilled ? comboMission : comboKillBouns;
+            comboCounterKill = missionMultipleKilled ? numOfKillesToWinComboMission : numOfKillesForCombo;
 
             colliderHitsAction(colliderHitsDown, curBomb.tag);
             colliderHitsAction(colliderHitsRight, curBomb.tag);
             colliderHitsAction(colliderHitsUp, curBomb.tag);
             colliderHitsAction(colliderHitsLeft, curBomb.tag);
 
-            //check if two enemies killed mission
+            //check if multiple enemies killed 
             if (comboCounterKill <= 0)
             {
                 StartCoroutine(slowMotion());
-                comboCounterKill = missionMultipleKilled ? comboMission : comboKillBouns;
+               // comboCounterKill = missionMultipleKilled ? numOfKillesToWinComboMission : numOfKillesForCombo;
                 if (missionMultipleKilled)
                 {
                     wonMissionMultipleKilled = true;
@@ -126,14 +130,13 @@ namespace Assets.Scripts
                 }
                 else
                 {
-                   // Instantiate(Combo, curBomb.transform.position, Quaternion.identity);
-                    
+                    Instantiate(Combo, new Vector3((int)column, (int)row, 0), Quaternion.identity);
                     deploySpecialBomb();
                 }
             }
           
 
-            BoardManager.main.updateMovementPosition(row, column, row, column);
+            BoardManager.main.updateGridPointObject(row, column, row, column);
             //BoardManager.main.setFireOff(row, column, powerOfExplosion);
         }
 
@@ -203,6 +206,27 @@ namespace Assets.Scripts
 
         }
 
+    
+        //for bouns combo
+        private void deploySpecialBomb()
+        {
+            gridColBomb = UnityEngine.Random.Range(0, BoardManager.main.columns);
+            gridRowBomb = UnityEngine.Random.Range(0, BoardManager.main.rows);
+            GameObject floor = BoardManager.main.getGameObjectOnGridPoint((int)gridRowBomb, (int)gridColBomb);
+
+            if (BoardManager.main.getGridPointObject((int)gridRowBomb, (int)gridColBomb) == BoardManager.GridPointObject.Empty)
+            {
+                
+                var curBomb =
+                    Instantiate(SpecialBomb, new Vector3(floor.transform.position.x, floor.transform.position.y, -1), Quaternion.identity) as GameObject;
+                StartCoroutine(DelayedExecution(curBomb, (int)gridRowBomb, (int)gridColBomb));
+                BoardManager.main.setBombOnGrid((int)gridRowBomb, (int)gridColBomb);
+            }
+            else
+            {
+                deploySpecialBomb();
+            }
+        }
         //delay bomb action
         IEnumerator DelayedExecution(GameObject curBomb, int row, int column)
         {
@@ -212,27 +236,6 @@ namespace Assets.Scripts
             Destroy(curBomb);
 
 
-        }
-        //for bouns combo
-        private void deploySpecialBomb()
-        {
-            comboCounterKill = missionMultipleKilled ? comboMission : comboKillBouns;
-            gridColBomb = UnityEngine.Random.Range(0, BoardManager.main.columns);
-            gridRowBomb = UnityEngine.Random.Range(0, BoardManager.main.rows);
-            GameObject floor = BoardManager.main.getGameObject((int)gridRowBomb, (int)gridColBomb);
-
-            if (BoardManager.main.checkGrid((int)gridRowBomb, (int)gridColBomb) == BoardManager.GridPointObject.Empty)
-            {
-                
-                var curBomb =
-                    Instantiate(SpecialBomb, new Vector3(floor.transform.position.x, floor.transform.position.y, -1), Quaternion.identity) as GameObject;
-                StartCoroutine(DelayedExecution(curBomb, (int)gridRowBomb, (int)gridColBomb));
-                BoardManager.main.setBombPosition((int)gridRowBomb, (int)gridColBomb);
-            }
-            else
-            {
-                deploySpecialBomb();
-            }
         }
 
         IEnumerator slowMotion()

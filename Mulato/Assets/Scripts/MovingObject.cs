@@ -35,7 +35,7 @@ namespace Assets.Scripts
             //Check if anything was hit
             if(BoardManager.main.CanMoveToGridPoint(gridRow, gridCol))
             {
-                 BoardManager.main.updateMovementPosition(gridRow - yDir, gridCol - xDir, gridRow, gridCol);
+                 BoardManager.main.updateGridPointObject(gridRow - yDir, gridCol - xDir, gridRow, gridCol);
                 //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
                 StartCoroutine(SmoothMovement(end));
                

@@ -71,7 +71,7 @@ namespace Assets.Scripts
 
         }
 
-        public void setBombColorPosibilities()
+        private void setBombColorPosibilities()
         {
             for (int i = 0; i < numOfColors; i++)
             {

@@ -12,7 +12,7 @@ namespace Assets.Scripts
     {
         private int missionNum;
         public int difficulty;
-        public int level;
+        public int currLevel;
         public int life = 3;
         public int numberOFEnemiesInTheLevel;
         public int[] enemiesOnTheBoard;
@@ -30,7 +30,7 @@ namespace Assets.Scripts
         {
             base.Awake();
             //DontDestroyOnLoad (gameObject);
-            InitGame (level = 3);         
+            InitGame (currLevel = 3);         
         }
         void Start()
         {
@@ -42,11 +42,11 @@ namespace Assets.Scripts
 			startLevel [3] = startLevel5;
         }
 
-        public void InitGame (int level) {
+        public void InitGame (int currLevel) {
           
             
             BoardManager.main.clearScene();
-            switch (level)
+            switch (currLevel)
             {
                 case (1):
                 {
@@ -63,6 +63,8 @@ namespace Assets.Scripts
 
                     Timer.main.setTimerMission(180);
                         #endregion
+
+                    onAMission = false;
                         break;
                 }
                 //classic play
@@ -123,11 +125,11 @@ namespace Assets.Scripts
                     missionNum = 2;
                         #endregion
                         //sets up the color array to choose from
-                        BoardManager.main.setNumberOfColors(numberOfColors);
-                        colorManager.main.init(numberOfColors);  
-                        BombManager.main.setNumberOfColors(numberOfColors);
+                        BoardManager.main.setNumberOfColors(numberOfColors);                       
+                        BombManager.main.setNumberOfColors(numberOfColors);                       
                         
                         Timer.main.setTimerMission(120);
+                    onAMission = true;
                         break;
                 }
                     //classic play - 2 colors squares
@@ -145,7 +147,6 @@ namespace Assets.Scripts
                     BoardManager.main.numOfNomralBoxes = 2;
 
                     Timer.main.setTimerMission(180);
-
 
                         #endregion
                     onAMission = false;
@@ -184,13 +185,12 @@ namespace Assets.Scripts
                         BoardManager.main.numOfFreezeBoxes = 0;
                         BoardManager.main.numOfSpecialBombBoxes = 1;
                         BoardManager.main.numOfNomralBoxes = 2;
-
                        
                         difficulty = 2;
                         missionNum = 3;
                         #endregion
 
-                        BoardManager.main.setNumberOfColors(numberOfColors);
+                      
                         onAMission = true;
                         break;
 
@@ -201,6 +201,7 @@ namespace Assets.Scripts
                         #region hard_coding_scene
 
                         numberOfColors = 2;
+                        difficulty = numberOfColors;
                         numberOFEnemiesInTheLevel = 7;
                         BoardManager.main.wallPostions = new int[] { 82,72,62,52,42,32,22,83,74,65,45,34,23 };
                         BoardManager.main.numOfLifeBoxes = 1;
@@ -212,7 +213,7 @@ namespace Assets.Scripts
                         missionNum = 5;
                         #endregion
 
-                        BoardManager.main.setNumberOfColors(numberOfColors);
+                        
                         onAMission = true;
                         break;
 
@@ -230,17 +231,15 @@ namespace Assets.Scripts
                         BoardManager.main.numOfSpecialBombBoxes = 1;
                         BoardManager.main.numOfNomralBoxes = 2;
                       
-                        Missions.main.difficulty = 1;
-
                         missionNum = 3;
                         #endregion
-
-                        
+                       
                         onAMission = true;
                         break;
 
                     }
             }
+
             enemiesOnTheBoard = new int[numberOfColors];
             BoardManager.main.setNumberOfEnemies(numberOFEnemiesInTheLevel);
           
@@ -250,13 +249,14 @@ namespace Assets.Scripts
             }
             else
             {
-
-                colorManager.main.init(numberOfColors);            
+                   
                 BoardManager.main.setNumberOfColors(numberOfColors);              
                 BombManager.main.setNumberOfColors(numberOfColors);
+                
             }
 
-            BoardManager.main.SetupScene(level);
+            BoardManager.main.SetupScene(currLevel);
+            BombManager.main.reDrawBombs();
         }
 
         public void GameOver(int damage)
@@ -284,7 +284,7 @@ namespace Assets.Scripts
         public void changeLevel()
         {
             Timer.main.setTimerMission(5);
-            level++;    
+            currLevel++;    
             nextLevel = true;
             //startLevel [level - 2].gameObject.SetActive (nextLevel);
             StartCoroutine(delayLoadLevel());
@@ -299,7 +299,7 @@ namespace Assets.Scripts
 
         public void StartGame()
         {
-            level = 1;
+            currLevel = 1;
             SceneManager.LoadScene("Scene1", LoadSceneMode.Single);
 
         }
@@ -338,11 +338,8 @@ namespace Assets.Scripts
         {
             
             yield return new WaitForSeconds(3f);
-            InitGame(level);
-            yield return new WaitForSeconds(0.5f);
-            BombManager.main.DeployBomb(50, 50, 50, 50);
-            BombManager.main.DeployBomb(50, 50, 50, 50);
-            BombManager.main.DeployBomb(50, 50, 50, 50);
+            InitGame(currLevel);
+           // BombManager.main.reDrawBombs();
    
 
         }

@@ -45,10 +45,9 @@ namespace Assets.Scripts
         private float gridColBomb;
 
 
-        void Start()
+        public void reDrawBombs()
         {
             bombs = new Queue<GameObject>();
-
             currentBombColor = drawNextBomb();
             bombs.Enqueue(colorManager.main.currentColorPosibilities[currentBombColor]);
             nextBombColor = drawNextBomb();
@@ -62,6 +61,7 @@ namespace Assets.Scripts
         public void setNumberOfColors(int numberOfColors)
         {
             numOfColors = numberOfColors;
+            colorManager.main.init(numberOfColors);
         }
 
         private int drawNextBomb()

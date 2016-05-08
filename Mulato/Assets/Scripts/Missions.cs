@@ -45,7 +45,7 @@ namespace Assets.Scripts
                         //choose which color to destory
                         color = UnityEngine.Random.Range(0, difficulty);
 
-                        colorManager.main.init(difficulty);
+                        BoardManager.main.setNumberOfColors(difficulty);                     
                         BombManager.main.startIndexBombColor = color;
                         BombManager.main.setNumberOfColors(color);
                         BombManager.main.onMission = true;
@@ -57,13 +57,11 @@ namespace Assets.Scripts
                 case (4):
                     {
                         if (difficulty > 3)
-                        {
-                            colorManager.main.init(2);
+                        {                           
                             BombManager.main.setNumberOfColors(2);
                         }
                         else
-                        {
-                            colorManager.main.init(1);
+                        {                         
                             BombManager.main.setNumberOfColors(1);
                         }
                         BombManager.main.onMission = true;
@@ -76,17 +74,18 @@ namespace Assets.Scripts
                 case (5):
                     {
                         if (difficulty <= 0 || difficulty > 3) difficulty = 2;
-                        colorManager.main.init(difficulty);
-                        BombManager.main.setNumberOfColors(difficulty);
-                        disappearingMission = true;
+
+                        BoardManager.main.setNumberOfColors(difficulty);                       
+                        BombManager.main.setNumberOfColors(difficulty);                        
                         BombManager.main.onMission = true;
+                        disappearingMission = true;
                         Timer.main.setTimerMission(timeToSet);
                         break;
                     }
                 //survival
                 case (6):
                     {                        
-                        colorManager.main.init(difficulty);
+                       
                         BombManager.main.missionSurvival = true;
                         BombManager.main.setNumberOfColors(difficulty);                 
                         BombManager.main.onMission = true;
@@ -111,7 +110,7 @@ namespace Assets.Scripts
                         }
                         else if (GameManager.main.numberOFEnemiesInTheLevel < difficulty)
                         {
-                            GameManager.main.InitGame(GameManager.main.level);
+                            GameManager.main.InitGame(GameManager.main.currLevel);
                         }
                         break;
                     }

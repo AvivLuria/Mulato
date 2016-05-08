@@ -90,7 +90,7 @@ namespace Assets.Scripts
                         BombManager.main.setNumberOfColors(difficulty);                 
                         BombManager.main.onMission = true;
                        
-                        Timer.main.setTimerMission(35 - difficulty * 5);
+                       // Timer.main.setTimerMission(35 - difficulty * 5);
                         break;
                     }
             }

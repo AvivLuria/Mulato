@@ -30,7 +30,7 @@ namespace Assets.Scripts
         {
             base.Awake();
             //DontDestroyOnLoad (gameObject);
-            InitGame (currLevel = 2);         
+            InitGame (currLevel = 16);         
         }
         void Start()
         {
@@ -202,19 +202,17 @@ namespace Assets.Scripts
 
                         numberOfColors = 2;
                         difficulty = numberOfColors;
-                        numberOFEnemiesInTheLevel = 7;
+                        numberOFEnemiesInTheLevel = 5;
                         BoardManager.main.wallPostions = new int[] { 82,72,62,52,42,32,22,83,74,65,45,34,23 };
                         BoardManager.main.numOfLifeBoxes = 1;
                         BoardManager.main.numOfFreezeBoxes = 0;
                         BoardManager.main.numOfSpecialBombBoxes = 1;
                         BoardManager.main.numOfNomralBoxes = 2;
-                      
-                   
-                        missionNum = 5;
+
+                        Timer.main.setTimerMission(20);
                         #endregion
 
-                        
-                        onAMission = true;
+                        onAMission = false;
                         break;
 
                     }
@@ -223,6 +221,7 @@ namespace Assets.Scripts
                     {
                         #region hard_coding_scene
 
+                        missionNum = 5;
                         numberOfColors = 2;
                         numberOFEnemiesInTheLevel = 7;
                         BoardManager.main.wallPostions = new int[] { 72,83,84,85,75,65,54,53,43,23};
@@ -231,10 +230,148 @@ namespace Assets.Scripts
                         BoardManager.main.numOfSpecialBombBoxes = 1;
                         BoardManager.main.numOfNomralBoxes = 2;
                       
-                        missionNum = 3;
                         #endregion
                        
                         onAMission = true;
+                        break;
+
+                    }
+                    //classic play - lots of boxes
+                case (10):
+                    {
+                        #region hard_coding_scene
+
+                     
+                        numberOfColors = 3;
+                        numberOFEnemiesInTheLevel = 9;
+                        BoardManager.main.wallPostions = new int[] { };
+                        BoardManager.main.numOfLifeBoxes = 1;
+                        BoardManager.main.numOfFreezeBoxes = 1;
+                        BoardManager.main.numOfSpecialBombBoxes = 4;
+                        BoardManager.main.numOfNomralBoxes = 20;
+
+                        Timer.main.setTimerMission(120);
+                        #endregion
+
+                        onAMission = false;
+                        break;
+
+                    }
+                    //survival
+                case (11):
+                    {
+                        #region hard_coding_scene
+
+                        numberOfColors = 3;
+                        numberOFEnemiesInTheLevel = 9;
+                        BoardManager.main.wallPostions = new int[] {33,23,25,35,43,45,53,55,63,65,62,64,73,75 };
+                        BoardManager.main.numOfLifeBoxes = 1;
+                        BoardManager.main.numOfFreezeBoxes = 1;
+                        BoardManager.main.numOfSpecialBombBoxes = 2;
+                        BoardManager.main.numOfNomralBoxes = 3;
+
+                        Timer.main.setTimerMission(120);
+                        #endregion
+
+                        onAMission = false;
+                        break;
+
+                    }
+                    // closed levels
+                case (12):
+                    {
+                        #region hard_coding_scene
+
+                        numberOfColors = 3;
+                        numberOFEnemiesInTheLevel = 9;
+                        BoardManager.main.wallPostions = new int[] { 11,12,13,14,15,16,91,92,93,94,95,96,51,52,55,56};
+                        BoardManager.main.numOfLifeBoxes = 1;
+                        BoardManager.main.numOfFreezeBoxes = 1;
+                        BoardManager.main.numOfSpecialBombBoxes = 2;
+                        BoardManager.main.numOfNomralBoxes = 3;
+
+                        Timer.main.setTimerMission(120);
+                        #endregion
+
+                        onAMission = false;
+                        break;
+
+                    }
+                    //like bomber man
+                case (13):
+                    {
+                        #region hard_coding_scene
+
+                        numberOfColors = 3;
+                        numberOFEnemiesInTheLevel = 9;
+                        BoardManager.main.wallPostions = new int[] {81,83,85,62,64,66,41,43,45,22,24,26 };
+                        BoardManager.main.numOfLifeBoxes = 1;
+                        BoardManager.main.numOfFreezeBoxes = 1;
+                        BoardManager.main.numOfSpecialBombBoxes = 2;
+                        BoardManager.main.numOfNomralBoxes = 3;
+
+                        Timer.main.setTimerMission(120);
+                        #endregion
+
+                        onAMission = false;
+                        break;
+
+                    }
+                    // lamed
+                case (14):
+                    {
+                        #region hard_coding_scene
+
+                        numberOfColors = 3;
+                        numberOFEnemiesInTheLevel = 9;
+                        BoardManager.main.wallPostions = new int[] { 26,35,44,53,62,52,42,32,22,33,55,66,56,46,36,45,43};
+                        BoardManager.main.numOfLifeBoxes = 1;
+                        BoardManager.main.numOfFreezeBoxes = 1;
+                        BoardManager.main.numOfSpecialBombBoxes = 2;
+                        BoardManager.main.numOfNomralBoxes = 3;
+
+                        Timer.main.setTimerMission(120);
+                        #endregion
+
+                        onAMission = false;
+                        break;
+
+                    }
+                case (15):
+                    {
+                        #region hard_coding_scene
+
+                        numberOfColors = 3;
+                        numberOFEnemiesInTheLevel = 9;
+                        BoardManager.main.wallPostions = new int[] { 22, 25, 32, 35, 42, 45, 52, 55, 62, 65, 72, 75, 53, 54, 82, 85 };
+                        BoardManager.main.numOfLifeBoxes = 1;
+                        BoardManager.main.numOfFreezeBoxes = 1;
+                        BoardManager.main.numOfSpecialBombBoxes = 2;
+                        BoardManager.main.numOfNomralBoxes = 3;
+
+                        Timer.main.setTimerMission(120);
+                        #endregion
+
+                        onAMission = false;
+                        break;
+
+                    }
+                case (16):
+                    {
+                        #region hard_coding_scene
+
+                        numberOfColors = 3;
+                        numberOFEnemiesInTheLevel = 9;
+                        BoardManager.main.wallPostions = new int[] { 83,84,72,73,62,63,52,53,42,43,32,33,23,24,55};
+                        BoardManager.main.numOfLifeBoxes = 1;
+                        BoardManager.main.numOfFreezeBoxes = 1;
+                        BoardManager.main.numOfSpecialBombBoxes = 2;
+                        BoardManager.main.numOfNomralBoxes = 3;
+
+                        Timer.main.setTimerMission(120);
+                        #endregion
+
+                        onAMission = false;
                         break;
 
                     }
@@ -275,7 +412,7 @@ namespace Assets.Scripts
             {
                 changeLevel();
             }
-            else
+            else if (onAMission)
             {
                 Missions.main.checkMissionStatus();
             } 

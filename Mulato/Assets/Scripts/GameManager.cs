@@ -30,7 +30,7 @@ namespace Assets.Scripts
         {
             base.Awake();
             //DontDestroyOnLoad (gameObject);
-            InitGame (currLevel = 3);         
+            InitGame (currLevel = 2);         
         }
         void Start()
         {
@@ -79,7 +79,7 @@ namespace Assets.Scripts
                     BoardManager.main.numOfLifeBoxes = 0;
                     BoardManager.main.numOfFreezeBoxes = 0;
                     BoardManager.main.numOfSpecialBombBoxes = 0;
-                    BoardManager.main.numOfNomralBoxes = 0;
+                    BoardManager.main.numOfNomralBoxes = 1;
 
                     Timer.main.setTimerMission(180);
                     #endregion

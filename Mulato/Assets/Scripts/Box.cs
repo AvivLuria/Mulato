@@ -14,9 +14,11 @@ public class Box : MonoBehaviour
     public bool isSpecialColorBombBox = false;
     public bool isMoreLifeBox = false;
     public bool isEnemyFreezeBox = false;
+    private Animator animator;
 
     public void DestroyMe()
     {
+        animator = GetComponent<Animator>();
         BoardManager.main.updateGridPointObject(gridRow,gridCol,gridRow,gridCol);
         if (isSpecialColorBombBox)
         {
@@ -28,6 +30,9 @@ public class Box : MonoBehaviour
         } else if (isEnemyFreezeBox)
         {
             freezeEnemies();
+        } else
+        {
+            animator.SetBool("empty", true);
         }
 
         StartCoroutine(delayedDestory());
@@ -63,7 +68,7 @@ public class Box : MonoBehaviour
    
     IEnumerator delayedDestory()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(1.5f);
         Destroy(this.gameObject);
     }
 

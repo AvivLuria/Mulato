@@ -16,6 +16,12 @@ public class Enemy : MovingObject {
 
 	public Animator animator;
      
+    void Awake()
+    {
+        // SHIR!
+        //animator = GetComponent<Animator>();
+    }
+
 	void Update() {
 		m_timeToMove += Time.deltaTime;
 		if (m_timeToMove >= EnemySpeedSlow) {
@@ -59,31 +65,37 @@ public class Enemy : MovingObject {
         countTryTimes--;
         int xDir = 0;
         int yDir = 0;
+        int AnimDir;
         float random = Random.value;
 
         if (random < 0.25)
         {
             xDir = 1;
-
+            AnimDir = 1;
         }
         else if (random >= 0.25 && random < 0.5)
         {
             xDir = -1;
+            AnimDir = 2;
         }
         else if (random >= 0.5 && random < 0.75)
         {
             yDir = 1;
+            AnimDir = 3;
         }
         else
         {
             yDir = -1;
+            AnimDir = 4;
         }
 
-		//animator.SetInteger ("X", xDir);
-		//animator.SetInteger ("Y", yDir);	
+		
 
         if (AttemptMove(xDir, yDir, gridRow + yDir, gridCol + xDir, 0))
         {
+            // SHIR!
+            //animator.SetInteger("Dir", AnimDir);
+            
             countTryTimes = 10;
             gridRow += yDir;
             gridCol += xDir;
@@ -113,7 +125,10 @@ public class Enemy : MovingObject {
 
     IEnumerator delayedDestory()
     {
-        yield return new WaitForSeconds(0.2f);
+        // SHIR!
+        //animator.SetBool("die", true);
+       yield return new WaitForSeconds(0.2f);
+
        Destroy(this.gameObject);
     }
 }

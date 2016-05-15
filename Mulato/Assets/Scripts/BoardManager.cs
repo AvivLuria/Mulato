@@ -335,7 +335,10 @@ namespace Assets.Scripts
             return m_board[gridRowBomb][gridColBomb].gameObject;
         }
        
-        
+        public void setBoxes(int amountOfBoxes)
+        {
+            LayoutObjectAtRandom(boxTiles, GridPointObject.Box, amountOfBoxes);
+        }
 
        
     }

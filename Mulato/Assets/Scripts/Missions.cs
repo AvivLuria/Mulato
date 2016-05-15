@@ -13,6 +13,7 @@ namespace Assets.Scripts
         public int timeToSet;
         public int difficulty;
         public bool disappearingMission = false;
+        private bool createBoxes = false;
 
 
        
@@ -47,7 +48,7 @@ namespace Assets.Scripts
 
                         BoardManager.main.setNumberOfColors(difficulty);                     
                         BombManager.main.startIndexBombColor = color;
-                        BombManager.main.setNumberOfColors(color);
+                        BombManager.main.setNumberOfColors(color + 1);
                         BombManager.main.onMission = true;
                         Timer.main.setTimerMission(timeToSet);
                         
@@ -84,13 +85,22 @@ namespace Assets.Scripts
                     }
                 //survival
                 case (6):
-                    {                        
-                       
+                    {                                            
                         BombManager.main.missionSurvival = true;
                         BombManager.main.setNumberOfColors(difficulty);                 
                         BombManager.main.onMission = true;
                        
                        // Timer.main.setTimerMission(35 - difficulty * 5);
+                        break;
+                    }
+                    //boxes appears 
+                case (7):
+                    {                  
+                        BombManager.main.setNumberOfColors(difficulty);
+                        BombManager.main.onMission = true;
+                        Timer.main.setTimerMission(timeToSet);
+                        createBoxes = true;
+                        StartCoroutine(DelayCreateBoxes(difficulty));
                         break;
                     }
             }
@@ -152,8 +162,18 @@ namespace Assets.Scripts
                         }
                         break;
                     }
+                case (7):
+                    {
+                        if (GameManager.main.enemiesOnTheBoard[color] == 0)
+                        {
+                            createBoxes = false;
+                            GameManager.main.changeLevel();
+                        }
+                        break;
+                    }
             }
         }
+
 
         IEnumerator DelayedExecution()
         {
@@ -163,7 +183,13 @@ namespace Assets.Scripts
             initMission(currMission, numberOfEnemies, difficulty + 1);
         }
 
-
-
+        IEnumerator DelayCreateBoxes(int i_difficulty)
+        {
+            while (createBoxes)
+            {
+                yield return new WaitForSeconds(2.5f);
+                BoardManager.main.setBoxes(i_difficulty);
+            }
+        }
     }
 }

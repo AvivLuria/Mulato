@@ -30,7 +30,7 @@ namespace Assets.Scripts
         {
             base.Awake();
             //DontDestroyOnLoad (gameObject);
-            InitGame (currLevel = 16);         
+            InitGame (currLevel = 14);         
         }
         void Start()
         {
@@ -321,7 +321,7 @@ namespace Assets.Scripts
                 case (14):
                     {
                         #region hard_coding_scene
-
+                        missionNum = 7;
                         numberOfColors = 3;
                         numberOFEnemiesInTheLevel = 9;
                         BoardManager.main.wallPostions = new int[] { 26,35,44,53,62,52,42,32,22,33,55,66,56,46,36,45,43};
@@ -333,7 +333,7 @@ namespace Assets.Scripts
                         Timer.main.setTimerMission(120);
                         #endregion
 
-                        onAMission = false;
+                        onAMission = true;
                         break;
 
                     }

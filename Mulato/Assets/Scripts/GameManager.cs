@@ -30,7 +30,7 @@ namespace Assets.Scripts
         {
             base.Awake();
             //DontDestroyOnLoad (gameObject);
-            InitGame (currLevel = 16);         
+            InitGame (currLevel = 6);         
         }
         void Start()
         {

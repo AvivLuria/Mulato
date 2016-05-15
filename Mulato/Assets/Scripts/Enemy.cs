@@ -19,7 +19,7 @@ public class Enemy : MovingObject {
     void Awake()
     {
         // SHIR!
-        //animator = GetComponent<Animator>();
+       animator = GetComponent<Animator>();
     }
 
 	void Update() {
@@ -94,7 +94,7 @@ public class Enemy : MovingObject {
         if (AttemptMove(xDir, yDir, gridRow + yDir, gridCol + xDir, 0))
         {
             // SHIR!
-            //animator.SetInteger("Dir", AnimDir);
+           animator.SetInteger("Dir", AnimDir);
             
             countTryTimes = 10;
             gridRow += yDir;
@@ -126,7 +126,7 @@ public class Enemy : MovingObject {
     IEnumerator delayedDestory()
     {
         // SHIR!
-        //animator.SetBool("die", true);
+        animator.SetBool("die", true);
        yield return new WaitForSeconds(0.2f);
 
        Destroy(this.gameObject);

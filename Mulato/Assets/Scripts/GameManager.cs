@@ -31,7 +31,7 @@ namespace Assets.Scripts
             base.Awake();
             //DontDestroyOnLoad (gameObject);
 
-            InitGame (currLevel = 14);         
+            InitGame (currLevel = 6);         
         }
         void Start()
         {
@@ -428,12 +428,6 @@ namespace Assets.Scripts
             StartCoroutine(delayLoadLevel());
 
         }
-		public void StartLevel2(bool clicked){
-          
-        }
-
-
-
 
         public void StartGame()
         {
@@ -472,6 +466,10 @@ namespace Assets.Scripts
 
 		}
 
+        private void displayInstruction(int level)
+        {
+            //if ()
+        }
         IEnumerator delayLoadLevel()
         {
             

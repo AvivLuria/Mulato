@@ -280,9 +280,10 @@ namespace Assets.Scripts
                 {
                     foreach (var clone in clones)
                     {
-                        Destroy(clone);
+                       
                         m_board[clone.GetComponent<Box>().gridRow][clone.GetComponent<Box>().gridCol].gridPointObject =
                             GridPointObject.Empty;
+                        Destroy(clone);
                     }
                 } else if (tagsToDelete[i].ToString() == "Wall")
                 {

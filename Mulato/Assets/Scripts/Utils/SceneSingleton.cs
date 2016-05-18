@@ -12,7 +12,13 @@ namespace Assets.Scripts.Utils
         private static T g_instance;
 
         public static T main {
-            get { return g_instance; }
+            get {
+                //if(g_instance == null)
+                //{
+                //    return gameObject;
+                //}
+                return g_instance;
+            }
         }
 
         public virtual void Awake() {

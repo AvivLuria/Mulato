@@ -9,13 +9,13 @@ public class Indicators : MonoBehaviour
     Rigidbody2D currObj;
     private bool comboBlink;
 
-    void Start()
+    public void moveHeart()
     {
         currObj = this.GetComponent<Rigidbody2D>();
         StartCoroutine(delayedDestory());
         if (currObj.tag == "bounsHeart")
         {
-            iTween.MoveTo(currObj.gameObject, new Vector3(3.925091f, 11.45222f, 0), 5f);
+            iTween.MoveTo(currObj.gameObject, new Vector3(80f, 250f, -2), 5f);
         }
         else
         {
@@ -27,7 +27,7 @@ public class Indicators : MonoBehaviour
     IEnumerator delayedDestory()
     {
         yield return new WaitForSeconds(1.5f);
-        Destroy(this.gameObject);
+        this.transform.position = new Vector3(-100, -100, 0);
     }
 
     IEnumerator scale()

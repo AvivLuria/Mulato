@@ -13,6 +13,7 @@ public class Enemy : MovingObject {
     public int gridRow;
     public int gridCol;
     private int countTryTimes = 10;
+    private bool dead;
 
 	public Animator animator;
      
@@ -20,11 +21,12 @@ public class Enemy : MovingObject {
     {
         // SHIR!
        animator = GetComponent<Animator>();
+        dead = false;
     }
 
 	void Update() {
 		m_timeToMove += Time.deltaTime;
-		if (m_timeToMove >= EnemySpeedSlow) {
+		if (m_timeToMove >= EnemySpeedSlow && !dead) {
 			MoveEnemey ();
 		    if (Missions.main.disappearingMission)
 		    {
@@ -114,7 +116,10 @@ public class Enemy : MovingObject {
 
     public void activeDelay()
     {
-        StartCoroutine(delayedDestory());
+        if (!dead)
+        {
+            StartCoroutine(delayedDestory());
+        }
     }
 
     IEnumerator delayedExecution(float speed)
@@ -126,8 +131,11 @@ public class Enemy : MovingObject {
     IEnumerator delayedDestory()
     {
         // SHIR!
+        UnityEngine.Debug.Log("Hi");
         animator.SetBool("die", true);
-       yield return new WaitForSeconds(0.2f);
+        Destroy(gameObject.GetComponent<BoxCollider2D>());
+        dead = true;
+       yield return new WaitForSeconds(1.6f);
 
        Destroy(this.gameObject);
     }

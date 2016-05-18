@@ -31,7 +31,6 @@ namespace Assets.Scripts
             base.Awake();
             //DontDestroyOnLoad (gameObject);
 
-            InitGame (currLevel = 6);         
         }
         void Start()
         {
@@ -41,11 +40,16 @@ namespace Assets.Scripts
 			startLevel [1] = startLevel3;
 			startLevel [2] = startLevel4;
 			startLevel [3] = startLevel5;
+            UnityEngine.Debug.Log(currLevel);
+            InitGame (currLevel = 6);         
         }
 
         public void InitGame (int currLevel) {
-          
-            
+            if (currLevel == 0)
+            {
+                return;
+            }
+            UnityEngine.Debug.Log(BoardManager.main);
             BoardManager.main.clearScene();
             switch (currLevel)
             {
@@ -433,7 +437,7 @@ namespace Assets.Scripts
         {
             currLevel = 1;
             SceneManager.LoadScene("Scene1", LoadSceneMode.Single);
-
+            //InitGame(currLevel);
         }
 		public void ExitMenu(bool clicked){
 			if (clicked == true) {

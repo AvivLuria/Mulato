@@ -168,6 +168,7 @@ namespace Assets.Scripts
             setUpEnemiesOnTheBoard();
         }
 
+        //setup grid points and side walls
         private void BoardSetup()
         {
             boardHolder = new GameObject("Board").transform;
@@ -225,7 +226,6 @@ namespace Assets.Scripts
             return array;
         }
 
-      
         public void LayoutObjectAtRandom(GameObject obj, GridPointObject gridPointObjectToAdd, int numberOfOccurences)
         {
 
@@ -335,7 +335,7 @@ namespace Assets.Scripts
         {
             return m_board[gridRowBomb][gridColBomb].gameObject;
         }
-       
+        //generate boxes on random postion in board 
         public void setBoxes(int amountOfBoxes)
         {
             LayoutObjectAtRandom(boxTiles, GridPointObject.Box, amountOfBoxes);

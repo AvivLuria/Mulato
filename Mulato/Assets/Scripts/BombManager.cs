@@ -96,19 +96,19 @@ namespace Assets.Scripts
 
             colorManager.main.changeColors();
             BoardManager.main.setBombOnGrid(gridRow, gridColumn);
-            StartCoroutine(DelayedExecution(curBomb, gridRow, gridColumn));
+            StartCoroutine(DelayedExplode(curBomb, gridRow, gridColumn));
         }
 
         private void Explode(GameObject curBomb, int row, int column)
         {
             //raycast from bomb to right,left,up,down
-            RaycastHit2D[] colliderHitsRight = Physics2D.RaycastAll(new Vector3(0.6f, 0, 0) + curBomb.transform.position, Vector2.right,
+            RaycastHit2D[] colliderHitsRight = Physics2D.RaycastAll(new Vector3(1f, 0, 0) + curBomb.transform.position, Vector2.right,
                 powerOfExplosion, layerMask);
-            RaycastHit2D[] colliderHitsLeft = Physics2D.RaycastAll(new Vector3(-0.6f, 0, 0) + curBomb.transform.position, Vector2.left,
+            RaycastHit2D[] colliderHitsLeft = Physics2D.RaycastAll(new Vector3(-1f, 0, 0) + curBomb.transform.position, Vector2.left,
                 powerOfExplosion, layerMask);
             RaycastHit2D[] colliderHitsUp = Physics2D.RaycastAll(curBomb.transform.position, Vector2.up,
                 powerOfExplosion, layerMask);
-            RaycastHit2D[] colliderHitsDown = Physics2D.RaycastAll(new Vector3(0, -0.6f, 0) + curBomb.transform.position, Vector2.down,
+            RaycastHit2D[] colliderHitsDown = Physics2D.RaycastAll(new Vector3(0, -1f, 0) + curBomb.transform.position, Vector2.down,
                 powerOfExplosion, layerMask);
 
             comboCounterKill = missionMultipleKilled ? numOfKillesToWinComboMission : numOfKillesForCombo;
@@ -130,6 +130,7 @@ namespace Assets.Scripts
                 }
                 else
                 {
+                    //create "Combo" on last bomb position
                     Instantiate(Combo, new Vector3((int)column, (int)row, 0), Quaternion.identity);
                     deploySpecialBomb();
                 }
@@ -205,30 +206,31 @@ namespace Assets.Scripts
            
 
         }
-
     
         //for bouns combo
         private void deploySpecialBomb()
         {
             gridColBomb = UnityEngine.Random.Range(0, BoardManager.main.columns);
             gridRowBomb = UnityEngine.Random.Range(0, BoardManager.main.rows);
+            //get game object on random postion choosen
             GameObject floor = BoardManager.main.getGameObjectOnGridPoint((int)gridRowBomb, (int)gridColBomb);
-
+            //check if random game object is empty to deploy special bomb
             if (BoardManager.main.getGridPointObject((int)gridRowBomb, (int)gridColBomb) == BoardManager.GridPointObject.Empty)
             {
-                
+                //creates special bomb on choosen point
                 var curBomb =
                     Instantiate(SpecialBomb, new Vector3(floor.transform.position.x, floor.transform.position.y, -1), Quaternion.identity) as GameObject;
-                StartCoroutine(DelayedExecution(curBomb, (int)gridRowBomb, (int)gridColBomb));
+                StartCoroutine(DelayedExplode(curBomb, (int)gridRowBomb, (int)gridColBomb));
                 BoardManager.main.setBombOnGrid((int)gridRowBomb, (int)gridColBomb);
             }
+            //if game object isnt empty recall function
             else
             {
                 deploySpecialBomb();
             }
         }
-        //delay bomb action
-        IEnumerator DelayedExecution(GameObject curBomb, int row, int column)
+        //delay bomb action for slow motion
+        IEnumerator DelayedExplode(GameObject curBomb, int row, int column)
         {
             yield return new WaitForSeconds(2.8f);
             Explode(curBomb, row, column);

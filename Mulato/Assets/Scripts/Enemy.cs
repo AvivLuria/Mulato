@@ -131,7 +131,6 @@ public class Enemy : MovingObject {
     IEnumerator delayedDestory()
     {
         // SHIR!
-        UnityEngine.Debug.Log("Hi");
         animator.SetBool("die", true);
         Destroy(gameObject.GetComponent<BoxCollider2D>());
         dead = true;

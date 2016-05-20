@@ -7,22 +7,20 @@ public class Indicators : MonoBehaviour
 
     // Use this for initialization
     Rigidbody2D currObj;
-    private bool comboBlink;
+    Canvas bar;
 
-    public void moveHeart()
+    void Start()
     {
         currObj = this.GetComponent<Rigidbody2D>();
-        StartCoroutine(delayedDestory());
-        if (currObj.tag == "bounsHeart")
-        {
-            iTween.MoveTo(currObj.gameObject, new Vector3(80f, 250f, -2), 5f);
-        }
-        else
+        if (currObj.tag == "Combo")
         {
             StartCoroutine(scale());
+        } else
+        {
+            iTween.MoveTo(currObj.gameObject, new Vector3(8, 11, 0), 5f);
+            StartCoroutine(delayedDestory());
         }
     }
-
 
     IEnumerator delayedDestory()
     {
@@ -32,11 +30,11 @@ public class Indicators : MonoBehaviour
 
     IEnumerator scale()
     {
-
         iTween.ScaleTo(currObj.gameObject, transform.localScale + new Vector3(0.5f, 0.5f, 0), 2.5f);
         yield return new WaitForSeconds(0.5f);
         iTween.ScaleTo(currObj.gameObject, transform.localScale - new Vector3(0.5f, 0.5f, 0),2.5f);
         yield return new WaitForSeconds(0.5f);
         iTween.ScaleTo(currObj.gameObject, transform.localScale + new Vector3(0.5f, 0.5f, 0), 2.5f);
+        Destroy(this.gameObject,1f);
     }
 }

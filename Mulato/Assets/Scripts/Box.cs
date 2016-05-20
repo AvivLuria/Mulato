@@ -3,6 +3,7 @@ using System.Collections;
 using Assets.Scripts;
 using System;
 using Assets.Scripts.Utils;
+using UnityEngine.UI;
 
 public class Box : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class Box : MonoBehaviour
     public bool isMoreLifeBox = false;
     public bool isEnemyFreezeBox = false;
     private Animator animator;
+
+    public GameObject heart;
 
     public void DestroyMe()
     {
@@ -53,8 +56,9 @@ public class Box : MonoBehaviour
 
     private void addMoreLife()
     {
-        GameObject.FindGameObjectWithTag("bounsHeart").transform.position = new Vector3(this.transform.position.x * 7f, this.transform.position.y * 7f, 0);
-        GameObject.FindGameObjectWithTag("bounsHeart").GetComponent<Indicators>().moveHeart();
+        //  GameObject.FindGameObjectWithTag("bounsHeart").transform.position = bar.transform.position;
+        Instantiate(heart, this.transform.position, Quaternion.identity);
+     //   GameObject.FindGameObjectWithTag("bounsHeart").GetComponent<Indicators>().moveHeart();
         GameManager.main.life++;
     }
 

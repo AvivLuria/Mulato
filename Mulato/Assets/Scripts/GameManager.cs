@@ -41,7 +41,7 @@ namespace Assets.Scripts
 			startLevel [2] = startLevel4;
 			startLevel [3] = startLevel5;
             UnityEngine.Debug.Log(currLevel);
-            InitGame (currLevel = 6);         
+            InitGame (currLevel = 1);         
         }
 
         public void InitGame (int currLevel) {
@@ -61,16 +61,15 @@ namespace Assets.Scripts
                     numberOFEnemiesInTheLevel = 3;
                     BoardManager.main.wallPostions = new int[]
                     {92, 93, 94, 95, 83, 84, 63, 64, 52, 53, 54, 55, 43, 44, 12, 13, 14, 15, 23, 24};
-                    BoardManager.main.numOfLifeBoxes = 0;
+                    BoardManager.main.numOfLifeBoxes = 4;
                     BoardManager.main.numOfFreezeBoxes = 0;
                     BoardManager.main.numOfSpecialBombBoxes = 0;
                     BoardManager.main.numOfNomralBoxes = 0;
 
                     Timer.main.setTimerMission(180);
                         #endregion
-
                     onAMission = false;
-                        break;
+                    break;
                 }
                 //classic play
                 case (2):
@@ -88,7 +87,6 @@ namespace Assets.Scripts
 
                     Timer.main.setTimerMission(180);
                     #endregion
-
                     break;
                 }
                 //classic play - robot 
@@ -108,7 +106,6 @@ namespace Assets.Scripts
                     Timer.main.setTimerMission(180);
   
                     #endregion
-
                     break;
                 }
                     //combo kill - 2
@@ -134,7 +131,7 @@ namespace Assets.Scripts
                         BombManager.main.setNumberOfColors(numberOfColors);                       
                         
                         Timer.main.setTimerMission(120);
-                    onAMission = true;
+                        onAMission = true;
                         break;
                 }
                     //classic play - 2 colors squares
@@ -173,15 +170,14 @@ namespace Assets.Scripts
                     Timer.main.setTimerMission(180);
 
                     #endregion
-
                     onAMission = false;
                     break;
 
                 }
                 // kill the same color - lucky number 7 
                 case (7):
-                    {
-                        #region hard_coding_scene
+                {
+                    #region hard_coding_scene
 
                         numberOfColors = 2;
                         numberOFEnemiesInTheLevel = 7;
@@ -193,17 +189,15 @@ namespace Assets.Scripts
                        
                         difficulty = 2;
                         missionNum = 3;
-                        #endregion
+                        #endregion               
+                    onAMission = true;
+                    break;
 
-                      
-                        onAMission = true;
-                        break;
-
-                    }
+                }
                 //disappearing enemies - 2 colors
                 case (8):
-                    {
-                        #region hard_coding_scene
+                {
+                    #region hard_coding_scene
 
                         numberOfColors = 2;
                         difficulty = numberOfColors;
@@ -216,15 +210,13 @@ namespace Assets.Scripts
 
                         Timer.main.setTimerMission(20);
                         #endregion
-
-                        onAMission = false;
-                        break;
-
-                    }
-                    //kill the same color - 2 colors
+                    onAMission = false;
+                    break;                   
+                }
+               //kill the same color - 2 colors
                 case (9):
-                    {
-                        #region hard_coding_scene
+                {
+                    #region hard_coding_scene
 
                         missionNum = 5;
                         numberOfColors = 2;
@@ -235,16 +227,14 @@ namespace Assets.Scripts
                         BoardManager.main.numOfSpecialBombBoxes = 1;
                         BoardManager.main.numOfNomralBoxes = 2;
                       
-                        #endregion
-                       
-                        onAMission = true;
-                        break;
-
-                    }
-                    //classic play - lots of boxes
+                        #endregion                       
+                    onAMission = true;
+                    break;
+                }
+                //classic play - lots of boxes
                 case (10):
-                    {
-                        #region hard_coding_scene
+                {
+                    #region hard_coding_scene
 
                      
                         numberOfColors = 3;
@@ -256,16 +246,14 @@ namespace Assets.Scripts
                         BoardManager.main.numOfNomralBoxes = 20;
 
                         Timer.main.setTimerMission(120);
-                        #endregion
-
-                        onAMission = false;
-                        break;
-
-                    }
-                    //survival
+                        #endregion                    
+                    onAMission = false;
+                    break;
+                }
+                //survival
                 case (11):
-                    {
-                        #region hard_coding_scene
+                {
+                    #region hard_coding_scene
 
                         numberOfColors = 3;
                         numberOFEnemiesInTheLevel = 9;
@@ -277,15 +265,13 @@ namespace Assets.Scripts
 
                         Timer.main.setTimerMission(120);
                         #endregion
-
-                        onAMission = false;
-                        break;
-
-                    }
-                    // closed levels
+                    onAMission = false;
+                    break;
+                }
+                // closed levels
                 case (12):
-                    {
-                        #region hard_coding_scene
+                {
+                    #region hard_coding_scene
 
                         numberOfColors = 3;
                         numberOFEnemiesInTheLevel = 9;
@@ -296,16 +282,14 @@ namespace Assets.Scripts
                         BoardManager.main.numOfNomralBoxes = 3;
 
                         Timer.main.setTimerMission(120);
-                        #endregion
-
-                        onAMission = false;
-                        break;
-
-                    }
-                    //like bomber man
+                        #endregion                    
+                    onAMission = false;
+                    break;
+                }
+                //like bomber man
                 case (13):
-                    {
-                        #region hard_coding_scene
+                {
+                    #region hard_coding_scene
 
                         numberOfColors = 3;
                         numberOFEnemiesInTheLevel = 9;
@@ -316,16 +300,14 @@ namespace Assets.Scripts
                         BoardManager.main.numOfNomralBoxes = 3;
 
                         Timer.main.setTimerMission(120);
-                        #endregion
-
-                        onAMission = false;
-                        break;
-
-                    }
-                    // lamed
+                        #endregion                    
+                    onAMission = false;
+                    break;
+                }
+                // lamed
                 case (14):
-                    {
-                        #region hard_coding_scene
+                {
+                    #region hard_coding_scene
                         missionNum = 7;
                         numberOfColors = 3;
                         numberOFEnemiesInTheLevel = 9;
@@ -337,14 +319,12 @@ namespace Assets.Scripts
 
                         Timer.main.setTimerMission(120);
                         #endregion
-
-                        onAMission = true;
-                        break;
-
-                    }
+                    onAMission = true;
+                    break;
+                }
                 case (15):
-                    {
-                        #region hard_coding_scene
+                {
+                    #region hard_coding_scene
 
                         numberOfColors = 3;
                         numberOFEnemiesInTheLevel = 9;
@@ -356,14 +336,12 @@ namespace Assets.Scripts
 
                         Timer.main.setTimerMission(120);
                         #endregion
-
-                        onAMission = false;
-                        break;
-
-                    }
+                    onAMission = false;
+                    break;
+                }
                 case (16):
-                    {
-                        #region hard_coding_scene
+                {
+                    #region hard_coding_scene
 
                         numberOfColors = 3;
                         numberOFEnemiesInTheLevel = 9;
@@ -375,11 +353,9 @@ namespace Assets.Scripts
 
                         Timer.main.setTimerMission(120);
                         #endregion
-
-                        onAMission = false;
-                        break;
-
-                    }
+                    onAMission = false;
+                    break;
+                }
             }
 
             enemiesOnTheBoard = new int[numberOfColors];
@@ -390,8 +366,7 @@ namespace Assets.Scripts
                 Missions.main.initMission(missionNum, numberOFEnemiesInTheLevel,difficulty);
             }
             else
-            {
-                   
+            {                
                 BoardManager.main.setNumberOfColors(numberOfColors);              
                 BombManager.main.setNumberOfColors(numberOfColors);
                 
@@ -426,7 +401,8 @@ namespace Assets.Scripts
         public void changeLevel()
         {
             Timer.main.setTimerMission(5);
-            currLevel++;    
+            currLevel++;
+            GetComponent<UI>().enabled = false;
             nextLevel = true;
             //startLevel [level - 2].gameObject.SetActive (nextLevel);
             StartCoroutine(delayLoadLevel());
@@ -479,8 +455,8 @@ namespace Assets.Scripts
             
             yield return new WaitForSeconds(3f);
             InitGame(currLevel);
-           // BombManager.main.reDrawBombs();
-   
+            // BombManager.main.reDrawBombs();
+            GetComponent<UI>().enabled = true;
 
         }
     }

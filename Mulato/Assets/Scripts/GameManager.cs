@@ -40,7 +40,7 @@ namespace Assets.Scripts
 			startLevel [1] = startLevel3;
 			startLevel [2] = startLevel4;
 			startLevel [3] = startLevel5;
-            InitGame (currLevel = 0);         
+            InitGame (currLevel = 2);         
         }
 
         public void InitGame (int currLevel) {
@@ -122,9 +122,9 @@ namespace Assets.Scripts
                     BoardManager.main.wallPostions = new int[]
                     {92, 93, 94, 95, 83, 84, 63, 64, 43, 44, 12, 13, 14, 15, 23, 24};
                     BoardManager.main.numOfLifeBoxes = 0;
-                    BoardManager.main.numOfFreezeBoxes = 0;
+                    BoardManager.main.numOfFreezeBoxes = 1;
                     BoardManager.main.numOfSpecialBombBoxes = 0;
-                    BoardManager.main.numOfNomralBoxes = 1;
+                    BoardManager.main.numOfNomralBoxes = 0;
 
                     Timer.main.setTimerMission(180);
                     #endregion

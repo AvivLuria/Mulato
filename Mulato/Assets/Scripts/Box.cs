@@ -16,14 +16,18 @@ public class Box : MonoBehaviour
     public bool isMoreLifeBox = false;
     public bool isEnemyFreezeBox = false;
     private Animator animator;
-
+    private AudioSource source;
+    public AudioClip BoxSound;
     public GameObject heart;
     public GameObject special;
+    
 
     public void DestroyMe()
     {
         if (active)
         {
+            source = GetComponent<AudioSource>();
+            source.PlayOneShot(BoxSound);
             active = !active;
             animator = GetComponent<Animator>();
             BoardManager.main.updateGridPointObject(gridRow, gridCol, gridRow, gridCol);
@@ -40,6 +44,7 @@ public class Box : MonoBehaviour
             }
             else if (isEnemyFreezeBox)
             {
+                
                 animator.SetBool("freeze", true);
                 freezeEnemies();
             }

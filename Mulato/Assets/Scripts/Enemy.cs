@@ -14,7 +14,8 @@ public class Enemy : MovingObject {
     public int gridCol;
     private int countTryTimes = 10;
     private bool dead;
-
+    public AudioClip eggsSound;
+    private AudioSource source;
 	public Animator animator;
     public Sprite omletBlue;
     public Sprite omletPurple;
@@ -137,6 +138,8 @@ public class Enemy : MovingObject {
         animator.SetBool("die", true);
         Destroy(gameObject.GetComponent<BoxCollider2D>());
         dead = true;
+        source = GetComponent<AudioSource>();
+        source.PlayOneShot(eggsSound);
         yield return new WaitForSeconds(3f);
         Destroy(this.gameObject);
     }

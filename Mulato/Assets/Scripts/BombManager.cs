@@ -21,7 +21,8 @@ namespace Assets.Scripts
         public GameObject SpecialBomb;
         public GameObject Combo;
         public Queue<GameObject> bombs;
-
+        public AudioClip bombSound;
+        
         public ParticleSystem ExplodParticleSystem;
 
         public int currentBombColor;
@@ -80,6 +81,7 @@ namespace Assets.Scripts
         {
 
             var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row, column, -1), Quaternion.identity) as GameObject;
+            
             currentBombColor = nextBombColor;
             nextBombColor = thirdBombColor;
             thirdBombColor = forthBombColor;
@@ -244,7 +246,9 @@ namespace Assets.Scripts
         //delay bomb action for slow motion
         IEnumerator DelayedExplode(GameObject curBomb, int row, int column)
         {
-            yield return new WaitForSeconds(2.8f);
+            yield return new WaitForSeconds(2.6f);
+            curBomb.GetComponent<AudioSource>().PlayOneShot(bombSound, 0.5f);
+            yield return new WaitForSeconds(0.2f);
             Explode(curBomb, row, column);
             yield return new WaitForSeconds(0.2f);
             Destroy(curBomb);

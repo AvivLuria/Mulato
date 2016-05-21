@@ -22,7 +22,7 @@ namespace Assets.Scripts
         private bool onAMission = false;
         public bool timer = true;
 		public bool nextLevel = false;
-		public Transform mainMenu, exitMenu, pauseMenu, startLevel2, startLevel3, startLevel4, startLevel5, startLevel1, startLevel6, startLevel7, startLevel8, startLevel9, startLevel10, startLevel11;
+		public Transform mainMenu, exitMenu,gameOver, pauseMenu, startLevel2, startLevel3, startLevel4, startLevel5, startLevel1, startLevel6, startLevel7, startLevel8, startLevel9, startLevel10, startLevel11;
 		public Transform[] startLevel;
 
 
@@ -443,9 +443,21 @@ namespace Assets.Scripts
             life -= damage;
             if (life <= 0)
             {
-                SceneManager.LoadScene("StartScene", LoadSceneMode.Single);
+				nextLevel = true;
+				gameOver.gameObject.SetActive (nextLevel);
+               // SceneManager.LoadScene("StartScene", LoadSceneMode.Single);
             }
         }
+
+		public void Restart(){
+			life = 3;
+			Timer.main.setTimerMission(200);
+			nextLevel = false;
+			InitGame (currLevel);
+			gameOver.gameObject.SetActive (nextLevel);
+			
+		}
+
 
         public void EnemyKilled()
         {
@@ -502,6 +514,9 @@ namespace Assets.Scripts
 
 		public void MainMenu(){
 			SceneManager.LoadScene ("StartScene", LoadSceneMode.Single);
+			nextLevel = false;
+
+			//gameOver.gameObject.SetActive (nextLevel);
 		}
 
 		public void PauseMenu(bool clicked){

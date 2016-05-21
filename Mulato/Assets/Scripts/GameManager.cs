@@ -40,7 +40,7 @@ namespace Assets.Scripts
 			startLevel [1] = startLevel3;
 			startLevel [2] = startLevel4;
 			startLevel [3] = startLevel5;
-            InitGame (currLevel = 2);         
+            InitGame (currLevel = -1);         
         }
 
         public void InitGame (int currLevel) {
@@ -99,7 +99,7 @@ namespace Assets.Scripts
                         #region hard_coding_scene
 
                         numberOfColors = 1;
-                        numberOFEnemiesInTheLevel = 1;
+                        numberOFEnemiesInTheLevel = 3;
                         BoardManager.main.wallPostions = new int[]
                           {92, 93, 94, 95, 83, 84, 63, 64, 52, 53, 54, 55, 43, 44, 12, 13, 14, 15, 23, 24};
                         BoardManager.main.numOfLifeBoxes = 0;
@@ -446,7 +446,7 @@ namespace Assets.Scripts
             Ui.activeUI(false);
             //startLevel [level - 2].gameObject.SetActive (nextLevel);
             StartCoroutine(delayLoadLevel());
-            Ui.activeUI(true);
+           
         }
 
         public void StartGame()
@@ -497,7 +497,7 @@ namespace Assets.Scripts
             yield return new WaitForSeconds(3f);
             InitGame(currLevel);
             // BombManager.main.reDrawBombs();
-            GetComponent<Ui>().enabled = true;
+            Ui.activeUI(true);
 
         }
     }

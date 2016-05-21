@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Utils;
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -68,7 +69,7 @@ namespace Assets.Scripts
             {
                 thirdBombColorImage.sprite = currentColorPosibilities[BombManager.main.thirdBombColor].GetComponent<SpriteRenderer>().sprite;
             }
-
+            StartCoroutine(rotateBombs());
         }
 
         private void setBombColorPosibilities()
@@ -93,6 +94,17 @@ namespace Assets.Scripts
                         }
                 }
             }
+        }
+
+        IEnumerator rotateBombs()
+        {
+            thirdBombColorImage.rectTransform.eulerAngles = new Vector3(0, 0, -45);
+            nextBombColorImage.rectTransform.eulerAngles = new Vector3(0, 0, -45);
+            currentBombColorImage.rectTransform.eulerAngles = new Vector3(0, 0, -45);
+            yield return new WaitForSeconds(0.3f);
+            thirdBombColorImage.rectTransform.eulerAngles = new Vector3(0, 0, 0);
+            nextBombColorImage.rectTransform.eulerAngles = new Vector3(0, 0, 0);
+            currentBombColorImage.rectTransform.eulerAngles = new Vector3(0, 0, 0);
         }
     }
 }

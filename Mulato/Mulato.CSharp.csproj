@@ -97,6 +97,7 @@
     <Compile Include="Assets\Scripts\Utils\SceneSingleton.cs" />
     <Compile Include="Assets\Scripts\colorManager.cs" />
     <Compile Include="Assets\Scripts\floor.cs" />
+    <Compile Include="Assets\Scripts\startScene.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Fonts\OFL.txt" />

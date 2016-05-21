@@ -40,8 +40,21 @@ namespace Assets.Scripts
 			startLevel [1] = startLevel3;
 			startLevel [2] = startLevel4;
 			startLevel [3] = startLevel5;
-            InitGame (currLevel = -1);         
+			nextLevel = true;
+			startLevel[0].gameObject.SetActive (nextLevel);
+           // InitGame (currLevel = -1);         
         }
+
+		public void OkFirstLevel(){
+			
+				nextLevel = false;
+				InitGame (currLevel = -1);
+				startLevel[0].gameObject.SetActive (false);
+			
+		
+
+		}
+
 
         public void InitGame (int currLevel) {
             if (currLevel == -2)

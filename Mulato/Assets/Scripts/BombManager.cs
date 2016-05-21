@@ -12,9 +12,9 @@ namespace Assets.Scripts
 
         public float explosionTime;
         public int powerOfExplosion;
-
+        public GameObject heart;
         public LayerMask layerMask = ~(1 << 9 | 1 << 11); //all exept bomb and floor
-
+        public GameObject test;
         public GameObject bombBlue;
         public GameObject bombPink;
         public GameObject bombPurple;
@@ -102,15 +102,25 @@ namespace Assets.Scripts
         private void Explode(GameObject curBomb, int row, int column)
         {
             //raycast from bomb to right,left,up,down
-            RaycastHit2D[] colliderHitsRight = Physics2D.RaycastAll(new Vector3(1f, 0, 0) + curBomb.transform.position, Vector2.right,
-                powerOfExplosion, layerMask);
-            RaycastHit2D[] colliderHitsLeft = Physics2D.RaycastAll(new Vector3(-1f, 0, 0) + curBomb.transform.position, Vector2.left,
-                powerOfExplosion, layerMask);
-            RaycastHit2D[] colliderHitsUp = Physics2D.RaycastAll(curBomb.transform.position, Vector2.up,
-                powerOfExplosion, layerMask);
-            RaycastHit2D[] colliderHitsDown = Physics2D.RaycastAll(new Vector3(0, -1f, 0) + curBomb.transform.position, Vector2.down,
-                powerOfExplosion, layerMask);
+          // Instantiate(test, new Vector3(1.2f, 0, 0) + curBomb.transform.position, Quaternion.identity);
+            RaycastHit2D[] colliderHitsRight = Physics2D.RaycastAll(new Vector3(1.2f, 0, 0) + curBomb.transform.position, Vector2.right,
+                powerOfExplosion - 0.3f, layerMask);
+         //   Instantiate(test, new Vector3(3f, 0, 0) + curBomb.transform.position, Quaternion.identity);
 
+          //  Instantiate(test, new Vector3(-1.2f, 0, 0) + curBomb.transform.position, Quaternion.identity);
+            RaycastHit2D[] colliderHitsLeft = Physics2D.RaycastAll(new Vector3(-1.2f, 0, 0) + curBomb.transform.position, Vector2.left,
+                powerOfExplosion - 0.3f, layerMask);
+          //  Instantiate(test, new Vector3(-3f, 0, 0) + curBomb.transform.position, Quaternion.identity);
+
+          //  Instantiate(test, new Vector3(0, 0, 0) + curBomb.transform.position, Quaternion.identity);
+            RaycastHit2D[] colliderHitsUp = Physics2D.RaycastAll(curBomb.transform.position, Vector2.up,
+                powerOfExplosion +0.5f, layerMask);
+         //  Instantiate(test, new Vector3(0, 2.5f, 0) + curBomb.transform.position, Quaternion.identity);
+
+         //   Instantiate(test, new Vector3(0, -1.2f, 0) + curBomb.transform.position, Quaternion.identity);
+            RaycastHit2D[] colliderHitsDown = Physics2D.RaycastAll(new Vector3(0, -1.2f, 0) + curBomb.transform.position, Vector2.down,
+                powerOfExplosion -0.3f, layerMask);
+        //    Instantiate(test, new Vector3(0, -3.2f, 0) + curBomb.transform.position, Quaternion.identity);
             comboCounterKill = missionMultipleKilled ? numOfKillesToWinComboMission : numOfKillesForCombo;
 
             colliderHitsAction(colliderHitsDown, curBomb.tag);
@@ -194,12 +204,14 @@ namespace Assets.Scripts
                 }
                 else if (currCollider.tag == "Box")
                 {
-                    currCollider.GetComponent<Box>().DestroyMe();
+                    currCollider.GetComponent<Box>().DestroyMe();                   
                     break;
                 }
                 else
                 {
                     GameManager.main.GameOver(1);
+                    Instantiate(heart, currCollider.transform.position, Quaternion.identity);
+                    heart.GetComponent<Heart>().SetAnimation();
                 }
             }
 

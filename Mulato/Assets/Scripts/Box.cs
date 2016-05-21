@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class Box : MonoBehaviour
 {
     //public Canvas heartBouns;
-
+    private bool active = true;
     private float enemySpeed;
     public int gridRow;
     public int gridCol;
@@ -18,27 +18,38 @@ public class Box : MonoBehaviour
     private Animator animator;
 
     public GameObject heart;
+    public GameObject special;
 
     public void DestroyMe()
     {
-        animator = GetComponent<Animator>();
-        BoardManager.main.updateGridPointObject(gridRow,gridCol,gridRow,gridCol);
-        if (isSpecialColorBombBox)
+        if (active)
         {
-            // TODO: add special effect here
-            addSpecialColorBombToTheStack();
-        } else if (isMoreLifeBox)
-        {
-            addMoreLife();
-        } else if (isEnemyFreezeBox)
-        {
-            freezeEnemies();
-        } else
-        {
-            animator.SetBool("empty", true);
-        }
+            active = !active;
+            animator = GetComponent<Animator>();
+            BoardManager.main.updateGridPointObject(gridRow, gridCol, gridRow, gridCol);
+            if (isSpecialColorBombBox)
+            {
+                // TODO: add special effect here
+                animator.SetBool("multyBomb", true);
+                addSpecialColorBombToTheStack();
+            }
+            else if (isMoreLifeBox)
+            {
+                animator.SetBool("heart", true);
+                addMoreLife();
+            }
+            else if (isEnemyFreezeBox)
+            {
+                animator.SetBool("freeze", true);
+                freezeEnemies();
+            }
+            else
+            {
+                animator.SetBool("empty", true);
+            }
 
-        StartCoroutine(delayedDestory());
+            StartCoroutine(delayedDestory());
+        }
     }
 
     private void freezeEnemies()
@@ -64,7 +75,7 @@ public class Box : MonoBehaviour
 
     private void addSpecialColorBombToTheStack()
     {
-        
+        Instantiate(special, this.transform.position, Quaternion.identity);
         BombManager.main.forthBombColor = colorManager.colorsOptions.Special;
         colorManager.main.changeColors();
         

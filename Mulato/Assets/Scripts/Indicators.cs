@@ -15,17 +15,21 @@ public class Indicators : MonoBehaviour
         if (currObj.tag == "Combo")
         {
             StartCoroutine(scale());
+        } else if (currObj.tag == "bounsHeart")
+        {
+            iTween.MoveTo(currObj.gameObject, new Vector3(4, 11, 0), 5f);
         } else
         {
-            iTween.MoveTo(currObj.gameObject, new Vector3(8, 11, 0), 5f);
-            StartCoroutine(delayedDestory());
+            iTween.MoveTo(currObj.gameObject, new Vector3(0, 11, 0), 5f);        
         }
     }
 
-    IEnumerator delayedDestory()
+    void Update()
     {
-        yield return new WaitForSeconds(1.5f);
-        this.transform.position = new Vector3(-100, -100, 0);
+        if (currObj.transform.position.y > 10)
+        {
+            Destroy(currObj.gameObject);
+        }
     }
 
     IEnumerator scale()

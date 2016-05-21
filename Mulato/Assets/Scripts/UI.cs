@@ -2,13 +2,13 @@
 using System.Collections;
 using Assets.Scripts;
 
-public class UI : MonoBehaviour
+public class Ui : MonoBehaviour
 {
-    private bool click = true;
+    private static bool click = true;
     private Vector2 m_inputMouse;
     // Update is called once per frame
     void Update () {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && click)
         {
             //get the hit position
             m_inputMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -19,12 +19,6 @@ public class UI : MonoBehaviour
                     hit.collider.gameObject.GetComponent<floor>().gridRow, 
                     hit.collider.gameObject.GetComponent<floor>().gridCol);            
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            GameManager.main.PauseMenu(click);
-            click = !click;
         }
 
         if (Input.GetKeyDown(KeyCode.S))
@@ -40,5 +34,10 @@ public class UI : MonoBehaviour
             }
         }
 
+    }
+
+    public static void activeUI(bool input)
+    {
+        click = input;
     }
 }

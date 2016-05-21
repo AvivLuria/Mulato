@@ -40,8 +40,7 @@ namespace Assets.Scripts
 			startLevel [1] = startLevel3;
 			startLevel [2] = startLevel4;
 			startLevel [3] = startLevel5;
-            UnityEngine.Debug.Log(currLevel);
-            InitGame (currLevel = 1);         
+            InitGame (currLevel = 6);         
         }
 
         public void InitGame (int currLevel) {
@@ -49,7 +48,6 @@ namespace Assets.Scripts
             {
                 return;
             }
-            UnityEngine.Debug.Log(BoardManager.main);
             BoardManager.main.clearScene();
             switch (currLevel)
             {
@@ -59,9 +57,9 @@ namespace Assets.Scripts
 
                     numberOfColors = 1;
                     numberOFEnemiesInTheLevel = 3;
-                    BoardManager.main.wallPostions = new int[]
-                    {92, 93, 94, 95, 83, 84, 63, 64, 52, 53, 54, 55, 43, 44, 12, 13, 14, 15, 23, 24};
-                    BoardManager.main.numOfLifeBoxes = 4;
+                //    BoardManager.main.wallPostions = new int[]
+                 //   {92, 93, 94, 95, 83, 84, 63, 64, 52, 53, 54, 55, 43, 44, 12, 13, 14, 15, 23, 24};
+                    BoardManager.main.numOfLifeBoxes = 1;
                     BoardManager.main.numOfFreezeBoxes = 0;
                     BoardManager.main.numOfSpecialBombBoxes = 0;
                     BoardManager.main.numOfNomralBoxes = 0;
@@ -402,8 +400,7 @@ namespace Assets.Scripts
         {
             Timer.main.setTimerMission(5);
             currLevel++;
-            GetComponent<UI>().enabled = false;
-            nextLevel = true;
+            Ui.activeUI(false);
             //startLevel [level - 2].gameObject.SetActive (nextLevel);
             StartCoroutine(delayLoadLevel());
 
@@ -432,10 +429,11 @@ namespace Assets.Scripts
 
 		public void PauseMenu(bool clicked){
 			if (clicked == true) {
+                Ui.activeUI(false);
 				pauseMenu.gameObject.SetActive (clicked);
 				timer = false;
-
 			} else {
+                Ui.activeUI(true);
 				pauseMenu.gameObject.SetActive (clicked);
 				timer = true;
 			}
@@ -456,7 +454,7 @@ namespace Assets.Scripts
             yield return new WaitForSeconds(3f);
             InitGame(currLevel);
             // BombManager.main.reDrawBombs();
-            GetComponent<UI>().enabled = true;
+            GetComponent<Ui>().enabled = true;
 
         }
     }

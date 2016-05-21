@@ -83,6 +83,7 @@
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GameMemory.cs" />
+    <Compile Include="Assets\Scripts\Heart.cs" />
     <Compile Include="Assets\Scripts\Indicators.cs" />
     <Compile Include="Assets\Scripts\Missions.cs" />
     <Compile Include="Assets\Scripts\MovingObject.cs" />
@@ -91,7 +92,7 @@
     <Compile Include="Assets\Scripts\PowerUp.cs" />
     <Compile Include="Assets\Scripts\TextLife.cs" />
     <Compile Include="Assets\Scripts\Timer.cs" />
-    <Compile Include="Assets\Scripts\UI.cs" />
+    <Compile Include="Assets\Scripts\Ui.cs" />
     <Compile Include="Assets\Scripts\Utils\DelayedExecute.cs" />
     <Compile Include="Assets\Scripts\Utils\SceneSingleton.cs" />
     <Compile Include="Assets\Scripts\colorManager.cs" />

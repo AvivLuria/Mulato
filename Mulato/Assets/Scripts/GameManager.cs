@@ -22,7 +22,7 @@ namespace Assets.Scripts
         private bool onAMission = false;
         public bool timer = true;
 		public bool nextLevel = false;
-		public Transform mainMenu, exitMenu, pauseMenu, startLevel2, startLevel3, startLevel4, startLevel5;
+		public Transform mainMenu, exitMenu, pauseMenu, startLevel2, startLevel3, startLevel4, startLevel5, startLevel1, startLevel6, startLevel7, startLevel8, startLevel9, startLevel10, startLevel11;
 		public Transform[] startLevel;
 
 
@@ -35,11 +35,19 @@ namespace Assets.Scripts
         void Start()
         {
             
-			startLevel = new Transform[4];
-			startLevel [0] = startLevel2;
-			startLevel [1] = startLevel3;
-			startLevel [2] = startLevel4;
-			startLevel [3] = startLevel5;
+			startLevel = new Transform[12];
+			startLevel [0] = startLevel1;
+			startLevel [1] = startLevel2;
+			startLevel [2] = startLevel3;
+			startLevel [3] = startLevel4;
+			startLevel [4] = startLevel5;
+			startLevel [5] = startLevel6;
+			startLevel [6] = startLevel7;
+			startLevel [7] = startLevel8;
+			startLevel [8] = startLevel9;
+			startLevel [9] = startLevel10;
+			startLevel [10] = startLevel11;
+
 			nextLevel = true;
 			startLevel[0].gameObject.SetActive (nextLevel);
            // InitGame (currLevel = -1);         
@@ -454,13 +462,26 @@ namespace Assets.Scripts
    
         public void changeLevel()
         {
-            Timer.main.setTimerMission(5);
-            currLevel++;
-            Ui.activeUI(false);
-            //startLevel [level - 2].gameObject.SetActive (nextLevel);
-            StartCoroutine(delayLoadLevel());
+			StartCoroutine(delayLoadLevel());
+
+            
            
         }
+
+		public void OkNextLevel(){
+			nextLevel = false;
+			currLevel++;
+			Timer.main.setTimerMission(5);
+
+			Ui.activeUI(false);
+
+		
+			InitGame(currLevel);
+			// BombManager.main.reDrawBombs();
+			Ui.activeUI(true);
+			startLevel [currLevel + 1].gameObject.SetActive (nextLevel);
+			
+		}
 
         public void StartGame()
         {
@@ -508,9 +529,9 @@ namespace Assets.Scripts
         {
             
             yield return new WaitForSeconds(3f);
-            InitGame(currLevel);
-            // BombManager.main.reDrawBombs();
-            Ui.activeUI(true);
+			nextLevel = true;
+			startLevel [currLevel + 2].gameObject.SetActive (nextLevel);
+            
 
         }
     }

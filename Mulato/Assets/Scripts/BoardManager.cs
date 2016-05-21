@@ -155,7 +155,6 @@ namespace Assets.Scripts
             // Initialize the board
             if (m_board == null)
                 BoardSetup();
-
             // Initialize the walls in the board
             setUpWallsOnBoard(wallPostions);
 
@@ -164,8 +163,46 @@ namespace Assets.Scripts
             LayoutObjectAtRandom(specialBoxTiles, GridPointObject.Box, numOfSpecialBombBoxes);
             LayoutObjectAtRandom(specialLifeBoxTiles, GridPointObject.Box, numOfLifeBoxes);
             LayoutObjectAtRandom(specialEnemyFreezeTiles, GridPointObject.Box, numOfFreezeBoxes);
+            if (level != 0) { 
+                setUpEnemiesOnTheBoard();
+            } else
+            {
+                setUpEnemiesOnTheBoardManualy(level);
+            }
+        }
 
-            setUpEnemiesOnTheBoard();
+        private void setUpEnemiesOnTheBoardManualy(int level)
+        {
+            if (level == 0)
+            {
+                numOfEnemies-=4;
+                GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue]=2;
+                GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink]=2;
+                ///
+                m_board[1][1].gridPointObject = GridPointObject.Enemy;
+                var gridPoint = m_board[1][1];
+                var enemy = Instantiate(enemyBlue, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+                enemy.GetComponent<Enemy>().gridRow = 1;
+                enemy.GetComponent<Enemy>().gridCol = 1;
+                ///
+                m_board[9][6].gridPointObject = GridPointObject.Enemy;
+                gridPoint = m_board[9][6];
+                enemy = Instantiate(enemyBlue, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+                enemy.GetComponent<Enemy>().gridRow = 9;
+                enemy.GetComponent<Enemy>().gridCol = 6;
+                ///
+                m_board[1][6].gridPointObject = GridPointObject.Enemy;
+                gridPoint = m_board[1][6];
+                enemy = Instantiate(enemyPink, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+                enemy.GetComponent<Enemy>().gridRow = 1;
+                enemy.GetComponent<Enemy>().gridCol = 6;
+                ///
+                m_board[9][1].gridPointObject = GridPointObject.Enemy;
+                gridPoint = m_board[9][1];
+                enemy = Instantiate(enemyPink, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+                enemy.GetComponent<Enemy>().gridRow = 9;
+                enemy.GetComponent<Enemy>().gridCol = 1;
+            }       
         }
 
         //setup grid points and side walls
@@ -270,7 +307,7 @@ namespace Assets.Scripts
 
         public void clearScene()
         {
-            String[] tagsToDelete = new[] {"Box", "EnemyBlue", "EnemyPurple", "EnemyPink", "Wall"};
+            String[] tagsToDelete = new[] {"Box", "EnemyBlue", "EnemyPurple", "EnemyPink", "Wall", "arrow"};
 
             for (int i = 0; i < tagsToDelete.Length; i++)
             {
@@ -297,7 +334,13 @@ namespace Assets.Scripts
                             GridPointObject.Empty;
                     }
                 }
-                else
+                else if (tagsToDelete[i].ToString() == "arrow")
+                {
+                    foreach (var clone in clones)
+                    {
+                        Destroy(clone);
+                    }
+                } else
                 {
                     foreach (var clone in clones)
                     {
@@ -305,7 +348,7 @@ namespace Assets.Scripts
                         m_board[clone.GetComponent<Enemy>().gridRow][clone.GetComponent<Enemy>().gridCol].gridPointObject =
                             GridPointObject.Empty;
                     }
-                }              
+                }            
             }           
         }
 

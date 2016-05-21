@@ -75,7 +75,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\LevelManager.cs" />
     <Compile Include="Assets\Scripts\BoardManager.cs" />
     <Compile Include="Assets\Scripts\BombManager.cs" />
     <Compile Include="Assets\Scripts\BombScript.cs" />
@@ -92,6 +91,7 @@
     <Compile Include="Assets\Scripts\PowerUp.cs" />
     <Compile Include="Assets\Scripts\TextLife.cs" />
     <Compile Include="Assets\Scripts\Timer.cs" />
+    <Compile Include="Assets\Scripts\ToolTip.cs" />
     <Compile Include="Assets\Scripts\Ui.cs" />
     <Compile Include="Assets\Scripts\Utils\DelayedExecute.cs" />
     <Compile Include="Assets\Scripts\Utils\SceneSingleton.cs" />

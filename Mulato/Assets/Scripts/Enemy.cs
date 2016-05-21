@@ -16,7 +16,10 @@ public class Enemy : MovingObject {
     private bool dead;
 
 	public Animator animator;
-     
+    public Sprite omletBlue;
+    public Sprite omletPurple;
+    public Sprite omletPink;
+
     void Awake()
     {
         // SHIR!
@@ -134,9 +137,8 @@ public class Enemy : MovingObject {
         animator.SetBool("die", true);
         Destroy(gameObject.GetComponent<BoxCollider2D>());
         dead = true;
-       yield return new WaitForSeconds(1.6f);
-
-       Destroy(this.gameObject);
+        yield return new WaitForSeconds(3f);
+        Destroy(this.gameObject);
     }
 }
 

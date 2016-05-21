@@ -17,7 +17,7 @@ namespace Assets.Scripts
         public int numberOFEnemiesInTheLevel;
         public int[] enemiesOnTheBoard;
         public int numberOfColors;
-         
+        public GameObject arrowIndicator; 
         public GameObject Memory;
         private bool onAMission = false;
         public bool timer = true;
@@ -40,35 +40,78 @@ namespace Assets.Scripts
 			startLevel [1] = startLevel3;
 			startLevel [2] = startLevel4;
 			startLevel [3] = startLevel5;
-            InitGame (currLevel = 6);         
+            InitGame (currLevel = 0);         
         }
 
         public void InitGame (int currLevel) {
-            if (currLevel == 0)
+            if (currLevel == -2)
             {
                 return;
             }
             BoardManager.main.clearScene();
             switch (currLevel)
             {
-                case (1):
-                {
-                    #region hard_coding_scene
+                case (-1):
+                    {
+                        #region hard_coding_scene
 
-                    numberOfColors = 1;
-                    numberOFEnemiesInTheLevel = 3;
-                //    BoardManager.main.wallPostions = new int[]
-                 //   {92, 93, 94, 95, 83, 84, 63, 64, 52, 53, 54, 55, 43, 44, 12, 13, 14, 15, 23, 24};
-                    BoardManager.main.numOfLifeBoxes = 1;
+                        numberOfColors = 1;
+                        numberOFEnemiesInTheLevel = 1;
+                        BoardManager.main.wallPostions = new int[]
+                          {11 ,12, 13 ,14 ,15, 16, 21, 22, 23, 24, 25, 26, 31, 32, 33, 34 , 35, 36, 41, 42, 44, 45
+                          ,46 ,51 ,52, 56, 66, 71 ,72, 76, 81, 82,84 ,85 ,86, 91, 92, 93, 94, 95, 96, 54,55,74,75 };
+                    BoardManager.main.numOfLifeBoxes = 0;
                     BoardManager.main.numOfFreezeBoxes = 0;
                     BoardManager.main.numOfSpecialBombBoxes = 0;
                     BoardManager.main.numOfNomralBoxes = 0;
 
                     Timer.main.setTimerMission(180);
                         #endregion
+                        Instantiate(arrowIndicator, new Vector3(4, 5, 0), Quaternion.Euler(0, 0, 50));
                     onAMission = false;
+                        Timer.main.setTimerMission(1800);
+                        Timer.main.timerText.enabled = false;
                     break;
                 }
+                case (0):
+                    {
+                        #region hard_coding_scene
+
+                        numberOfColors = 2;
+                        numberOFEnemiesInTheLevel = 4;
+                        BoardManager.main.wallPostions = new int[]
+                          {13,14,23,24,33,34,43,44,53,54,63,64,73,74,83,84,93,94,51,52,55,56};
+                        BoardManager.main.numOfLifeBoxes = 0;
+                        BoardManager.main.numOfFreezeBoxes = 0;
+                        BoardManager.main.numOfSpecialBombBoxes = 0;
+                        BoardManager.main.numOfNomralBoxes = 0;
+                        BombManager.main.setNumberOfColors(numberOfColors);
+                        Timer.main.setTimerMission(1800);
+                        Instantiate(arrowIndicator, new Vector3(3.3f, 9, 0), Quaternion.Euler(0, 0, 300));
+                        #endregion
+
+                        Timer.main.timerText.enabled = false;
+                        onAMission = false;
+                        break;
+                    }
+                case (1):
+                    {
+                        #region hard_coding_scene
+
+                        numberOfColors = 1;
+                        numberOFEnemiesInTheLevel = 1;
+                        BoardManager.main.wallPostions = new int[]
+                          {92, 93, 94, 95, 83, 84, 63, 64, 52, 53, 54, 55, 43, 44, 12, 13, 14, 15, 23, 24};
+                        BoardManager.main.numOfLifeBoxes = 0;
+                        BoardManager.main.numOfFreezeBoxes = 0;
+                        BoardManager.main.numOfSpecialBombBoxes = 0;
+                        BoardManager.main.numOfNomralBoxes = 0;
+                        Timer.main.timerText.enabled = true;
+                        Timer.main.setTimerMission(180);
+                        #endregion
+                        onAMission = false;
+                        break;
+                    }
                 //classic play
                 case (2):
                 {
@@ -403,12 +446,12 @@ namespace Assets.Scripts
             Ui.activeUI(false);
             //startLevel [level - 2].gameObject.SetActive (nextLevel);
             StartCoroutine(delayLoadLevel());
-
+            Ui.activeUI(true);
         }
 
         public void StartGame()
         {
-            currLevel = 1;
+            currLevel = -1;
             SceneManager.LoadScene("Scene1", LoadSceneMode.Single);
             //InitGame(currLevel);
         }

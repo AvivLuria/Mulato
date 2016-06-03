@@ -141,12 +141,13 @@ public class Enemy : MovingObject {
     IEnumerator delayedDestory()
     {
         // SHIR!
+        GetComponent<SpriteRenderer>().sortingLayerName = "bouns_indic";
         animator.SetBool("die", true);
         Destroy(gameObject.GetComponent<BoxCollider2D>());
         dead = true;
         source = GetComponent<AudioSource>();
         source.PlayOneShot(eggsSound);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1.5f);
         Destroy(this.gameObject);
     }
 }

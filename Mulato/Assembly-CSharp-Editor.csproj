@@ -6,10 +6,10 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{EA16798A-BFAE-37CC-B5AD-E3CFE89C8C65}</ProjectGuid>
+    <ProjectGuid>{708EA279-DB14-6588-B686-AC8345F3BBA0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>Assets</BaseDirectory>
@@ -45,46 +45,48 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\BoardManager.cs" />
-     <Compile Include="Assets\Scripts\BombManager.cs" />
-     <Compile Include="Assets\Scripts\Box.cs" />
-     <Compile Include="Assets\Scripts\Enemy.cs" />
-     <Compile Include="Assets\Scripts\GameManager.cs" />
-     <Compile Include="Assets\Scripts\GameMemory.cs" />
-     <Compile Include="Assets\Scripts\Heart.cs" />
-     <Compile Include="Assets\Scripts\Indicators.cs" />
-     <Compile Include="Assets\Scripts\Missions.cs" />
-     <Compile Include="Assets\Scripts\MovingObject.cs" />
-     <Compile Include="Assets\Scripts\NotForUsing\JoyStickUnused.cs" />
-     <Compile Include="Assets\Scripts\NotForUsing\SmoothCameraUnused.cs" />
-     <Compile Include="Assets\Scripts\TextLife.cs" />
-     <Compile Include="Assets\Scripts\Timer.cs" />
-     <Compile Include="Assets\Scripts\Ui.cs" />
-     <Compile Include="Assets\Scripts\UnityTweenPackage\TweenAlpha.cs" />
-     <Compile Include="Assets\Scripts\UnityTweenPackage\TweenBase.cs" />
-     <Compile Include="Assets\Scripts\UnityTweenPackage\TweenColor.cs" />
-     <Compile Include="Assets\Scripts\UnityTweenPackage\TweenSequence.cs" />
-     <Compile Include="Assets\Scripts\UnityTweenPackage\TweenTransforms.cs" />
-     <Compile Include="Assets\Scripts\UnityTweenPackage\TweenValue.cs" />
-     <Compile Include="Assets\Scripts\UnityTweenPackage\TweenVector.cs" />
-     <Compile Include="Assets\Scripts\Utils\DelayedExecute.cs" />
-     <Compile Include="Assets\Scripts\Utils\SceneSingleton.cs" />
-     <Compile Include="Assets\Scripts\colorManager.cs" />
-     <Compile Include="Assets\Scripts\floor.cs" />
-     <Compile Include="Assets\Scripts\level.cs" />
-     <Compile Include="Assets\Scripts\startScene.cs" />
+     <Compile Include="Assets\Scripts\UnityTweenPackage\Editor\TweenTransformsEditor.cs" />
      <None Include="Assets\Fonts\OFL.txt" />
      <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
+ <Reference Include="UnityEditor.Advertisements">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
+ </Reference>
+ <Reference Include="nunit.framework">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/EditorTestsRunner/Editor/nunit.framework.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.EditorTestsRunner">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/EditorTestsRunner/Editor/UnityEditor.EditorTestsRunner.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
+ <Reference Include="UnityEditor.UI">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/Editor/UnityEditor.UI.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.Networking">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.Networking">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Networking/Editor/UnityEditor.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.TreeEditor">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/TreeEditor/Editor/UnityEditor.TreeEditor.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.Graphs">
+ <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.Graphs.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.Android.Extensions">
+ <HintPath>/Applications/Unity/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.OSXStandalone.Extensions">
+ <HintPath>/Applications/Unity/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
       <Project>{4EB165EC-4B4B-D7A6-682D-61DCD30E11C6}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+    <ProjectReference Include="Assembly-CSharp.csproj">
+      <Project>{EA16798A-BFAE-37CC-B5AD-E3CFE89C8C65}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

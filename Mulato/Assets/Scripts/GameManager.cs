@@ -17,7 +17,7 @@ namespace Assets.Scripts
 
         private int missionNum;
         public int difficulty;
-        public int currLevel;
+        public int currLevel = -3;
         public int life = 3;
         public int numberOFEnemiesInTheLevel;
         public int[] enemiesOnTheBoard;
@@ -42,7 +42,7 @@ namespace Assets.Scripts
         void Start()
         {
             
-			startLevel = new Transform[12];
+			startLevel = new Transform[13];
             startLevel[0] = startLevel0;
             startLevel [1] = startLevel1;
 			startLevel [2] = startLevel2;
@@ -56,15 +56,17 @@ namespace Assets.Scripts
 			startLevel [10] = startLevel10;
 			startLevel [11] = startLevel11;
 
-			nextLevel = true;
+
+
+            nextLevel = true;
 			startLevel[0].gameObject.SetActive (nextLevel);
-           // InitGame (currLevel = -1);         
+            // InitGame (currLevel = -1);         
         }
 
 		public void OkFirstLevel(){
 			
 				nextLevel = false;
-				InitGame (currLevel = -1);
+				InitGame (currLevel = -2);
 				startLevel[0].gameObject.SetActive (false);		
 		}
 
@@ -441,8 +443,8 @@ namespace Assets.Scripts
                 Vector2 enemyOne = m_CurrentBoard.GetComponent<BoardManager>().enemies[0].transform.position;
                 StartCoroutine(delayedMove(arrowIndicator, enemyOne.x + 1f, enemyOne.y + 0.8f, enemyOne.x + 0.3f, enemyOne.y, 0f));
                 Vector2 enemyTwo = m_CurrentBoard.GetComponent<BoardManager>().enemies[1].transform.position;
-                StartCoroutine(delayedMove(arrowIndicator, enemyTwo.x + 1f, enemyTwo.y + 0.8f, enemyTwo.x + 0.3f, enemyTwo.y, 3f));
-                StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 5f));
+                StartCoroutine(delayedMove(arrowIndicator, enemyTwo.x + 1f, enemyTwo.y + 0.8f, enemyTwo.x + 0.3f, enemyTwo.y, 2f));
+                StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 4f));
             }
             BombManager.main.reDrawBombs();
         }
@@ -495,7 +497,7 @@ namespace Assets.Scripts
 			Timer.main.setTimerMission(5);
 			Ui.activeUI(false);
 			InitGame(currLevel);			
-			startLevel [currLevel + 2].gameObject.SetActive (nextLevel);
+			startLevel [currLevel + 2].gameObject.SetActive (false);
             Ui.activeUI(true);
         }
 
@@ -505,7 +507,8 @@ namespace Assets.Scripts
             SceneManager.LoadScene("Scene1", LoadSceneMode.Single);
             //InitGame(currLevel);
         }
-		public void ExitMenu(bool clicked){
+
+        public void ExitMenu(bool clicked){
 			if (clicked == true) {
 				exitMenu.gameObject.SetActive (clicked);
 				mainMenu.gameObject.SetActive (false);
@@ -540,32 +543,22 @@ namespace Assets.Scripts
 
 		}
 
-        private void displayInstruction(int level)
-        {
-            //if ()
-        }
         IEnumerator delayLoadLevel()
         {
             Ui.activeUI(false);
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(3f);
 			nextLevel = true;
-			startLevel [currLevel + 3].gameObject.SetActive (nextLevel);
-            
-
+            startLevel [currLevel + 3].gameObject.SetActive (nextLevel);           
         }
         IEnumerator delayRestart()
-        {
-            
-            yield return new WaitForSeconds(1f);
-            
+        {            
+            yield return new WaitForSeconds(1f);           
             life = 3;
            // Timer.main.setTimerMission(200);
             nextLevel = false;
             InitGame(currLevel);
             gameOver.gameObject.SetActive(nextLevel);
             Ui.activeUI(true);
-
-
         }
 
         IEnumerator delayedMove(GameObject objectToMove, float XStartPostion, float YStartPostion, float XEndPostion, float YEndPostion, float timeToWait)
@@ -575,6 +568,4 @@ namespace Assets.Scripts
             objectToMove.GetComponent<TweenTransforms>().endVector = new Vector3(XEndPostion, YEndPostion, 0);
         }
     }
-
-
 }

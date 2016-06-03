@@ -244,7 +244,8 @@ namespace Assets.Scripts
             {
                 //creates special bomb on choosen point
                 var curBomb =
-                    Instantiate(SpecialBomb, new Vector3(floor.transform.position.x, floor.transform.position.y, -1), Quaternion.identity) as GameObject;
+                    Instantiate(SpecialBomb,new Vector3(2,8,0), Quaternion.identity) as GameObject;
+                iTween.MoveTo(curBomb, new Vector3(floor.transform.position.x, floor.transform.position.y, -1), 1.5f);
                 StartCoroutine(DelayedExplode(curBomb, (int)gridRowBomb, (int)gridColBomb));
                 m_setBombOnBoard((int)gridRowBomb, (int)gridColBomb);
             }

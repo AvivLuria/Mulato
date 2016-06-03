@@ -64,7 +64,7 @@ namespace Assets.Scripts
 		public void OkFirstLevel(){
 			
 				nextLevel = false;
-				InitGame (currLevel = -2);
+				InitGame (currLevel = -1);
 				startLevel[0].gameObject.SetActive (false);		
 		}
 
@@ -94,7 +94,8 @@ namespace Assets.Scripts
                         m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[]{
                             11 ,12, 13 ,14 ,15, 16, 21, 22, 23, 24, 25, 26, 31, 32, 33, 34 , 35, 36, 41, 42, 44, 45
                            ,46 ,51 ,52, 56, 66, 71 ,72, 76, 81, 82,84 ,85 ,86, 91, 92, 93, 94, 95, 96, 54,55,74,75 };
-                       // Instantiate(arrowIndicator, new Vector3(6.27f, 8.6f, 0), Quaternion.Euler(0, 0, 50));
+                        // Instantiate(arrowIndicator, new Vector3(6.27f, 8.6f, 0), Quaternion.Euler(0, 0, 50));
+                        StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 2f));
                         onAMission = false;
                         Timer.main.setTimerMission(1800);
                         Timer.main.timerText.enabled = false;
@@ -110,7 +111,8 @@ namespace Assets.Scripts
                           {13,14,23,24,33,34,43,44,53,54,63,64,73,74,83,84,93,94,51,52,55,56};                  
                         BombManager.main.setNumberOfColors(numberOfColors);
                         Timer.main.setTimerMission(1800);
-                        Instantiate(arrowIndicator, new Vector3(3.3f, 9, 0), Quaternion.Euler(0, 0, 300));
+                        
+                        //    Instantiate(arrowIndicator, new Vector3(3.3f, 9, 0), Quaternion.Euler(0, 0, 300));
                         #endregion
 
                         Timer.main.timerText.enabled = false;
@@ -128,7 +130,7 @@ namespace Assets.Scripts
                           {13,14,23,24,33,34,43,44,53,54,63,64,73,74,83,84,93,94,51,52,55,56};
                         BombManager.main.setNumberOfColors(numberOfColors);
                         Timer.main.setTimerMission(1800);
-                        Instantiate(arrowIndicator, new Vector3(3.3f, 9, 0), Quaternion.Euler(0, 0, 300));
+                       // Instantiate(arrowIndicator, new Vector3(3.3f, 9, 0), Quaternion.Euler(0, 0, 300));
                         #endregion
 
                         Timer.main.timerText.enabled = false;
@@ -434,6 +436,14 @@ namespace Assets.Scripts
             }
 
             m_CurrentBoard.GetComponent<BoardManager>().StartScene();
+            if ( currLevel == -1)
+            {
+                Vector2 enemyOne = m_CurrentBoard.GetComponent<BoardManager>().enemies[0].transform.position;
+                StartCoroutine(delayedMove(arrowIndicator, enemyOne.x + 1f, enemyOne.y + 0.8f, enemyOne.x + 0.3f, enemyOne.y, 0f));
+                Vector2 enemyTwo = m_CurrentBoard.GetComponent<BoardManager>().enemies[1].transform.position;
+                StartCoroutine(delayedMove(arrowIndicator, enemyTwo.x + 1f, enemyTwo.y + 0.8f, enemyTwo.x + 0.3f, enemyTwo.y, 3f));
+                StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 5f));
+            }
             BombManager.main.reDrawBombs();
         }
 
@@ -557,6 +567,14 @@ namespace Assets.Scripts
 
 
         }
+
+        IEnumerator delayedMove(GameObject objectToMove, float XStartPostion, float YStartPostion, float XEndPostion, float YEndPostion, float timeToWait)
+        {
+            yield return new WaitForSeconds(timeToWait);
+            objectToMove.GetComponent<TweenTransforms>().startingVector = new Vector3(XStartPostion, YStartPostion, 0);
+            objectToMove.GetComponent<TweenTransforms>().endVector = new Vector3(XEndPostion, YEndPostion, 0);
+        }
     }
+
 
 }

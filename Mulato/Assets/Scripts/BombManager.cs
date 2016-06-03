@@ -259,7 +259,7 @@ namespace Assets.Scripts
         {
             yield return new WaitForSeconds(0.3f);
             m_setBombOnBoard(row, column);
-            yield return new WaitForSeconds(2.5f);
+            yield return new WaitForSeconds(1f);
             curBomb.GetComponent<AudioSource>().PlayOneShot(bombSound, 0.5f);
             yield return new WaitForSeconds(0.2f);
             Explode(curBomb, row, column);

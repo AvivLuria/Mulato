@@ -53,7 +53,7 @@ namespace Assets.Scripts
         public GameObject enemyPurple;
         #endregion
         private List<GridPoint[]> m_GridPointList = null;
-        private List<GameObject> enemies = null;
+        public List<GameObject> enemies { get; set; }
         private List<GameObject> boxesFloor = null;
 
         private BombManagerBoxMovingObjectsUpdateBombGridPoint m_UpdateBombGridPoint;
@@ -331,7 +331,7 @@ namespace Assets.Scripts
                         enemy.GetComponent<Enemy>().gridRow = randomRowIndex;
                         enemy.GetComponent<Enemy>().gridCol = randomColumnIndex;
                         enemy.GetComponent<Enemy>().setBoardListener(this.gameObject);
-                        enemies.Add(enemy.gameObject);
+                        enemies.Add(enemy);
                         //new Vector3(gridPoint.gameObject.transform.position.x, gridPoint.gameObject.transform.position.y,-1)
                     }
                     else if (gridPointObjectToAdd == GridPointObject.Box)

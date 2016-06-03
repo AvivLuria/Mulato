@@ -21,11 +21,17 @@ public class Enemy : MovingObject {
     public Sprite omletPurple;
     public Sprite omletPink;
 
+    GameObject m_curBoard;
     void Awake()
     {
         // SHIR!
        animator = GetComponent<Animator>();
         dead = false;
+    }
+
+    public void setBoardListener(GameObject i_curBoard)
+    {
+        m_curBoard = i_curBoard;
     }
 
 	void Update() {
@@ -97,7 +103,7 @@ public class Enemy : MovingObject {
 
 		
 
-        if (AttemptMove(xDir, yDir, gridRow + yDir, gridCol + xDir, 0))
+        if (AttemptMove(xDir, yDir, gridRow + yDir, gridCol + xDir, 0, m_curBoard))
         {
             // SHIR!
            animator.SetInteger("Dir", AnimDir);

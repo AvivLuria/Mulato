@@ -5,8 +5,13 @@ using UnityEngine;
 //The abstract keyword enables you to create classes and class members that are incomplete and must be implemented in a derived class.
 namespace Assets.Scripts
 {
+    public delegate bool MovingObjectsCanMoveOnBoard(int row, int col);
     public abstract class MovingObject : MonoBehaviour
     {
+        public GameObject m_CurrBoard;
+        public BombManagerBoxMovingObjectsUpdateBombGridPoint m_UpdateBombGridPointEnemy;
+        public MovingObjectsCanMoveOnBoard m_CanMove;
+
         public float moveTime = 1f;			//Time it will take object to move, in seconds.
         public LayerMask blockingLayer;			//Layer on which collision will be checked.
         private Rigidbody2D rb2D;				//The Rigidbody2D component attached to this object.
@@ -20,12 +25,15 @@ namespace Assets.Scripts
             //By storing the reciprocal of the move time we can use it by multiplying instead of dividing, this is more efficient.
             inverseMoveTime = 1f / moveTime;
         }
+
         //Move returns true if it is able to move and false if not. 
         //Move takes parameters for row direction, column direction and a RaycastHit2D to check collision.
         //TODO : added type
-        protected bool Move (int xDir, int yDir, int gridRow, int gridCol,int type)
+        protected bool Move (int xDir, int yDir, int gridRow, int gridCol,int type, GameObject i_curBoard)
         {
-			
+           
+            MovingObjectsCanMoveOnBoard m_CanMove = new MovingObjectsCanMoveOnBoard(i_curBoard.GetComponent<BoardManager>().CanMoveToGridPoint);
+            BombManagerBoxMovingObjectsUpdateBombGridPoint m_UpdateBombGridPoint = new BombManagerBoxMovingObjectsUpdateBombGridPoint(i_curBoard.GetComponent<BoardManager>().UpdateGridPointObject);
             //Store start position to move from, based on objects current transform position.
             Vector2 start = transform.position;
 
@@ -33,9 +41,9 @@ namespace Assets.Scripts
             Vector2 end = start + new Vector2 (xDir * 1.5f, yDir * 1.5f);
 
             //Check if anything was hit
-            if(BoardManager.main.CanMoveToGridPoint(gridRow, gridCol))
+            if(m_CanMove(gridRow, gridCol))
             {
-                 BoardManager.main.updateGridPointObject(gridRow - yDir, gridCol - xDir, gridRow, gridCol);
+                m_UpdateBombGridPoint(gridRow - yDir, gridCol - xDir, gridRow, gridCol);
                 //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
                 StartCoroutine(SmoothMovement(end));
                
@@ -74,10 +82,10 @@ namespace Assets.Scripts
         //The virtual keyword means AttemptMove can be overridden by inheriting classes using the override keyword.
         //AttemptMove takes a generic parameter T to specify the type of component we expect our unit to interact with if blocked (Player for Enemies, Wall for Player).
         //TODO : added type - 1 for player , 0 for enemy
-        protected virtual bool AttemptMove(int xDir, int yDir, int gridRow, int gridCol,int type)
+        protected virtual bool AttemptMove(int xDir, int yDir, int gridRow, int gridCol,int type, GameObject i_curBoard)
         {
             //Set canMove to true if Move was successful, false if failed.// gridRow = old gridRow + ydir , gridCol = old gridCol + xdir
-            bool canMove = Move (xDir, yDir, gridRow, gridCol,type);
+            bool canMove = Move (xDir, yDir, gridRow, gridCol,type, i_curBoard);
 
             return canMove;
         }

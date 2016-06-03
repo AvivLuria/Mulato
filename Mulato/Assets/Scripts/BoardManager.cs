@@ -7,8 +7,12 @@ using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
-    public class BoardManager : SceneSingleton<BoardManager>
+    public class BoardManager : MonoBehaviour
+        // : SceneSingleton<BoardManager>
     {
+
+       
+
         // This is all the options in the board
         public enum GridPointObject
         {
@@ -30,9 +34,12 @@ namespace Assets.Scripts
             public GameObject gameObject;
         }
 
-        public int columns;
-        public int rows;
+        
+        public const int k_Columns = 8;
+        public const int k_Rows = 11;
 
+        #region game objects
+        //public GameObject boardManager;
         public GameObject floorTiles;
         public GameObject wallTiles;
         public GameObject boxWallTiles;
@@ -44,40 +51,66 @@ namespace Assets.Scripts
         public GameObject enemyBlue;
         public GameObject enemyPink;
         public GameObject enemyPurple;
+        #endregion
+        private List<GridPoint[]> m_GridPointList = null;
+        private List<GameObject> enemies = null;
+        private List<GameObject> boxesFloor = null;
 
-        private List<GridPoint[]> m_board = null;
-
+        private BombManagerBoxMovingObjectsUpdateBombGridPoint m_UpdateBombGridPoint;
+        private MovingObjectsCanMoveOnBoard m_CanMove;
         private Transform boardHolder;
 
-        public int[] wallPostions;
-        public int numOfNomralBoxes;
-        public int numOfLifeBoxes;
-        public int numOfSpecialBombBoxes;
-        public int numOfFreezeBoxes;
-        private int numOfEnemies;
-        private int numOfColors;
-
-        public void Start()
+        public int[] wallPostions { get; set; }
+        public int m_NumOfNomralBoxes { get; set; }
+        public int m_NumOfLifeBoxes { get; set; }
+        public int m_NumOfSpecialBombBoxes { get; set; }
+        public int m_NumOfFreezeBoxes { get; set; }
+        public int m_NumOfEnemies { get; set; }
+        public int m_NumOfColors { get; set; }
+        public int m_Level { get; set; }
+        /*
+        void Start()
         {
-            //base.Awake();
-            // DontDestroyOnLoad(gameObject);
+            m_UpdateBombGridPoint = new BombManagerBoxMovingObjectsUpdateBombGridPoint(UpdateGridPointObject);
+            m_SetBombOnBoard = new BombManagerSetBombOnBoard(SetBombOnGrid);
+            m_CanMove = new MovingObjectsCanMoveOnBoard(CanMoveToGridPoint);
         }
-
-        public void setNumberOfEnemies(int numberOfEnemies)
+        */
+        /*public GameObject CreateBoardManager(int level)
         {
-            numOfEnemies = numberOfEnemies;
-        }
+            var board = Instantiate(boardManager,new Vector3(0,0,0),Quaternion.identity) as GameObject;
+           /* m_GridPointList = new List<GridPoint[]>();
+            m_Level = level;
+            m_NumOfNomralBoxes = 0;
+            m_NumOfLifeBoxes = 0;
+            m_NumOfSpecialBombBoxes = 0;
+            m_NumOfFreezeBoxes = 0;
 
-        public void setNumberOfColors(int numberOfColors)
-        {
-            numOfColors = numberOfColors;
-        }
+            m_UpdateBombGridPoint = new BombManagerBoxMovingObjectsUpdateBombGridPoint(UpdateGridPointObject);
+            m_SetBombOnBoard = new BombManagerSetBombOnBoard(SetBombOnGrid);
+            m_CanMove = new MovingObjectsCanMoveOnBoard(CanMoveToGridPoint);
+            
+            return board;
+        }*/
 
-        public void setUpEnemiesOnTheBoard()
+        /* public void setNumberOfEnemies(int numberOfEnemies)
+         {
+             numOfEnemies = numberOfEnemies;
+         }
+
+         public void setNumberOfColors(int numberOfColors)
+         {
+             numOfColors = numberOfColors;
+         }
+         */
+
+       
+ 
+        private void createEnemiesOnTheBoard()
         {
-            for (int i = 0; i < numOfColors; i++)
+            for (int i = 0; i < m_NumOfColors; i++)
             {
-                numOfEnemies--;
+                m_NumOfEnemies--;
                 switch (i)
                 {
                     case colorManager.colorsOptions.Blue:
@@ -101,10 +134,10 @@ namespace Assets.Scripts
                 }
             }
 
-            while (numOfEnemies > 0)
+            while (m_NumOfEnemies > 0)
             {
-                int colorOfEnemy = (int)UnityEngine.Random.Range(0, numOfColors);
-                int currentNumberOfEnemy = (int)UnityEngine.Random.Range(1, numOfEnemies);
+                int colorOfEnemy = (int)UnityEngine.Random.Range(0, m_NumOfColors);
+                int currentNumberOfEnemy = (int)UnityEngine.Random.Range(1, m_NumOfEnemies);
 
                 switch (colorOfEnemy)
                 {
@@ -128,14 +161,15 @@ namespace Assets.Scripts
                         }
                 }
 
-                numOfEnemies -= currentNumberOfEnemy;
+                m_NumOfEnemies -= currentNumberOfEnemy;
             }
         }
 
-        public void setBombOnGrid(int row, int column)
+        public void SetBombOnGrid(int row, int column)
         {
-            m_board[row][column].gridPointObject = GridPointObject.Bomb;
+            m_GridPointList[row][column].gridPointObject = GridPointObject.Bomb;
         }
+       
         //creates Box Wall in game in the int array postions
         private void setUpWallsOnBoard(int[] wallPos)
         {
@@ -143,31 +177,35 @@ namespace Assets.Scripts
             {
                 int randomRowIndex = wallPos[i] / 10;
                 int randomColumnIndex = wallPos[i] % 10;
-                var gridPoint = m_board[randomRowIndex][randomColumnIndex];
-                m_board[randomRowIndex][randomColumnIndex].gridPointObject = GridPointObject.Wall;
-                Instantiate(boxWallTiles, gridPoint.gameObject.transform.position, Quaternion.identity);
+                var gridPoint = m_GridPointList[randomRowIndex][randomColumnIndex];
+                m_GridPointList[randomRowIndex][randomColumnIndex].gridPointObject = GridPointObject.Wall;
+                var box = Instantiate(boxWallTiles, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+                boxesFloor.Add(box);
             }
         }
 
         //Scene Builder <><>
-        public void SetupScene(int level)
+        public void StartScene()
         {
+            enemies = new List<GameObject>();
+            boxesFloor = new List<GameObject>();
             // Initialize the board
-            if (m_board == null)
-                BoardSetup();
+            /*if (m_Board == null)
+                BoardSetup();*/
             // Initialize the walls in the board
+            BoardSetup();
             setUpWallsOnBoard(wallPostions);
 
             //Instantiate a random number of boxes tiles based on minimum and maximum, at randomized positions.
-            LayoutObjectAtRandom(boxTiles, GridPointObject.Box, numOfNomralBoxes);
-            LayoutObjectAtRandom(specialBoxTiles, GridPointObject.Box, numOfSpecialBombBoxes);
-            LayoutObjectAtRandom(specialLifeBoxTiles, GridPointObject.Box, numOfLifeBoxes);
-            LayoutObjectAtRandom(specialEnemyFreezeTiles, GridPointObject.Box, numOfFreezeBoxes);
-            if (level != 0) { 
-                setUpEnemiesOnTheBoard();
+            LayoutObjectAtRandom(boxTiles, GridPointObject.Box, m_NumOfNomralBoxes);
+            LayoutObjectAtRandom(specialBoxTiles, GridPointObject.Box, m_NumOfSpecialBombBoxes);
+            LayoutObjectAtRandom(specialLifeBoxTiles, GridPointObject.Box, m_NumOfLifeBoxes);
+            LayoutObjectAtRandom(specialEnemyFreezeTiles, GridPointObject.Box, m_NumOfFreezeBoxes);
+            if (m_Level != 0) { 
+                createEnemiesOnTheBoard();
             } else
             {
-                setUpEnemiesOnTheBoardManualy(level);
+                setUpEnemiesOnTheBoardManualy(m_Level);
             }
         }
 
@@ -175,76 +213,85 @@ namespace Assets.Scripts
         {
             if (level == 0)
             {
-                numOfEnemies-=4;
+                m_NumOfEnemies-=4;
                 GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue]=2;
                 GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink]=2;
                 ///
-                m_board[1][1].gridPointObject = GridPointObject.Enemy;
-                var gridPoint = m_board[1][1];
+                m_GridPointList[1][1].gridPointObject = GridPointObject.Enemy;
+                var gridPoint = m_GridPointList[1][1];
                 var enemy = Instantiate(enemyBlue, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
                 enemy.GetComponent<Enemy>().gridRow = 1;
                 enemy.GetComponent<Enemy>().gridCol = 1;
+                enemy.GetComponent<Enemy>().setBoardListener(this.gameObject);
+                enemies.Add(enemy.gameObject);
                 ///
-                m_board[9][6].gridPointObject = GridPointObject.Enemy;
-                gridPoint = m_board[9][6];
+                m_GridPointList[9][6].gridPointObject = GridPointObject.Enemy;
+                gridPoint = m_GridPointList[9][6];
                 enemy = Instantiate(enemyBlue, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
                 enemy.GetComponent<Enemy>().gridRow = 9;
                 enemy.GetComponent<Enemy>().gridCol = 6;
+                enemy.GetComponent<Enemy>().setBoardListener(this.gameObject);
+                enemies.Add(enemy.gameObject);
                 ///
-                m_board[1][6].gridPointObject = GridPointObject.Enemy;
-                gridPoint = m_board[1][6];
+                m_GridPointList[1][6].gridPointObject = GridPointObject.Enemy;
+                gridPoint = m_GridPointList[1][6];
                 enemy = Instantiate(enemyPink, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
                 enemy.GetComponent<Enemy>().gridRow = 1;
                 enemy.GetComponent<Enemy>().gridCol = 6;
+                enemy.GetComponent<Enemy>().setBoardListener(this.gameObject);
+                enemies.Add(enemy.gameObject);
                 ///
-                m_board[9][1].gridPointObject = GridPointObject.Enemy;
-                gridPoint = m_board[9][1];
+                m_GridPointList[9][1].gridPointObject = GridPointObject.Enemy;
+                gridPoint = m_GridPointList[9][1];
                 enemy = Instantiate(enemyPink, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
                 enemy.GetComponent<Enemy>().gridRow = 9;
                 enemy.GetComponent<Enemy>().gridCol = 1;
+                enemy.GetComponent<Enemy>().setBoardListener(this.gameObject);
+                enemies.Add(enemy.gameObject);
             }       
         }
 
         //setup grid points and side walls
         private void BoardSetup()
         {
-            boardHolder = new GameObject("Board").transform;
-            m_board = new List<GridPoint[]>();
-            for (var i = 0; i < rows; i++)
+            //boardHolder = new GameObject("Board").transform;
+            m_GridPointList = new List<GridPoint[]>();
+            for (var i = 0; i < k_Rows; i++)
             {
-                m_board.Add(new GridPoint[columns]);
+                m_GridPointList.Add(new GridPoint[k_Columns]);
             }
 
-            for (var column = 0; column < columns; column++)
+            for (var column = 0; column < k_Columns; column++)
             {
-                for (var row = 0; row < rows; row++)
+                for (var row = 0; row < k_Rows; row++)
                 {
 
                     {
                         GameObject toInstantiate = floorTiles;
 
-                        m_board[row][column] = new GridPoint()
+                        m_GridPointList[row][column] = new GridPoint()
                         {
                             row = row,
                             column = column,
                             gridPointObject = GridPointObject.Empty
                         };
                         // If a wall
-                        if ((row == 0 || column == columns - 1 || column == 0 || row == rows - 1))
+                        if ((row == 0 || column == k_Columns - 1 || column == 0 || row == k_Rows - 1))
                         {
                             toInstantiate = wallTiles;
-                            m_board[row][column].gridPointObject = GridPointObject.Wall;
+                            m_GridPointList[row][column].gridPointObject = GridPointObject.Wall;
                         }
 
                         var instance =
                             Instantiate(toInstantiate, new Vector3(column*1.5f - 1.25f, row*1.5f - 4.8f, 0f),
                                 Quaternion.identity) as GameObject;
+                        boxesFloor.Add(instance);
                         if (instance.GetComponent<floor>() != null)
                         {
                             instance.GetComponent<floor>().gridRow = row;
                             instance.GetComponent<floor>().gridCol = column;
                         }
-                        m_board[row][column].gameObject = instance;
+                        m_GridPointList[row][column].gameObject = instance;
                         instance.transform.SetParent(boardHolder);
 
                     }
@@ -257,8 +304,8 @@ namespace Assets.Scripts
        
         public int[] RandomPosition()
         {
-            int randomRowIndex = Random.Range(0, m_board.Count);
-            int randomColumnIndex = Random.Range(0, m_board[0].Length);
+            int randomRowIndex = Random.Range(0, m_GridPointList.Count);
+            int randomColumnIndex = Random.Range(0, m_GridPointList[0].Length);
             int[] array = new int[] {randomRowIndex, randomColumnIndex};
             return array;
         }
@@ -269,33 +316,38 @@ namespace Assets.Scripts
             for (int i = 0; i < numberOfOccurences; i++)
             {
                 //    var randomPosition = RandomPosition();
-                int randomRowIndex = Random.Range(0, m_board.Count);
-                int randomColumnIndex = Random.Range(0, m_board[0].Length);
-                var gridPoint = m_board[randomRowIndex][randomColumnIndex];
+                int randomRowIndex = Random.Range(0, m_GridPointList.Count);
+                int randomColumnIndex = Random.Range(0, m_GridPointList[0].Length);
+                var gridPoint = m_GridPointList[randomRowIndex][randomColumnIndex];
                 var gridPointObject = gridPoint.gridPointObject;
                 if (gridPointObject == GridPointObject.Empty)
                 {
                     gridPoint.gridPointObject = gridPointObjectToAdd;
                     if (gridPointObjectToAdd == GridPointObject.Enemy)
                     {
-                        m_board[randomRowIndex][randomColumnIndex].gridPointObject = GridPointObject.Enemy;
+                        m_GridPointList[randomRowIndex][randomColumnIndex].gridPointObject = GridPointObject.Enemy;
                         var enemy =
                             Instantiate(obj, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
                         enemy.GetComponent<Enemy>().gridRow = randomRowIndex;
                         enemy.GetComponent<Enemy>().gridCol = randomColumnIndex;
+                        enemy.GetComponent<Enemy>().setBoardListener(this.gameObject);
+                        enemies.Add(enemy.gameObject);
                         //new Vector3(gridPoint.gameObject.transform.position.x, gridPoint.gameObject.transform.position.y,-1)
                     }
                     else if (gridPointObjectToAdd == GridPointObject.Box)
                     {
-                        m_board[randomRowIndex][randomColumnIndex].gridPointObject = GridPointObject.Box;
+                        m_GridPointList[randomRowIndex][randomColumnIndex].gridPointObject = GridPointObject.Box;
                         var box =
                             Instantiate(obj, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
                         box.GetComponent<Box>().gridRow = randomRowIndex;
                         box.GetComponent<Box>().gridCol = randomColumnIndex;
+                        box.GetComponent<Box>().setBoardListener(this.gameObject);
+                        boxesFloor.Add(box.gameObject);
                     }
                     else
                     {
-                        Instantiate(obj, gridPoint.gameObject.transform.position, Quaternion.identity);
+                        var variable = Instantiate(obj, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+                        boxesFloor.Add(variable.gameObject);
                     }
                 }
                 else
@@ -307,9 +359,19 @@ namespace Assets.Scripts
 
         public void clearScene()
         {
-            String[] tagsToDelete = new[] {"Box", "EnemyBlue", "EnemyPurple", "EnemyPink", "Wall", "arrow"};
+            foreach(GameObject enemy in enemies)
+            {
+                if ( enemy != null)
+                Destroy(enemy);
+            }
+            foreach(GameObject box in boxesFloor)
+            {
+                if (box != null)
+                    Destroy(box);
+            }
+          //  String[] tagsToDelete = new[] {"Box", "EnemyBlue", "EnemyPurple", "EnemyPink", "Wall", "arrow"};
 
-            for (int i = 0; i < tagsToDelete.Length; i++)
+            /*for (int i = 0; i < tagsToDelete.Length; i++)
             {
                 var clones = GameObject.FindGameObjectsWithTag(tagsToDelete[i].ToString());
 
@@ -318,7 +380,7 @@ namespace Assets.Scripts
                     foreach (var clone in clones)
                     {
                        
-                        m_board[clone.GetComponent<Box>().gridRow][clone.GetComponent<Box>().gridCol].gridPointObject =
+                        m_GridPointList[clone.GetComponent<Box>().gridRow][clone.GetComponent<Box>().gridCol].gridPointObject =
                             GridPointObject.Empty;
                         Destroy(clone);
                     }
@@ -330,7 +392,7 @@ namespace Assets.Scripts
                     }
                     for (int j = 0; j < wallPostions.Length; j++)
                     {
-                        m_board[wallPostions[j]/10][wallPostions[j]%10].gridPointObject =
+                        m_GridPointList[wallPostions[j]/10][wallPostions[j]%10].gridPointObject =
                             GridPointObject.Empty;
                     }
                 }
@@ -345,41 +407,41 @@ namespace Assets.Scripts
                     foreach (var clone in clones)
                     {
                         Destroy(clone);
-                        m_board[clone.GetComponent<Enemy>().gridRow][clone.GetComponent<Enemy>().gridCol].gridPointObject =
+                        m_GridPointList[clone.GetComponent<Enemy>().gridRow][clone.GetComponent<Enemy>().gridCol].gridPointObject =
                             GridPointObject.Empty;
                     }
                 }            
-            }           
+            }     */      
         }
 
         // This function should update the grid
-        public void updateGridPointObject(int oldRow, int oldCol, int newRow, int newCol)
+        public void UpdateGridPointObject(int oldRow, int oldCol, int newRow, int newCol)
         {
-            m_board[newRow][newCol].gridPointObject = m_board[oldRow][oldCol].gridPointObject;
-            m_board[oldRow][oldCol].gridPointObject = GridPointObject.Empty;
+            m_GridPointList[newRow][newCol].gridPointObject = m_GridPointList[oldRow][oldCol].gridPointObject;
+            m_GridPointList[oldRow][oldCol].gridPointObject = GridPointObject.Empty;
         }
 
         // Checks if the next place is box or wall
         public bool CanMoveToGridPoint(int rowToMoveTo, int columnToMoveTo)
         {
-            var gridPointObject = m_board[rowToMoveTo][columnToMoveTo].gridPointObject;
+            var gridPointObject = m_GridPointList[rowToMoveTo][columnToMoveTo].gridPointObject;
             return gridPointObject != GridPointObject.Wall &&
                    gridPointObject != GridPointObject.Box &&
                    gridPointObject != GridPointObject.Enemy &&
                    gridPointObject != GridPointObject.Bomb;
         }
 
-        public GridPointObject getGridPointObject(int row, int col)
+        public GridPointObject GetGridPointObject(int row, int col)
         {
-            return m_board[row][col].gridPointObject;
+            return m_GridPointList[row][col].gridPointObject;
         }
 
-        public GameObject getGameObjectOnGridPoint(int gridRowBomb, int gridColBomb)
+        public GameObject GetGameObjectOnGridPoint(int gridRowBomb, int gridColBomb)
         {
-            return m_board[gridRowBomb][gridColBomb].gameObject;
+            return m_GridPointList[gridRowBomb][gridColBomb].gameObject;
         }
         //generate boxes on random postion in board 
-        public void setBoxes(int amountOfBoxes)
+        public void GenerateBoxesInRandomPosition(int amountOfBoxes)
         {
             LayoutObjectAtRandom(boxTiles, GridPointObject.Box, amountOfBoxes);
         }

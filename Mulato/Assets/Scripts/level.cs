@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PowerUp : MonoBehaviour {
+public class level : MonoBehaviour {
+
 
 	// Use this for initialization
-	void Start () {
-	
+	public level () {
+	    
 	}
 	
 	// Update is called once per frame

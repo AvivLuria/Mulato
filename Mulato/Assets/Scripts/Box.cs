@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class Box : MonoBehaviour
 {
+    public BombManagerBoxMovingObjectsUpdateBombGridPoint m_UpdateBombGridPointBox;
     //public Canvas heartBouns;
     private bool active = true;
     private float enemySpeed;
@@ -20,17 +21,24 @@ public class Box : MonoBehaviour
     public AudioClip BoxSound;
     public GameObject heart;
     public GameObject special;
+    public GameObject m_curBoard;
+
+    public void setBoardListener(GameObject i_curBoard)
+    {
+        m_curBoard = i_curBoard;
+    }
     
 
     public void DestroyMe()
     {
         if (active)
         {
+            BombManagerBoxMovingObjectsUpdateBombGridPoint m_UpdateBombGridPointBox = new BombManagerBoxMovingObjectsUpdateBombGridPoint(m_curBoard.GetComponent<BoardManager>().UpdateGridPointObject);
             source = GetComponent<AudioSource>();
             source.PlayOneShot(BoxSound);
             active = !active;
-            animator = GetComponent<Animator>();
-            BoardManager.main.updateGridPointObject(gridRow, gridCol, gridRow, gridCol);
+            animator = GetComponent<Animator>();       
+            m_UpdateBombGridPointBox(gridRow, gridCol, gridRow, gridCol);
             if (isSpecialColorBombBox)
             {
                 // TODO: add special effect here

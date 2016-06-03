@@ -7,17 +7,24 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
+    public delegate void BombManagerBoxMovingObjectsUpdateBombGridPoint(int oldRow, int oldCol, int newRow, int newCol);
+    public delegate void BombManagersetBombOnBoard(int row, int col);
+    public delegate GameObject BombManagerGetGameObjectFromBoard(int row, int col);
+    public delegate BoardManager.GridPointObject BombManagerGetGridPointObjectFromBoard(int row, int col);
+
     public class BombManager : SceneSingleton<BombManager>
     {
-
+        public BombManagerBoxMovingObjectsUpdateBombGridPoint m_updateBombGrid;
+        public BombManagersetBombOnBoard m_setBombOnBoard;
+        public BombManagerGetGameObjectFromBoard m_GetGameObjectOnBoard;
+        public BombManagerGetGridPointObjectFromBoard m_GetGridPointObjectOnBoard;
         public float explosionTime;
         public int powerOfExplosion;
-        public GameObject heart;
+
         public LayerMask layerMask = ~(1 << 9 | 1 << 11); //all exept bomb and floor
-        public GameObject test;
-        public GameObject bombBlue;
-        public GameObject bombPink;
-        public GameObject bombPurple;
+
+       // public GameObject m_currBoard;
+        public GameObject heart;
         public GameObject SpecialBomb;
         public GameObject Combo;
         public Queue<GameObject> bombs;
@@ -45,6 +52,10 @@ namespace Assets.Scripts
         private float gridRowBomb;
         private float gridColBomb;
 
+        /*public void setBoardAsListener(GameObject i_CurBoard)
+        {
+            m_currBoard = i_CurBoard;
+        }*/
 
         public void reDrawBombs()
         {
@@ -80,8 +91,8 @@ namespace Assets.Scripts
         public void DeployBomb(float row, float column, int gridRow, int gridColumn)
         {
 
-            var curBomb = Instantiate(bombs.Dequeue(), new Vector3(row, column, -1), Quaternion.identity) as GameObject;
-            
+            var curBomb = Instantiate(bombs.Dequeue(), new Vector3(3f, 10.5f, -1), Quaternion.identity) as GameObject;
+            iTween.MoveTo(curBomb, new Vector3(row, column, -1), 2f);
             currentBombColor = nextBombColor;
             nextBombColor = thirdBombColor;
             thirdBombColor = forthBombColor;
@@ -97,7 +108,7 @@ namespace Assets.Scripts
             }
 
             colorManager.main.changeColors();
-            BoardManager.main.setBombOnGrid(gridRow, gridColumn);
+           
             StartCoroutine(DelayedExplode(curBomb, gridRow, gridColumn));
         }
 
@@ -147,9 +158,9 @@ namespace Assets.Scripts
                     deploySpecialBomb();
                 }
             }
-          
 
-            BoardManager.main.updateGridPointObject(row, column, row, column);
+            // m_currBoard.GetComponent<BoardManager>().UpdateGridPointObject (row, column, row, column);
+            m_updateBombGrid(row, column, row, column);
             //BoardManager.main.setFireOff(row, column, powerOfExplosion);
         }
 
@@ -224,18 +235,18 @@ namespace Assets.Scripts
         //for bouns combo
         private void deploySpecialBomb()
         {
-            gridColBomb = UnityEngine.Random.Range(0, BoardManager.main.columns);
-            gridRowBomb = UnityEngine.Random.Range(0, BoardManager.main.rows);
+            gridColBomb = UnityEngine.Random.Range(0, BoardManager.k_Columns);
+            gridRowBomb = UnityEngine.Random.Range(0, BoardManager.k_Rows);
             //get game object on random postion choosen
-            GameObject floor = BoardManager.main.getGameObjectOnGridPoint((int)gridRowBomb, (int)gridColBomb);
+            GameObject floor = m_GetGameObjectOnBoard((int)gridRowBomb, (int)gridColBomb);
             //check if random game object is empty to deploy special bomb
-            if (BoardManager.main.getGridPointObject((int)gridRowBomb, (int)gridColBomb) == BoardManager.GridPointObject.Empty)
+            if (m_GetGridPointObjectOnBoard((int)gridRowBomb, (int)gridColBomb) == 0)
             {
                 //creates special bomb on choosen point
                 var curBomb =
                     Instantiate(SpecialBomb, new Vector3(floor.transform.position.x, floor.transform.position.y, -1), Quaternion.identity) as GameObject;
                 StartCoroutine(DelayedExplode(curBomb, (int)gridRowBomb, (int)gridColBomb));
-                BoardManager.main.setBombOnGrid((int)gridRowBomb, (int)gridColBomb);
+                m_setBombOnBoard((int)gridRowBomb, (int)gridColBomb);
             }
             //if game object isnt empty recall function
             else
@@ -246,14 +257,14 @@ namespace Assets.Scripts
         //delay bomb action for slow motion
         IEnumerator DelayedExplode(GameObject curBomb, int row, int column)
         {
-            yield return new WaitForSeconds(2.6f);
+            yield return new WaitForSeconds(0.3f);
+            m_setBombOnBoard(row, column);
+            yield return new WaitForSeconds(2.5f);
             curBomb.GetComponent<AudioSource>().PlayOneShot(bombSound, 0.5f);
             yield return new WaitForSeconds(0.2f);
             Explode(curBomb, row, column);
             yield return new WaitForSeconds(0.2f);
             Destroy(curBomb);
-
-
         }
 
         IEnumerator slowMotion()
@@ -261,7 +272,6 @@ namespace Assets.Scripts
             Time.timeScale = 0.2F;
             yield return new WaitForSeconds(0.2f);
             Time.timeScale = 1F;
-
         }
 
     }

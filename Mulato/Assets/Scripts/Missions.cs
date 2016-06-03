@@ -15,7 +15,7 @@ namespace Assets.Scripts
         public bool disappearingMission = false;
         private bool createBoxes = false;
 
-
+        public BoardManager m_CurrBoard { get; set; }
        
 
         public void initMission(int input_level, int input_numberOfEnemies, int input_difficulty)
@@ -46,7 +46,7 @@ namespace Assets.Scripts
                         //choose which color to destory
                         color = UnityEngine.Random.Range(0, difficulty);
 
-                        BoardManager.main.setNumberOfColors(difficulty);                     
+                        m_CurrBoard.m_NumOfColors = (difficulty);                     
                         BombManager.main.startIndexBombColor = color;
                         BombManager.main.setNumberOfColors(color + 1);
                         BombManager.main.onMission = true;
@@ -55,7 +55,7 @@ namespace Assets.Scripts
                         break;
                     }
                  //Timer
-                case (4):
+                /*case (4):
                     {
                         if (difficulty > 3)
                         {                           
@@ -70,13 +70,13 @@ namespace Assets.Scripts
                         BoardManager.main.SetupScene(input_level);
                         Timer.main.setTimerMission(60 - difficulty * 5);
                         break;
-                    }
+                    }*/
                 //disappearing enemies
                 case (5):
                     {
                         if (difficulty <= 0 || difficulty > 3) difficulty = 2;
 
-                        BoardManager.main.setNumberOfColors(difficulty);                       
+                        m_CurrBoard.m_NumOfColors = (difficulty);
                         BombManager.main.setNumberOfColors(difficulty);                        
                         BombManager.main.onMission = true;
                         disappearingMission = true;
@@ -157,8 +157,8 @@ namespace Assets.Scripts
                         {
                             GameManager.main.numberOFEnemiesInTheLevel = numberOfEnemies + 1;
                             GameManager.main.life += 1;
-                            BoardManager.main.setNumberOfEnemies(numberOfEnemies);
-                            BoardManager.main.setUpEnemiesOnTheBoard();
+                            m_CurrBoard.m_NumOfEnemies = (numberOfEnemies);
+                         //   m_CurrBoard.SetUpEnemiesOnTheBoard();
                         }
                         break;
                     }
@@ -178,7 +178,7 @@ namespace Assets.Scripts
         IEnumerator DelayedExecution()
         {
             yield return new WaitForSeconds(3f);
-            BoardManager.main.clearScene();
+        //    BoardManager.main.clearScene();
             GameManager.main.numberOFEnemiesInTheLevel = numberOfEnemies;
             initMission(currMission, numberOfEnemies, difficulty + 1);
         }
@@ -188,7 +188,7 @@ namespace Assets.Scripts
             while (createBoxes)
             {
                 yield return new WaitForSeconds(2.5f);
-                BoardManager.main.setBoxes(i_difficulty);
+                m_CurrBoard.GenerateBoxesInRandomPosition(i_difficulty);
             }
         }
     }

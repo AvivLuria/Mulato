@@ -52,8 +52,8 @@ namespace Assets.Scripts
         public int startIndexBombColor = 0;
 
         // for bouns bomb
-        private float gridRowBomb;
-        private float gridColBomb;
+        private int gridRowBomb;
+        private int gridColBomb;
 
         public void reDrawBombs()
         {
@@ -252,11 +252,20 @@ namespace Assets.Scripts
         //for bouns combo
         private void deploySpecialBomb()
         {
-            gridColBomb = UnityEngine.Random.Range(0, BoardManager.k_Columns);
-            gridRowBomb = UnityEngine.Random.Range(0, BoardManager.k_Rows);
+            float gridColBomb = UnityEngine.Random.Range(0, BoardManager.k_Columns - 2);
+            float gridRowBomb = UnityEngine.Random.Range(0, BoardManager.k_Rows - 2);
             //get game object on random postion choosen
-            m_GetGameObjectOnBoard((int)gridRowBomb, (int)gridColBomb);
-            deploySpecialBomb();
+            GameObject gameobjectOnBoard = m_GetGameObjectOnBoard((int)gridRowBomb, (int)gridColBomb);
+            BoardManager.GridPointObject gridPointObjectOnBoard = m_GetGridPointObjectOnBoard((int)gridRowBomb, (int)gridColBomb);
+            if (gridPointObjectOnBoard != 0)
+            {
+                deploySpecialBomb();
+            } else
+            {
+                var curBomb = Instantiate(SpecialBomb, new Vector3(3f, 10.5f, -1), Quaternion.identity) as GameObject;
+                iTween.MoveTo(curBomb, new Vector3(gameobjectOnBoard.transform.position.x, gameobjectOnBoard.transform.position.y, -1), 2f);
+                StartCoroutine(DelayedExplode(curBomb, (int)gridRowBomb, (int)gridColBomb));
+            }
         }
         //delay bomb action for slow motion
         IEnumerator DelayedExplode(GameObject curBomb, int row, int column)

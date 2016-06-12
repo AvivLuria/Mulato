@@ -5,6 +5,7 @@ using Assets.Scripts.Utils;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
@@ -27,7 +28,7 @@ namespace Assets.Scripts
         public GameObject m_CurrentBoard = null;
         public GameObject m_BoardManager;
         public GameObject arrowIndicator;
-        public GameObject arrowIndicator_Fast;
+        public GameObject arrowIndicator_2;
         public GameObject Memory;
        
 		public Transform mainMenu, exitMenu,gameOver, pauseMenu, startLevel0, startLevel2, startLevel3, startLevel4, startLevel5, startLevel1, startLevel6, startLevel7, startLevel8, startLevel9, startLevel10, startLevel11;
@@ -59,6 +60,8 @@ namespace Assets.Scripts
 
             nextLevel = true;
 			startLevel[0].gameObject.SetActive (nextLevel);
+            startLevel[0].gameObject.GetComponentInChildren<Button>().image.enabled = false;
+            StartCoroutine(delayShowButton(0));
             // InitGame (currLevel = -1);         
         }
 
@@ -89,13 +92,14 @@ namespace Assets.Scripts
                 case (-2):
                     {
                         numberOfColors = 1;
-                        numberOFEnemiesInTheLevel = 1;
+                        numberOFEnemiesInTheLevel = 3;
                         
                         m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[]{
                             11 ,12, 13 ,14 ,15, 16, 21, 22, 23, 24, 25, 26, 31, 32, 33, 34 , 35, 36, 41, 42, 44, 45
                            ,46 ,51 ,52, 56, 66, 71 ,72, 76, 81, 82,84 ,85 ,86, 91, 92, 93, 94, 95, 96, 54,55,74,75 };
                         // Instantiate(arrowIndicator, new Vector3(6.27f, 8.6f, 0), Quaternion.Euler(0, 0, 50));
                         m_BombManager.GetComponent<BombManager>().explainBombTime = true;
+                        
                         StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 4f));
                         onAMission = false;
                         Timer.main.setTimerMission(1800);
@@ -443,9 +447,9 @@ namespace Assets.Scripts
                 Vector2 enemyOne = m_CurrentBoard.GetComponent<BoardManager>().enemies[0].transform.position;
                 Vector2 enemyTwo = m_CurrentBoard.GetComponent<BoardManager>().enemies[1].transform.position;
                 StartCoroutine(delayedMove(arrowIndicator, enemyOne.x + 1f, enemyOne.y + 0.8f, enemyOne.x + 0.3f, enemyOne.y, 1f));               
-                StartCoroutine(delayedMove(arrowIndicator_Fast, enemyTwo.x - 1f, enemyTwo.y + 1.2f, enemyTwo.x, enemyTwo.y + 0.4f, 3f));
+                StartCoroutine(delayedMove(arrowIndicator_2, enemyTwo.x - 1f, enemyTwo.y + 1.2f, enemyTwo.x, enemyTwo.y + 0.4f, 3f));
                 StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 4.5f));
-                StartCoroutine(delayedMove(arrowIndicator_Fast, -10, -10, -10, -10, 6f));
+                StartCoroutine(delayedMove(arrowIndicator_2, -10, -10, -10, -10, 6f));
             }
             BombManager.main.reDrawBombs();
         }
@@ -495,7 +499,6 @@ namespace Assets.Scripts
 		public void OkNextLevel(){
 			nextLevel = false;
 			currLevel++;
-			Timer.main.setTimerMission(5);
 			Ui.activeUI(false);
 			InitGame(currLevel);			
 			startLevel [currLevel + 2].gameObject.SetActive (false);
@@ -532,12 +535,13 @@ namespace Assets.Scripts
                 Ui.activeUI(false);
 				pauseMenu.gameObject.SetActive (clicked);
 				timer = false;
-			} else {
+			}
+            else
+            {
                 Ui.activeUI(true);
 				pauseMenu.gameObject.SetActive (clicked);
 				timer = true;
 			}
-
 		}
 
 		public void Exit(){
@@ -549,8 +553,17 @@ namespace Assets.Scripts
             Ui.activeUI(false);
             yield return new WaitForSeconds(3f);
 			nextLevel = true;
-            startLevel [currLevel + 3].gameObject.SetActive (nextLevel);           
+            startLevel [currLevel + 3].gameObject.SetActive (nextLevel);
+            startLevel[currLevel + 3].gameObject.GetComponentInChildren<Button>().image.enabled = false;
+            StartCoroutine(delayShowButton(currLevel + 3));
         }
+
+        IEnumerator delayShowButton(int currLevel)
+        {
+            yield return new WaitForSeconds(1.5f);
+            startLevel[currLevel].gameObject.GetComponentInChildren<Button>().image.enabled = true;
+        }
+
         IEnumerator delayRestart()
         {            
             yield return new WaitForSeconds(0f);           

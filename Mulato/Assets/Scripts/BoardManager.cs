@@ -59,7 +59,7 @@ namespace Assets.Scripts
 
         private BombManagerBoxMovingObjectsUpdateBombGridPoint m_UpdateBombGridPoint;
         private MovingObjectsCanMoveOnBoard m_CanMove;
-        private Transform boardHolder;
+       // private Transform boardHolder;
 
         public int[] wallPostions { get; set; }
         public int m_NumOfNomralBoxes { get; set; }
@@ -254,7 +254,7 @@ namespace Assets.Scripts
                             instance.GetComponent<floor>().gridCol = column;
                         }
                         m_GridPointList[row][column].gameObject = instance;
-                        instance.transform.SetParent(boardHolder);
+                       // instance.transform.SetParent(boardHolder);
                     }
                 }
             }

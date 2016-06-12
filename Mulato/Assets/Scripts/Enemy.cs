@@ -148,6 +148,7 @@ public class Enemy : MovingObject {
         source = GetComponent<AudioSource>();
         source.PlayOneShot(eggsSound);
         yield return new WaitForSeconds(1.5f);
+        m_curBoard.GetComponent<BoardManager>().UpdateGridPointObject(gridRow, gridCol, gridRow, gridCol);
         Destroy(this.gameObject);
     }
 }

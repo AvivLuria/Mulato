@@ -13,7 +13,9 @@ public class Ui : MonoBehaviour
             //get the hit position
             m_inputMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             var hit = Physics2D.Raycast(m_inputMouse, Vector2.zero);
-            if (hit.collider != null && hit.collider.tag.Equals("floor")) //we have a hit!!!
+            if (hit.collider != null && hit.collider.tag.Equals("floor") && GameManager.main.m_CurrentBoard.GetComponent<BoardManager>().GetGridPointObject
+                (hit.collider.gameObject.GetComponent<floor>().gridRow, 
+                    hit.collider.gameObject.GetComponent<floor>().gridCol) == 0) //we have a hit!!!
             {                
                 BombManager.main.DeployBomb(hit.transform.position.x ,hit.transform.position.y,
                     hit.collider.gameObject.GetComponent<floor>().gridRow, 

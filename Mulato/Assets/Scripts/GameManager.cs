@@ -24,9 +24,10 @@ namespace Assets.Scripts
         public int numberOfColors;
 
         public GameObject m_BombManager;
-        private GameObject m_CurrentBoard = null;
+        public GameObject m_CurrentBoard = null;
         public GameObject m_BoardManager;
-        public GameObject arrowIndicator; 
+        public GameObject arrowIndicator;
+        public GameObject arrowIndicator_Fast;
         public GameObject Memory;
        
 		public Transform mainMenu, exitMenu,gameOver, pauseMenu, startLevel0, startLevel2, startLevel3, startLevel4, startLevel5, startLevel1, startLevel6, startLevel7, startLevel8, startLevel9, startLevel10, startLevel11;
@@ -56,8 +57,6 @@ namespace Assets.Scripts
 			startLevel [10] = startLevel10;
 			startLevel [11] = startLevel11;
 
-
-
             nextLevel = true;
 			startLevel[0].gameObject.SetActive (nextLevel);
             // InitGame (currLevel = -1);         
@@ -70,7 +69,6 @@ namespace Assets.Scripts
 				startLevel[0].gameObject.SetActive (false);		
 		}
 
-
         public void InitGame (int currLevel) {
 
             if (m_CurrentBoard != null)
@@ -78,14 +76,14 @@ namespace Assets.Scripts
                 m_CurrentBoard.GetComponent<BoardManager>().clearScene();
                 Destroy(m_CurrentBoard.gameObject);
             }
-            // BoardManager.main.clearScene();
-
+            #region setting up for all levels
             m_CurrentBoard = Instantiate(m_BoardManager, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
             m_BombManager.GetComponent<BombManager>().m_updateBombGrid = new BombManagerBoxMovingObjectsUpdateBombGridPoint(m_CurrentBoard.GetComponent<BoardManager>().UpdateGridPointObject);
             m_BombManager.GetComponent<BombManager>().m_setBombOnBoard = new BombManagersetBombOnBoard(m_CurrentBoard.GetComponent<BoardManager>().SetBombOnGrid);
             m_BombManager.GetComponent<BombManager>().m_GetGameObjectOnBoard = new BombManagerGetGameObjectFromBoard(m_CurrentBoard.GetComponent<BoardManager>().GetGameObjectOnGridPoint);
             m_BombManager.GetComponent<BombManager>().m_GetGridPointObjectOnBoard = new BombManagerGetGridPointObjectFromBoard(m_CurrentBoard.GetComponent<BoardManager>().GetGridPointObject);
             m_CurrentBoard.GetComponent<BoardManager>().m_Level = currLevel;
+            #endregion
             switch (currLevel)
             {
                 case (-2):
@@ -97,7 +95,8 @@ namespace Assets.Scripts
                             11 ,12, 13 ,14 ,15, 16, 21, 22, 23, 24, 25, 26, 31, 32, 33, 34 , 35, 36, 41, 42, 44, 45
                            ,46 ,51 ,52, 56, 66, 71 ,72, 76, 81, 82,84 ,85 ,86, 91, 92, 93, 94, 95, 96, 54,55,74,75 };
                         // Instantiate(arrowIndicator, new Vector3(6.27f, 8.6f, 0), Quaternion.Euler(0, 0, 50));
-                        StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 2f));
+                        m_BombManager.GetComponent<BombManager>().explainBombTime = true;
+                        StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 4f));
                         onAMission = false;
                         Timer.main.setTimerMission(1800);
                         Timer.main.timerText.enabled = false;
@@ -106,6 +105,7 @@ namespace Assets.Scripts
                 case (-1):
                     {
                         #region hard_coding_scene
+                        m_BombManager.GetComponent<BombManager>().explainBombTime = false;
                         numberOfColors = 1;
                         numberOFEnemiesInTheLevel = 4;
                         m_CurrentBoard.GetComponent<BoardManager>().m_Level = currLevel;
@@ -441,10 +441,11 @@ namespace Assets.Scripts
             if ( currLevel == -1)
             {
                 Vector2 enemyOne = m_CurrentBoard.GetComponent<BoardManager>().enemies[0].transform.position;
-                StartCoroutine(delayedMove(arrowIndicator, enemyOne.x + 1f, enemyOne.y + 0.8f, enemyOne.x + 0.3f, enemyOne.y, 0f));
                 Vector2 enemyTwo = m_CurrentBoard.GetComponent<BoardManager>().enemies[1].transform.position;
-                StartCoroutine(delayedMove(arrowIndicator, enemyTwo.x + 1f, enemyTwo.y + 0.8f, enemyTwo.x + 0.3f, enemyTwo.y, 2f));
-                StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 4f));
+                StartCoroutine(delayedMove(arrowIndicator, enemyOne.x + 1f, enemyOne.y + 0.8f, enemyOne.x + 0.3f, enemyOne.y, 1f));               
+                StartCoroutine(delayedMove(arrowIndicator_Fast, enemyTwo.x - 1f, enemyTwo.y + 1.2f, enemyTwo.x, enemyTwo.y + 0.4f, 3f));
+                StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 4.5f));
+                StartCoroutine(delayedMove(arrowIndicator_Fast, -10, -10, -10, -10, 6f));
             }
             BombManager.main.reDrawBombs();
         }
@@ -552,9 +553,9 @@ namespace Assets.Scripts
         }
         IEnumerator delayRestart()
         {            
-            yield return new WaitForSeconds(1f);           
+            yield return new WaitForSeconds(0f);           
             life = 3;
-           // Timer.main.setTimerMission(200);
+            // Timer.main.setTimerMission(200);
             nextLevel = false;
             InitGame(currLevel);
             gameOver.gameObject.SetActive(nextLevel);

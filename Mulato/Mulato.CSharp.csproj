@@ -99,6 +99,7 @@
     <Compile Include="Assets\Scripts\UnityTweenPackage\TweenVector.cs" />
     <Compile Include="Assets\Scripts\Utils\DelayedExecute.cs" />
     <Compile Include="Assets\Scripts\Utils\SceneSingleton.cs" />
+    <Compile Include="Assets\Scripts\bombsCord.cs" />
     <Compile Include="Assets\Scripts\colorManager.cs" />
     <Compile Include="Assets\Scripts\floor.cs" />
     <Compile Include="Assets\Scripts\level.cs" />

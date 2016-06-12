@@ -9,10 +9,7 @@ namespace Assets.Scripts
 {
     public class BoardManager : MonoBehaviour
         // : SceneSingleton<BoardManager>
-    {
-
-       
-
+    {      
         // This is all the options in the board
         public enum GridPointObject
         {
@@ -40,11 +37,15 @@ namespace Assets.Scripts
 
         #region game objects
         //public GameObject boardManager;
-        public GameObject floorTiles;
+        public GameObject floorTiles0;
+        public GameObject floorTiles1;
+        public GameObject floorTiles2;
+        public GameObject floorTiles3;
+        public GameObject floorTiles4;
+        public GameObject floorTiles5;
         public GameObject wallTiles;
         public GameObject boxWallTiles;
         public GameObject boxTiles;
-        public GameObject powerUpsTiles;
         public GameObject specialBoxTiles;
         public GameObject specialLifeBoxTiles;
         public GameObject specialEnemyFreezeTiles;
@@ -68,43 +69,7 @@ namespace Assets.Scripts
         public int m_NumOfEnemies { get; set; }
         public int m_NumOfColors { get; set; }
         public int m_Level { get; set; }
-        /*
-        void Start()
-        {
-            m_UpdateBombGridPoint = new BombManagerBoxMovingObjectsUpdateBombGridPoint(UpdateGridPointObject);
-            m_SetBombOnBoard = new BombManagerSetBombOnBoard(SetBombOnGrid);
-            m_CanMove = new MovingObjectsCanMoveOnBoard(CanMoveToGridPoint);
-        }
-        */
-        /*public GameObject CreateBoardManager(int level)
-        {
-            var board = Instantiate(boardManager,new Vector3(0,0,0),Quaternion.identity) as GameObject;
-           /* m_GridPointList = new List<GridPoint[]>();
-            m_Level = level;
-            m_NumOfNomralBoxes = 0;
-            m_NumOfLifeBoxes = 0;
-            m_NumOfSpecialBombBoxes = 0;
-            m_NumOfFreezeBoxes = 0;
-
-            m_UpdateBombGridPoint = new BombManagerBoxMovingObjectsUpdateBombGridPoint(UpdateGridPointObject);
-            m_SetBombOnBoard = new BombManagerSetBombOnBoard(SetBombOnGrid);
-            m_CanMove = new MovingObjectsCanMoveOnBoard(CanMoveToGridPoint);
-            
-            return board;
-        }*/
-
-        /* public void setNumberOfEnemies(int numberOfEnemies)
-         {
-             numOfEnemies = numberOfEnemies;
-         }
-
-         public void setNumberOfColors(int numberOfColors)
-         {
-             numOfColors = numberOfColors;
-         }
-         */
-
-       
+        
  
         private void createEnemiesOnTheBoard()
         {
@@ -189,10 +154,7 @@ namespace Assets.Scripts
         {
             enemies = new List<GameObject>();
             boxesFloor = new List<GameObject>();
-            // Initialize the board
-            /*if (m_Board == null)
-                BoardSetup();*/
-            // Initialize the walls in the board
+           
             BoardSetup();
             setUpWallsOnBoard(wallPostions);
 
@@ -254,20 +216,19 @@ namespace Assets.Scripts
         //setup grid points and side walls
         private void BoardSetup()
         {
-            //boardHolder = new GameObject("Board").transform;
+            GameObject toInstantiate;
             m_GridPointList = new List<GridPoint[]>();
             for (var i = 0; i < k_Rows; i++)
             {
                 m_GridPointList.Add(new GridPoint[k_Columns]);
             }
-
+         
             for (var column = 0; column < k_Columns; column++)
             {
                 for (var row = 0; row < k_Rows; row++)
                 {
-
                     {
-                        GameObject toInstantiate = floorTiles;
+                        toInstantiate = getRandomFloorTiles();
 
                         m_GridPointList[row][column] = new GridPoint()
                         {
@@ -276,6 +237,7 @@ namespace Assets.Scripts
                             gridPointObject = GridPointObject.Empty
                         };
                         // If a wall
+                        
                         if ((row == 0 || column == k_Columns - 1 || column == 0 || row == k_Rows - 1))
                         {
                             toInstantiate = wallTiles;
@@ -293,15 +255,53 @@ namespace Assets.Scripts
                         }
                         m_GridPointList[row][column].gameObject = instance;
                         instance.transform.SetParent(boardHolder);
-
                     }
-
                 }
-
             }
         }
 
-       
+        private GameObject getRandomFloorTiles()
+        {
+            GameObject randomFloorTile = null;
+            int random = (int)(Random.value * 6);
+            
+            switch (random)
+            {
+                case 0:
+                    {
+                        randomFloorTile = floorTiles0;
+                        break;
+                    }
+                case 1:
+                    {
+                        randomFloorTile = floorTiles1;
+                        break;
+                    }
+                case 2:
+                    {
+                        randomFloorTile = floorTiles2;
+                        break;
+                    }
+                case 3:
+                    {
+                        randomFloorTile = floorTiles3;
+                        break;
+                    }
+                case 4:
+                    {
+                        randomFloorTile = floorTiles4;
+                        break;
+                    }
+                default:
+                    {
+                        randomFloorTile = floorTiles5;
+                        break;
+                    }
+            }
+
+            return randomFloorTile;     
+        }
+
         public int[] RandomPosition()
         {
             int randomRowIndex = Random.Range(0, m_GridPointList.Count);
@@ -369,49 +369,6 @@ namespace Assets.Scripts
                 if (box != null)
                     Destroy(box);
             }
-          //  String[] tagsToDelete = new[] {"Box", "EnemyBlue", "EnemyPurple", "EnemyPink", "Wall", "arrow"};
-
-            /*for (int i = 0; i < tagsToDelete.Length; i++)
-            {
-                var clones = GameObject.FindGameObjectsWithTag(tagsToDelete[i].ToString());
-
-                if (tagsToDelete[i].ToString() == "Box")
-                {
-                    foreach (var clone in clones)
-                    {
-                       
-                        m_GridPointList[clone.GetComponent<Box>().gridRow][clone.GetComponent<Box>().gridCol].gridPointObject =
-                            GridPointObject.Empty;
-                        Destroy(clone);
-                    }
-                } else if (tagsToDelete[i].ToString() == "Wall")
-                {
-                    foreach (var clone in clones)
-                    {
-                        Destroy(clone);
-                    }
-                    for (int j = 0; j < wallPostions.Length; j++)
-                    {
-                        m_GridPointList[wallPostions[j]/10][wallPostions[j]%10].gridPointObject =
-                            GridPointObject.Empty;
-                    }
-                }
-                else if (tagsToDelete[i].ToString() == "arrow")
-                {
-                    foreach (var clone in clones)
-                    {
-                        Destroy(clone);
-                    }
-                } else
-                {
-                    foreach (var clone in clones)
-                    {
-                        Destroy(clone);
-                        m_GridPointList[clone.GetComponent<Enemy>().gridRow][clone.GetComponent<Enemy>().gridCol].gridPointObject =
-                            GridPointObject.Empty;
-                    }
-                }            
-            }     */      
         }
 
         // This function should update the grid
@@ -444,8 +401,6 @@ namespace Assets.Scripts
         public void GenerateBoxesInRandomPosition(int amountOfBoxes)
         {
             LayoutObjectAtRandom(boxTiles, GridPointObject.Box, amountOfBoxes);
-        }
-
-       
+        }      
     }
 }

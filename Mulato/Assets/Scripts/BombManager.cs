@@ -23,10 +23,12 @@ namespace Assets.Scripts
 
         public LayerMask layerMask = ~(1 << 9 | 1 << 11); //all exept bomb and floor
 
-       // public GameObject m_currBoard;
+        public GameObject indicatorArrowFollow;
+        public GameObject indicatorArrowStatic;
         public GameObject heart;
         public GameObject SpecialBomb;
         public GameObject Combo;
+        private List<GameObject> bombsOnGame = new List<GameObject>();
         public Queue<GameObject> bombs;
         public AudioClip bombSound;
         
@@ -39,6 +41,7 @@ namespace Assets.Scripts
         private int numOfColors;
 
         // for missions
+        public bool explainBombTime;
         public bool onMission = false;
         public bool missionMultipleKilled = false;
         public bool missionSurvival = false;
@@ -52,13 +55,20 @@ namespace Assets.Scripts
         private float gridRowBomb;
         private float gridColBomb;
 
-        /*public void setBoardAsListener(GameObject i_CurBoard)
-        {
-            m_currBoard = i_CurBoard;
-        }*/
-
         public void reDrawBombs()
         {
+            foreach (GameObject bomb in bombsOnGame)
+            {
+                if (bomb != null)
+                {
+                    int bombXCord = bomb.GetComponent<bombsCord>().m_xCord;
+                    int bombYCord = bomb.GetComponent<bombsCord>().m_xCord;
+                    GameManager.main.m_CurrentBoard.GetComponent<BoardManager>().UpdateGridPointObject(bombXCord, bombYCord, bombXCord, bombYCord);
+                    Destroy(bomb.gameObject);
+                }
+            }
+
+            bombsOnGame.Clear();
             bombs = new Queue<GameObject>();
             currentBombColor = drawNextBomb();
             bombs.Enqueue(colorManager.main.currentColorPosibilities[currentBombColor]);
@@ -90,9 +100,22 @@ namespace Assets.Scripts
 
         public void DeployBomb(float row, float column, int gridRow, int gridColumn)
         {
-
             var curBomb = Instantiate(bombs.Dequeue(), new Vector3(3f, 10.5f, -1), Quaternion.identity) as GameObject;
+           /* if (explainBombTime == true)
+            {
+                
+                indicatorArrowFollow.transform.position = new Vector3(1f, 8.79f, 0);
+                indicatorArrowStatic.GetComponent<TweenTransforms>().startingVector = new Vector3(-10f, -10f, 0);
+                indicatorArrowStatic.GetComponent<TweenTransforms>().endVector = new Vector3(-10f, -10f, 0);
+                StartCoroutine(slowMotion(1f));
+                iTween.RotateTo(indicatorArrowFollow, new Vector3(0,0,110f), 0.5f);
+                iTween.MoveTo(indicatorArrowFollow, new Vector3(row - 1f, column + 1f, 0), 4f);
+            }*/
+            bombsOnGame.Add(curBomb);
+            curBomb.GetComponent<bombsCord>().m_xCord = gridRow;
+            curBomb.GetComponent<bombsCord>().m_yCord = gridColumn;
             iTween.MoveTo(curBomb, new Vector3(row, column, -1), 2f);
+            m_setBombOnBoard(gridRow, gridColumn);
             currentBombColor = nextBombColor;
             nextBombColor = thirdBombColor;
             thirdBombColor = forthBombColor;
@@ -107,8 +130,7 @@ namespace Assets.Scripts
                 bombs.Enqueue(colorManager.main.currentColorPosibilities[thirdBombColor]);
             }
 
-            colorManager.main.changeColors();
-           
+            colorManager.main.changeColors();          
             StartCoroutine(DelayedExplode(curBomb, gridRow, gridColumn));
         }
 
@@ -144,7 +166,7 @@ namespace Assets.Scripts
             //check if multiple enemies killed 
             if (comboCounterKill <= 0)
             {
-                StartCoroutine(slowMotion());
+                StartCoroutine(slowMotion(0.2f));
                // comboCounterKill = missionMultipleKilled ? numOfKillesToWinComboMission : numOfKillesForCombo;
                 if (missionMultipleKilled)
                 {
@@ -187,7 +209,6 @@ namespace Assets.Scripts
                         Timer.main.setTimerMission((int)Timer.main.myTimer + 5);
                     }
                     //colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
-
                 }
                 else if (currCollider.tag == "EnemyPink" && (bombTag == "BombPink" || bombTag == "SpecialBomb"))
                 {
@@ -200,7 +221,6 @@ namespace Assets.Scripts
                         Timer.main.setTimerMission((int)Timer.main.myTimer + 5);
                     }
                     //colliderHits [i].rigidbody.gameObject.GetComponent<Enemy> ().animator.SetBool ("die", true);
-
                 }
                 else if (currCollider.tag == "EnemyPurple" && (bombTag == "BombPurple" || bombTag == "SpecialBomb"))
                 {
@@ -226,10 +246,7 @@ namespace Assets.Scripts
                     Instantiate(heart, currCollider.transform.position, Quaternion.identity);
                     heart.GetComponent<Heart>().SetAnimation();
                 }
-            }
-
-           
-
+            }      
         }
     
         //for bouns combo
@@ -238,40 +255,28 @@ namespace Assets.Scripts
             gridColBomb = UnityEngine.Random.Range(0, BoardManager.k_Columns);
             gridRowBomb = UnityEngine.Random.Range(0, BoardManager.k_Rows);
             //get game object on random postion choosen
-            GameObject floor = m_GetGameObjectOnBoard((int)gridRowBomb, (int)gridColBomb);
-            //check if random game object is empty to deploy special bomb
-            if (m_GetGridPointObjectOnBoard((int)gridRowBomb, (int)gridColBomb) == 0)
-            {
-                //creates special bomb on choosen point
-                var curBomb =
-                    Instantiate(SpecialBomb,new Vector3(2,8,0), Quaternion.identity) as GameObject;
-                iTween.MoveTo(curBomb, new Vector3(floor.transform.position.x, floor.transform.position.y, -1), 1.5f);
-                StartCoroutine(DelayedExplode(curBomb, (int)gridRowBomb, (int)gridColBomb));
-                m_setBombOnBoard((int)gridRowBomb, (int)gridColBomb);
-            }
-            //if game object isnt empty recall function
-            else
-            {
-                deploySpecialBomb();
-            }
+            m_GetGameObjectOnBoard((int)gridRowBomb, (int)gridColBomb);
+            deploySpecialBomb();
         }
         //delay bomb action for slow motion
         IEnumerator DelayedExplode(GameObject curBomb, int row, int column)
         {
-            yield return new WaitForSeconds(0.3f);
-            m_setBombOnBoard(row, column);
-            yield return new WaitForSeconds(1f);
-            curBomb.GetComponent<AudioSource>().PlayOneShot(bombSound, 0.5f);
+           // yield return new WaitForSeconds(0.2f);           
+            yield return new WaitForSeconds(1.3f);
+            if(curBomb != null)
+                curBomb.GetComponent<AudioSource>().PlayOneShot(bombSound, 0.5f);
             yield return new WaitForSeconds(0.2f);
-            Explode(curBomb, row, column);
+            if (curBomb != null)
+                Explode(curBomb, row, column);
             yield return new WaitForSeconds(0.2f);
-            Destroy(curBomb);
+            if (curBomb != null)
+                Destroy(curBomb);
         }
 
-        IEnumerator slowMotion()
+        IEnumerator slowMotion(float time)
         {
             Time.timeScale = 0.2F;
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(time);
             Time.timeScale = 1F;
         }
 

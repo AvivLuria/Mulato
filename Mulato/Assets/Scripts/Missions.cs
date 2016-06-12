@@ -14,12 +14,11 @@ namespace Assets.Scripts
         public int difficulty;
         public bool disappearingMission = false;
         private bool createBoxes = false;
-
-        public BoardManager m_CurrBoard { get; set; }
-       
+        GameObject m_CurrBoard;
 
         public void initMission(int input_level, int input_numberOfEnemies, int input_difficulty)
         {
+            m_CurrBoard = GameManager.main.m_BoardManager;
             difficulty = input_difficulty;
             currMission = input_level;
             numberOfEnemies = input_numberOfEnemies;
@@ -46,7 +45,7 @@ namespace Assets.Scripts
                         //choose which color to destory
                         color = UnityEngine.Random.Range(0, difficulty);
 
-                        m_CurrBoard.m_NumOfColors = (difficulty);                     
+                        m_CurrBoard.GetComponent<BoardManager>(). m_NumOfColors = (difficulty);                     
                         BombManager.main.startIndexBombColor = color;
                         BombManager.main.setNumberOfColors(color + 1);
                         BombManager.main.onMission = true;
@@ -76,7 +75,7 @@ namespace Assets.Scripts
                     {
                         if (difficulty <= 0 || difficulty > 3) difficulty = 2;
 
-                        m_CurrBoard.m_NumOfColors = (difficulty);
+                        m_CurrBoard.GetComponent<BoardManager>().m_NumOfColors = (difficulty);
                         BombManager.main.setNumberOfColors(difficulty);                        
                         BombManager.main.onMission = true;
                         disappearingMission = true;
@@ -157,7 +156,7 @@ namespace Assets.Scripts
                         {
                             GameManager.main.numberOFEnemiesInTheLevel = numberOfEnemies + 1;
                             GameManager.main.life += 1;
-                            m_CurrBoard.m_NumOfEnemies = (numberOfEnemies);
+                            m_CurrBoard.GetComponent<BoardManager>().m_NumOfEnemies = (numberOfEnemies);
                          //   m_CurrBoard.SetUpEnemiesOnTheBoard();
                         }
                         break;
@@ -188,7 +187,7 @@ namespace Assets.Scripts
             while (createBoxes)
             {
                 yield return new WaitForSeconds(2.5f);
-                m_CurrBoard.GenerateBoxesInRandomPosition(i_difficulty);
+                m_CurrBoard.GetComponent<BoardManager>().GenerateBoxesInRandomPosition(i_difficulty);
             }
         }
     }

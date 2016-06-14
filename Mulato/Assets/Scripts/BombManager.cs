@@ -244,7 +244,7 @@ namespace Assets.Scripts
                 {
                     GameManager.main.GameOver(1);
                     Instantiate(heart, currCollider.transform.position, Quaternion.identity);
-                    heart.GetComponent<Heart>().SetAnimation();
+                   // heart.GetComponent<Heart>().SetAnimation();
                 }
             }      
         }

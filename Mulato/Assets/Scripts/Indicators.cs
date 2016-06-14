@@ -22,6 +22,8 @@ namespace Assets.Scripts
             } else if (currObj.tag == "losingHeart")
             {
                 iTween.MoveTo(currObj.gameObject, currObj.transform.position + new Vector3(0, 2, 0), 5f);
+                Animator animator = GetComponent<Animator>();
+                animator.SetBool("LostLife", true);
                 StartCoroutine(delayedDestory());
             } else if (currObj.tag == "SpecialBomb")
             {

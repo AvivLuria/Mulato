@@ -2,10 +2,9 @@
 using System.Collections;
 
 public class Heart : MonoBehaviour {
-    private Animator animator;
-    public void SetAnimation()
+    
+     void Start()
     {
-        animator = GetComponent<Animator>();
-        animator.SetBool("LostLife", true);
+        
     }
 }

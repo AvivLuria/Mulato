@@ -163,11 +163,11 @@ namespace Assets.Scripts
             LayoutObjectAtRandom(specialBoxTiles, GridPointObject.Box, m_NumOfSpecialBombBoxes);
             LayoutObjectAtRandom(specialLifeBoxTiles, GridPointObject.Box, m_NumOfLifeBoxes);
             LayoutObjectAtRandom(specialEnemyFreezeTiles, GridPointObject.Box, m_NumOfFreezeBoxes);
-            if (m_Level != 0) { 
-                createEnemiesOnTheBoard();
-            } else
-            {
+            if (m_Level == 0 || m_Level == -1) {
                 setUpEnemiesOnTheBoardManualy(m_Level);
+            } else
+            {         
+                createEnemiesOnTheBoard();
             }
         }
 
@@ -210,7 +210,45 @@ namespace Assets.Scripts
                 enemy.GetComponent<Enemy>().gridCol = 1;
                 enemy.GetComponent<Enemy>().setBoardListener(this.gameObject);
                 enemies.Add(enemy.gameObject);
-            }       
+            } else
+            {
+                m_NumOfEnemies -= 4;
+                GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue] = 4;
+                ///
+                m_GridPointList[1][1].gridPointObject = GridPointObject.Enemy;
+                var gridPoint = m_GridPointList[1][1];
+                var enemy = Instantiate(enemyBlue, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+                enemy.GetComponent<Enemy>().gridRow = 1;
+                enemy.GetComponent<Enemy>().gridCol = 2;
+                enemy.GetComponent<Enemy>().setBoardListener(this.gameObject);
+                enemy.GetComponent<MovingObject>().moveTime = 0.00001f;
+                enemies.Add(enemy.gameObject);
+                ///
+                m_GridPointList[6][5].gridPointObject = GridPointObject.Enemy;
+                gridPoint = m_GridPointList[6][5];
+                enemy = Instantiate(enemyBlue, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+                enemy.GetComponent<Enemy>().gridRow = 6;
+                enemy.GetComponent<Enemy>().gridCol = 5;
+                enemy.GetComponent<Enemy>().setBoardListener(this.gameObject);
+                enemy.GetComponent<MovingObject>().moveTime = 0.00001f;
+                enemies.Add(enemy.gameObject);
+                ///
+                m_GridPointList[1][6].gridPointObject = GridPointObject.Enemy;
+                gridPoint = m_GridPointList[1][6];
+                enemy = Instantiate(enemyBlue, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+                enemy.GetComponent<Enemy>().gridRow = 1;
+                enemy.GetComponent<Enemy>().gridCol = 6;
+                enemy.GetComponent<Enemy>().setBoardListener(this.gameObject);
+                enemies.Add(enemy.gameObject);
+                ///
+                m_GridPointList[9][1].gridPointObject = GridPointObject.Enemy;
+                gridPoint = m_GridPointList[9][1];
+                enemy = Instantiate(enemyBlue, gridPoint.gameObject.transform.position, Quaternion.identity) as GameObject;
+                enemy.GetComponent<Enemy>().gridRow = 9;
+                enemy.GetComponent<Enemy>().gridCol = 1;
+                enemy.GetComponent<Enemy>().setBoardListener(this.gameObject);
+                enemies.Add(enemy.gameObject);
+            } 
         }
 
         //setup grid points and side walls

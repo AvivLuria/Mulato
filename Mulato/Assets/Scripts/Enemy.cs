@@ -14,7 +14,7 @@ public class Enemy : MovingObject {
     public int gridCol;
     private int countTryTimes = 10;
     private bool dead;
-    public AudioClip eggsSound;
+   
     private AudioSource source;
 	public Animator animator;
     public Sprite omletBlue;
@@ -141,13 +141,13 @@ public class Enemy : MovingObject {
     IEnumerator delayedDestory()
     {
         // SHIR!
+        GetComponent<SpriteRenderer>().enabled = true;
         GetComponent<SpriteRenderer>().sortingLayerName = "bouns_indic";
+        yield return new WaitForSeconds(0f);
         animator.SetBool("die", true);
         Destroy(gameObject.GetComponent<BoxCollider2D>());
-        dead = true;
-        source = GetComponent<AudioSource>();
-        source.PlayOneShot(eggsSound);
-        yield return new WaitForSeconds(1.5f);
+        dead = true;      
+        yield return new WaitForSeconds(1.3f);
         m_curBoard.GetComponent<BoardManager>().UpdateGridPointObject(gridRow, gridCol, gridRow, gridCol);
         Destroy(this.gameObject);
     }

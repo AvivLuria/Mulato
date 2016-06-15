@@ -30,8 +30,10 @@ namespace Assets.Scripts
         public GameObject Combo;
         private List<GameObject> bombsOnGame = new List<GameObject>();
         public Queue<GameObject> bombs;
+
         public AudioClip bombSound;
-        
+        public AudioClip eggsSound;
+
         public ParticleSystem ExplodParticleSystem;
 
         public int currentBombColor;
@@ -201,8 +203,9 @@ namespace Assets.Scripts
                 else if (currCollider.tag == "EnemyBlue" && (bombTag == "BombBlue" || bombTag == "SpecialBomb"))
                 {
                     comboCounterKill--;
-                    GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue]--;
-                    currCollider.GetComponent<Enemy>().activeDelay();
+                    GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue]--;                    
+                    currCollider.GetComponent<AudioSource>().PlayOneShot(eggsSound);                    
+                    currCollider.GetComponent<Enemy>().activeDelay();                                        
                     GameManager.main.EnemyKilled();
                     if (missionSurvival)
                     {
@@ -214,7 +217,8 @@ namespace Assets.Scripts
                 {
                     comboCounterKill--;
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink]--;
-                    currCollider.GetComponent<Enemy>().activeDelay();
+                    currCollider.GetComponent<AudioSource>().PlayOneShot(eggsSound);
+                    currCollider.GetComponent<Enemy>().activeDelay();                    
                     GameManager.main.EnemyKilled();
                     if (missionSurvival)
                     {
@@ -226,6 +230,7 @@ namespace Assets.Scripts
                 {
                     comboCounterKill--;
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple]--;
+                    currCollider.GetComponent<AudioSource>().PlayOneShot(eggsSound);
                     currCollider.GetComponent<Enemy>().activeDelay();
                     GameManager.main.EnemyKilled();
                     if (missionSurvival)
@@ -272,8 +277,9 @@ namespace Assets.Scripts
         {
            // yield return new WaitForSeconds(0.2f);           
             yield return new WaitForSeconds(1.3f);
-            if(curBomb != null)
+            if (curBomb != null)
                 curBomb.GetComponent<AudioSource>().PlayOneShot(bombSound, 0.5f);
+                curBomb.GetComponent<SpriteRenderer>().sortingLayerName = "Units";
             yield return new WaitForSeconds(0.2f);
             if (curBomb != null)
                 Explode(curBomb, row, column);

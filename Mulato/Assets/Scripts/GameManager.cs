@@ -11,7 +11,6 @@ namespace Assets.Scripts
 {
     public class GameManager : SceneSingleton<GameManager>
     {
-        private bool tempBool = false;
         private bool onAMission = false;
         public bool timer = true;
         public bool nextLevel = false;
@@ -30,10 +29,12 @@ namespace Assets.Scripts
         public GameObject arrowIndicator;
         public GameObject arrowIndicator_2;
         public GameObject Memory;
-       
-		public Transform mainMenu, exitMenu,gameOver, pauseMenu, startLevel0, startLevel2, startLevel3, startLevel4, startLevel5, startLevel1, startLevel6, startLevel7, startLevel8, startLevel9, startLevel10, startLevel11;
-		public Transform[] startLevel;
 
+        public Canvas fader;
+
+		public Transform mainMenu, exitMenu,gameOver, pauseMenu, startLevel0, startLevel2, startLevel3, startLevel4, startLevel5, startLevel1, startLevel6, startLevel7, startLevel8, startLevel9, startLevel10, startLevel11, gameWon;
+		public Transform[] startLevel;
+        private bool stillPlaying = true;
 
         public override void Awake()
         {
@@ -57,20 +58,14 @@ namespace Assets.Scripts
 			startLevel [9] = startLevel9;
 			startLevel [10] = startLevel10;
 			startLevel [11] = startLevel11;
+            startLevel[12] = gameWon;
 
             nextLevel = true;
 			startLevel[0].gameObject.SetActive (nextLevel);
             startLevel[0].gameObject.GetComponentInChildren<Button>().image.enabled = false;
             StartCoroutine(delayShowButton(0));
             // InitGame (currLevel = -1);         
-        }
-
-		public void OkFirstLevel(){
-			
-				nextLevel = false;
-				InitGame (currLevel = -2);
-				startLevel[0].gameObject.SetActive (false);		
-		}
+        }		
 
         public void InitGame (int currLevel) {
 
@@ -92,12 +87,12 @@ namespace Assets.Scripts
                 case (-2):
                     {
                         numberOfColors = 1;
-                        numberOFEnemiesInTheLevel = 3;
+                        numberOFEnemiesInTheLevel = 1;
                         
                         m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[]{
                             11 ,12, 13 ,14 ,15, 16, 21, 22, 23, 24, 25, 26, 31, 32, 33, 34 , 35, 36, 41, 42, 44, 45
                            ,46 ,51 ,52, 56, 66, 71 ,72, 76, 81, 82,84 ,85 ,86, 91, 92, 93, 94, 95, 96, 54,55,74,75 };
-                        // Instantiate(arrowIndicator, new Vector3(6.27f, 8.6f, 0), Quaternion.Euler(0, 0, 50));
+                        //Instantiate(arrowIndicator, new Vector3(6.27f, 8.6f, 0), Quaternion.Euler(0, 0, 50));
                         m_BombManager.GetComponent<BombManager>().explainBombTime = true;
                         
                         StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 4f));
@@ -168,6 +163,7 @@ namespace Assets.Scripts
                         m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[]
                     {92, 93, 94, 95, 83, 84, 63, 64, 43, 44, 12, 13, 14, 15, 23, 24};
                     m_CurrentBoard.GetComponent<BoardManager>().m_NumOfFreezeBoxes = 1;
+                    onAMission = false;
                     Timer.main.setTimerMission(180);
                     #endregion
                     break;
@@ -182,7 +178,7 @@ namespace Assets.Scripts
                     m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[]
                     {93, 94, 83, 84, 63, 64, 43, 44, 13, 14, 23, 24, 66, 56, 46, 61, 41, 51};
                     Timer.main.setTimerMission(180);
-  
+                    onAMission = false;
                     #endregion
                     break;
                 }
@@ -193,7 +189,7 @@ namespace Assets.Scripts
 
                     
                     numberOfColors = 1;
-                    numberOFEnemiesInTheLevel = 6;
+                    numberOFEnemiesInTheLevel = 5;
                     m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[]
                     {93, 94, 83, 84, 63, 64, 43, 44, 13, 14, 23, 24, 66, 56, 46, 61, 41, 51};
 
@@ -264,7 +260,7 @@ namespace Assets.Scripts
                     break;
 
                 }
-                //disappearing enemies - 2 colors
+                //classic play - 2 color / 30 sec
                 case (8):
                 {
                     #region hard_coding_scene
@@ -277,18 +273,19 @@ namespace Assets.Scripts
                         m_CurrentBoard.GetComponent<BoardManager>().m_NumOfSpecialBombBoxes = 1;
                         m_CurrentBoard.GetComponent<BoardManager>().m_NumOfNomralBoxes = 2;
 
-                        Timer.main.setTimerMission(20);
+                        Timer.main.setTimerMission(30);
                         #endregion
                     onAMission = false;
                     break;                   
                 }
-               //kill the same color - 2 colors
+                //disappearing enemies - 2 colors
                 case (9):
                 {
                     #region hard_coding_scene
 
                         missionNum = 5;
                         numberOfColors = 2;
+                        difficulty = numberOfColors;
                         numberOFEnemiesInTheLevel = 7;
                         m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[] { 72,83,84,85,75,65,54,53,43,23};
                         m_CurrentBoard.GetComponent<BoardManager>().m_NumOfLifeBoxes = 1;
@@ -429,16 +426,14 @@ namespace Assets.Scripts
 
             enemiesOnTheBoard = new int[numberOfColors];
             m_CurrentBoard.GetComponent<BoardManager>().m_NumOfEnemies = numberOFEnemiesInTheLevel;
-          
+            m_CurrentBoard.GetComponent<BoardManager>().m_NumOfColors = numberOfColors;
             if (onAMission)
             {
                 Missions.main.initMission(missionNum, numberOFEnemiesInTheLevel,difficulty);
             }
             else
-            {                
-                m_CurrentBoard.GetComponent<BoardManager>().m_NumOfColors = numberOfColors;              
-                BombManager.main.setNumberOfColors(numberOfColors);
-                
+            {                                           
+                BombManager.main.setNumberOfColors(numberOfColors);               
             }
 
             m_CurrentBoard.GetComponent<BoardManager>().StartScene();
@@ -446,54 +441,67 @@ namespace Assets.Scripts
             {
                 Vector2 enemyOne = m_CurrentBoard.GetComponent<BoardManager>().enemies[0].transform.position;
                 Vector2 enemyTwo = m_CurrentBoard.GetComponent<BoardManager>().enemies[1].transform.position;
-                StartCoroutine(delayedMove(arrowIndicator, enemyOne.x + 1f, enemyOne.y + 0.8f, enemyOne.x + 0.3f, enemyOne.y, 1f));               
-                StartCoroutine(delayedMove(arrowIndicator_2, enemyTwo.x - 1f, enemyTwo.y + 1.2f, enemyTwo.x, enemyTwo.y + 0.4f, 3f));
-                StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 4.5f));
-                StartCoroutine(delayedMove(arrowIndicator_2, -10, -10, -10, -10, 6f));
+                StartCoroutine(delayedMove(arrowIndicator, enemyOne.x + 2.5f, enemyOne.y + 1.8f, enemyOne.x + 1.8f, enemyOne.y + 0.8f, 0f));               
+                StartCoroutine(delayedMove(arrowIndicator_2, enemyOne.x - 1f, enemyOne.y + 2.8f, enemyOne.x, enemyOne.y + 2f, 0f));
+                StartCoroutine(delayedMove(arrowIndicator, enemyTwo.x + 2.5f, enemyTwo.y + 1.8f, enemyTwo.x + 1.8f, enemyTwo.y + 0.8f, 4f));
+                StartCoroutine(delayedMove(arrowIndicator_2, enemyTwo.x - 1f, enemyTwo.y + 2.8f, enemyTwo.x, enemyTwo.y + 2f, 4f));
+                StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 7f));
+                StartCoroutine(delayedMove(arrowIndicator_2, -10, -10, -10, -10, 7f));
             }
             BombManager.main.reDrawBombs();
         }
 
-        public void GameOver(int damage)
-        {
-            life -= damage;
-            if (life <= 0)
-            {
-                Ui.activeUI(false);
-				nextLevel = true;
-				gameOver.gameObject.SetActive (nextLevel);
-                // SceneManager.LoadScene("StartScene", LoadSceneMode.Single);
-                //Ui.activeUI(true);
-            }
-        }
-
-		public void Restart(){
-            if (!tempBool)
-            {
-                tempBool = true;
-                Ui.activeUI(false);
-                StartCoroutine(delayRestart());
-            }
-            tempBool = false;
-		}
-
-
         public void EnemyKilled()
         {
             numberOFEnemiesInTheLevel--;
-            if (numberOFEnemiesInTheLevel == 0 && !onAMission)
+            if (numberOFEnemiesInTheLevel == 0 && !onAMission && stillPlaying)
             {
-                changeLevel();
+                changeLevel(3);
             }
             else if (onAMission)
             {
                 Missions.main.checkMissionStatus();
-            } 
+            }
         }
-   
-        public void changeLevel()
+
+        public void GameOver(int damage)
         {
-			StartCoroutine(delayLoadLevel());           
+            if (stillPlaying)
+            {
+                life -= damage;
+                if (life <= 0)
+                {
+                    stillPlaying = false;
+                    life = 0;
+                    Ui.activeUI(false);
+                    fader.GetComponentInChildren<canvasFader>().OnFade();
+                    StartCoroutine(delayLost());
+                }
+            }
+        }
+
+        public void OkFirstLevel()
+        {
+            stillPlaying = true;
+            nextLevel = false;
+            InitGame(currLevel = -1);
+            startLevel[0].gameObject.SetActive(false);
+        }
+
+        public void Restart(){
+            stillPlaying = true;
+            Ui.activeUI(false);
+            life = 3;
+            // InitGame(currLevel);           
+            currLevel--;
+            changeLevel(0);
+            gameOver.gameObject.SetActive(false);
+            // Ui.activeUI(true);
+        }
+
+        public void changeLevel(float delayTime)
+        {
+			StartCoroutine(delayLoadLevel(delayTime));           
         }
 
 		public void OkNextLevel(){
@@ -509,7 +517,6 @@ namespace Assets.Scripts
         {
             currLevel = -2;
             SceneManager.LoadScene("Scene1", LoadSceneMode.Single);
-            //InitGame(currLevel);
         }
 
         public void ExitMenu(bool clicked){
@@ -527,7 +534,6 @@ namespace Assets.Scripts
 			SceneManager.LoadScene ("StartScene", LoadSceneMode.Single);
 			nextLevel = false;
             Ui.activeUI(true);
-            //gameOver.gameObject.SetActive (nextLevel);
         }
 
 		public void PauseMenu(bool clicked){
@@ -548,10 +554,20 @@ namespace Assets.Scripts
 
 		}
 
-        IEnumerator delayLoadLevel()
+        IEnumerator delayStartingLevelLoad()
         {
             Ui.activeUI(false);
             yield return new WaitForSeconds(3f);
+            nextLevel = true;
+            startLevel[currLevel + 3].gameObject.SetActive(nextLevel);
+            startLevel[currLevel + 3].gameObject.GetComponentInChildren<Button>().image.enabled = false;
+            StartCoroutine(delayShowButton(currLevel + 3));
+        }
+
+        IEnumerator delayLoadLevel(float timeDelay)
+        {
+            Ui.activeUI(false);
+            yield return new WaitForSeconds(timeDelay);
 			nextLevel = true;
             startLevel [currLevel + 3].gameObject.SetActive (nextLevel);
             startLevel[currLevel + 3].gameObject.GetComponentInChildren<Button>().image.enabled = false;
@@ -564,15 +580,12 @@ namespace Assets.Scripts
             startLevel[currLevel].gameObject.GetComponentInChildren<Button>().image.enabled = true;
         }
 
-        IEnumerator delayRestart()
-        {            
-            yield return new WaitForSeconds(0f);           
-            life = 3;
-            // Timer.main.setTimerMission(200);
-            nextLevel = false;
-            InitGame(currLevel);
+        IEnumerator delayLost()
+        {
+            nextLevel = true;          
+            yield return new WaitForSeconds(3f);
             gameOver.gameObject.SetActive(nextLevel);
-            Ui.activeUI(true);
+            fader.GetComponentInChildren<canvasFader>().OffFade();
         }
 
         IEnumerator delayedMove(GameObject objectToMove, float XStartPostion, float YStartPostion, float XEndPostion, float YEndPostion, float timeToWait)

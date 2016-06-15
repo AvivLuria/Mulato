@@ -34,8 +34,7 @@ public class Box : MonoBehaviour
         if (active)
         {
             BombManagerBoxMovingObjectsUpdateBombGridPoint m_UpdateBombGridPointBox = new BombManagerBoxMovingObjectsUpdateBombGridPoint(m_curBoard.GetComponent<BoardManager>().UpdateGridPointObject);
-            source = GetComponent<AudioSource>();
-            source.PlayOneShot(BoxSound);
+            
             active = !active;
             animator = GetComponent<Animator>();       
             m_UpdateBombGridPointBox(gridRow, gridCol, gridRow, gridCol);
@@ -97,7 +96,10 @@ public class Box : MonoBehaviour
    
     IEnumerator delayedDestory()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0.5f);
+        source = GetComponent<AudioSource>();
+        source.PlayOneShot(BoxSound);
+        yield return new WaitForSeconds(1f);
         Destroy(this.gameObject);
     }
 

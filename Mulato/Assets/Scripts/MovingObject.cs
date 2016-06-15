@@ -12,7 +12,7 @@ namespace Assets.Scripts
         public BombManagerBoxMovingObjectsUpdateBombGridPoint m_UpdateBombGridPointEnemy;
         public MovingObjectsCanMoveOnBoard m_CanMove;
 
-        public float moveTime = 1f;			//Time it will take object to move, in seconds.
+        public float moveTime = 0.0005f;			//Time it will take object to move, in seconds.
         public LayerMask blockingLayer;			//Layer on which collision will be checked.
         private Rigidbody2D rb2D;				//The Rigidbody2D component attached to this object.
         private float inverseMoveTime;			//Used to make movement more efficient.
@@ -23,7 +23,8 @@ namespace Assets.Scripts
             rb2D = GetComponent <Rigidbody2D> ();
 
             //By storing the reciprocal of the move time we can use it by multiplying instead of dividing, this is more efficient.
-            inverseMoveTime = 1f / moveTime;
+            //inverseMoveTime = 1f / moveTime;
+            inverseMoveTime = moveTime;
         }
 
         //Move returns true if it is able to move and false if not. 
@@ -65,7 +66,7 @@ namespace Assets.Scripts
             while(sqrRemainingDistance > float.Epsilon)
             {
                 //Find a new position proportionally closer to the end, based on the moveTime
-                Vector3 newPostion = Vector3.MoveTowards(rb2D.position, end, inverseMoveTime * Time.deltaTime);
+                Vector3 newPostion = Vector3.MoveTowards(rb2D.position, end, inverseMoveTime);
 
                 //Call MovePosition on attached Rigidbody2D and move it to the calculated position.
                 rb2D.MovePosition (newPostion);

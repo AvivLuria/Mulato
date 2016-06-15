@@ -45,7 +45,7 @@ namespace Assets.Scripts
                         //choose which color to destory
                         color = UnityEngine.Random.Range(0, difficulty);
 
-                        m_CurrBoard.GetComponent<BoardManager>(). m_NumOfColors = (difficulty);                     
+                        m_CurrBoard.GetComponent<BoardManager>(). m_NumOfColors = difficulty;                     
                         BombManager.main.startIndexBombColor = color;
                         BombManager.main.setNumberOfColors(color + 1);
                         BombManager.main.onMission = true;
@@ -115,11 +115,11 @@ namespace Assets.Scripts
                         if (BombManager.main.wonMissionMultipleKilled)
                         {
                             BombManager.main.missionMultipleKilled = false;
-                            GameManager.main.changeLevel();
+                            GameManager.main.changeLevel(3);
                         }
                         else if (GameManager.main.numberOFEnemiesInTheLevel < difficulty)
                         {
-                            GameManager.main.InitGame(GameManager.main.currLevel);
+                            GameManager.main.GameOver(20);
                         }
                         break;
                     }
@@ -128,7 +128,7 @@ namespace Assets.Scripts
                     {
                         if (GameManager.main.enemiesOnTheBoard[color] == 0)
                         {
-                            GameManager.main.changeLevel();
+                            GameManager.main.changeLevel(3);
                         }
                         break;
                     }
@@ -146,7 +146,7 @@ namespace Assets.Scripts
                         if (GameManager.main.numberOFEnemiesInTheLevel == 0)
                         {
                             disappearingMission = false;
-                            GameManager.main.changeLevel();
+                            GameManager.main.changeLevel(3);
                         }
                         break;
                     }
@@ -166,7 +166,7 @@ namespace Assets.Scripts
                         if (GameManager.main.enemiesOnTheBoard[color] == 0)
                         {
                             createBoxes = false;
-                            GameManager.main.changeLevel();
+                            GameManager.main.changeLevel(3);
                         }
                         break;
                     }

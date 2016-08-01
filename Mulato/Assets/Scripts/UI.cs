@@ -4,6 +4,7 @@ using Assets.Scripts;
 
 public class Ui : MonoBehaviour
 {
+    public Transform areYousure;
     private static bool click = true;
     private Vector2 m_inputMouse;
     // Update is called once per frame
@@ -38,11 +39,22 @@ public class Ui : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-
-
-            Application.Quit();
+            Time.timeScale = 0f;
+            activeUI(false);
+            areYousure.gameObject.SetActive(true);
         }
 
+    }
+    public void Exit()
+    {
+        Application.Quit();
+    }
+
+    public void continueGame()
+    {
+        areYousure.gameObject.SetActive(false);
+        Time.timeScale = 1f;
+        activeUI(true);
     }
 
     public static void activeUI(bool input)

@@ -32,7 +32,7 @@ namespace Assets.Scripts
 
         public Canvas fader;
 
-		public Transform mainMenu, exitMenu,gameOver, pauseMenu, startLevel0, startLevel2, startLevel3, startLevel4, startLevel5, startLevel1, startLevel6, startLevel7, startLevel8, startLevel9, startLevel10, startLevel11, gameWon;
+		public Transform  mainMenu, exitMenu,gameOver, pauseMenu, startLevel0, startLevel2, startLevel3, startLevel4, startLevel5, startLevel1, startLevel6, startLevel7, startLevel8, startLevel9, startLevel10, startLevel11, gameWon;
 		public Transform[] startLevel;
         public bool stillPlaying = true;
 
@@ -113,7 +113,6 @@ namespace Assets.Scripts
                           {13,14,23,24,33,34,43,44,53,54,63,64,73,74,83,84,93,94,51,52,55,56};                  
                         BombManager.main.setNumberOfColors(numberOfColors);
                         Timer.main.setTimerMission(1800);
-                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfFreezeBoxes = 1;
                         //    Instantiate(arrowIndicator, new Vector3(3.3f, 9, 0), Quaternion.Euler(0, 0, 300));
                         #endregion
 
@@ -232,9 +231,9 @@ namespace Assets.Scripts
                     numberOFEnemiesInTheLevel = 6;
                     m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[] {92,93,82,83,64,65,54,55,32,33,22,23,25,26,15,16};
                     m_CurrentBoard.GetComponent<BoardManager>().m_NumOfLifeBoxes = 1;
-                    m_CurrentBoard.GetComponent<BoardManager>().m_NumOfSpecialBombBoxes = 2;
+                    m_CurrentBoard.GetComponent<BoardManager>().m_NumOfSpecialBombBoxes = 1;
                     m_CurrentBoard.GetComponent<BoardManager>().m_NumOfNomralBoxes = 2;
-
+                    m_CurrentBoard.GetComponent<BoardManager>().m_NumOfFreezeBoxes = 1;
                     Timer.main.setTimerMission(90);
 
                     #endregion
@@ -273,8 +272,8 @@ namespace Assets.Scripts
                         m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[] { 82,72,62,52,42,32,22,83,74,65,45,34,23 };
                         m_CurrentBoard.GetComponent<BoardManager>().m_NumOfLifeBoxes = 1;
                         m_CurrentBoard.GetComponent<BoardManager>().m_NumOfSpecialBombBoxes = 1;
-                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfNomralBoxes = 2;
-
+                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfNomralBoxes = 1;
+                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfFreezeBoxes = 1;
                         Timer.main.setTimerMission(30);
                         #endregion
                     onAMission = false;
@@ -547,19 +546,17 @@ namespace Assets.Scripts
 		public void PauseMenu(bool clicked){
 			if (clicked == true) {
                 Ui.activeUI(false);
+                Time.timeScale = 0f;
 				pauseMenu.gameObject.SetActive (clicked);
 				timer = false;
 			}
             else
             {
                 Ui.activeUI(true);
-				pauseMenu.gameObject.SetActive (clicked);
+                Time.timeScale = 1f;
+                pauseMenu.gameObject.SetActive (clicked);
 				timer = true;
 			}
-		}
-
-		public void Exit(){
-
 		}
 
         IEnumerator delayStartingLevelLoad()

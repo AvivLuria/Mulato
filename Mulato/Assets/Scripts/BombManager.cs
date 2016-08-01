@@ -41,6 +41,8 @@ namespace Assets.Scripts
         public int thirdBombColor;
         public int forthBombColor;
         private int numOfColors;
+        private int enemiesKilled;
+        private int damageTaken;
 
         // for missions
         public bool explainBombTime;
@@ -138,8 +140,10 @@ namespace Assets.Scripts
 
         private void Explode(GameObject curBomb, int row, int column)
         {
+            enemiesKilled = 0;
+            damageTaken = 0;
             //raycast from bomb to right,left,up,down
-          // Instantiate(test, new Vector3(1.2f, 0, 0) + curBomb.transform.position, Quaternion.identity);
+            // Instantiate(test, new Vector3(1.2f, 0, 0) + curBomb.transform.position, Quaternion.identity);
             RaycastHit2D[] colliderHitsRight = Physics2D.RaycastAll(new Vector3(1.2f, 0, 0) + curBomb.transform.position, Vector2.right,
                 powerOfExplosion - 0.3f, layerMask);
          //   Instantiate(test, new Vector3(3f, 0, 0) + curBomb.transform.position, Quaternion.identity);
@@ -168,7 +172,7 @@ namespace Assets.Scripts
             //check if multiple enemies killed 
             if (comboCounterKill <= 0)
             {
-                StartCoroutine(slowMotion(0.2f));
+                StartCoroutine(slowMotion(0.3f));
                // comboCounterKill = missionMultipleKilled ? numOfKillesToWinComboMission : numOfKillesForCombo;
                 if (missionMultipleKilled)
                 {
@@ -182,6 +186,9 @@ namespace Assets.Scripts
                     deploySpecialBomb();
                 }
             }
+
+            GameManager.main.GameOver(damageTaken);
+            GameManager.main.EnemyKilled(enemiesKilled);            
 
             // m_currBoard.GetComponent<BoardManager>().UpdateGridPointObject (row, column, row, column);
             m_updateBombGrid(row, column, row, column);
@@ -204,9 +211,10 @@ namespace Assets.Scripts
                 {
                     comboCounterKill--;
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Blue]--;                    
-                    currCollider.GetComponent<AudioSource>().PlayOneShot(eggsSound);                    
-                    currCollider.GetComponent<Enemy>().activeDelay();                                        
-                    GameManager.main.EnemyKilled();
+                //    currCollider.GetComponent<AudioSource>().PlayOneShot(eggsSound);                    
+                    currCollider.GetComponent<Enemy>().activeDelay();
+                    enemiesKilled++;
+
                     if (missionSurvival)
                     {
                         Timer.main.setTimerMission((int)Timer.main.myTimer + 5);
@@ -217,9 +225,9 @@ namespace Assets.Scripts
                 {
                     comboCounterKill--;
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Pink]--;
-                    currCollider.GetComponent<AudioSource>().PlayOneShot(eggsSound);
-                    currCollider.GetComponent<Enemy>().activeDelay();                    
-                    GameManager.main.EnemyKilled();
+              //      currCollider.GetComponent<AudioSource>().PlayOneShot(eggsSound);
+                    currCollider.GetComponent<Enemy>().activeDelay();
+                    enemiesKilled++;
                     if (missionSurvival)
                     {
                         Timer.main.setTimerMission((int)Timer.main.myTimer + 5);
@@ -230,9 +238,9 @@ namespace Assets.Scripts
                 {
                     comboCounterKill--;
                     GameManager.main.enemiesOnTheBoard[colorManager.colorsOptions.Purple]--;
-                    currCollider.GetComponent<AudioSource>().PlayOneShot(eggsSound);
+             //       currCollider.GetComponent<AudioSource>().PlayOneShot(eggsSound);
                     currCollider.GetComponent<Enemy>().activeDelay();
-                    GameManager.main.EnemyKilled();
+                    enemiesKilled++;
                     if (missionSurvival)
                     {
                         Timer.main.setTimerMission((int)Timer.main.myTimer + 5);
@@ -247,7 +255,7 @@ namespace Assets.Scripts
                 }
                 else
                 {
-                    GameManager.main.GameOver(1);
+                    damageTaken++;
                     Instantiate(heart, currCollider.transform.position, Quaternion.identity);
                    // heart.GetComponent<Heart>().SetAnimation();
                 }
@@ -276,21 +284,22 @@ namespace Assets.Scripts
         IEnumerator DelayedExplode(GameObject curBomb, int row, int column)
         {
            // yield return new WaitForSeconds(0.2f);           
-            yield return new WaitForSeconds(1.3f);
+            yield return new WaitForSeconds(1.15f);
             if (curBomb != null)
                 curBomb.GetComponent<AudioSource>().PlayOneShot(bombSound, 0.5f);
                 curBomb.GetComponent<SpriteRenderer>().sortingLayerName = "Units";
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0f);
             if (curBomb != null)
                 Explode(curBomb, row, column);
-            yield return new WaitForSeconds(0.2f);
+            curBomb.GetComponent<SpriteRenderer>().enabled = false;
+            yield return new WaitForSeconds(0.5f);
             if (curBomb != null)
                 Destroy(curBomb);
         }
 
         IEnumerator slowMotion(float time)
         {
-            Time.timeScale = 0.2F;
+            Time.timeScale = 0.3F;
             yield return new WaitForSeconds(time);
             Time.timeScale = 1F;
         }

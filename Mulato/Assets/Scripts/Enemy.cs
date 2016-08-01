@@ -35,7 +35,7 @@ public class Enemy : MovingObject {
     }
 
 	void Update() {
-		m_timeToMove += Time.deltaTime;
+		m_timeToMove += 0.85f * Time.deltaTime;
 		if (m_timeToMove >= EnemySpeedSlow && !dead) {
 			MoveEnemey ();
 		    if (Missions.main.disappearingMission)

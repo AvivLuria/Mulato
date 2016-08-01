@@ -12,7 +12,7 @@ namespace Assets.Scripts
         public BombManagerBoxMovingObjectsUpdateBombGridPoint m_UpdateBombGridPointEnemy;
         public MovingObjectsCanMoveOnBoard m_CanMove;
 
-        public float moveTime = 0.0005f;			//Time it will take object to move, in seconds.
+        public float moveTime = 100f;			//Time it will take object to move, in seconds.
         public LayerMask blockingLayer;			//Layer on which collision will be checked.
         private Rigidbody2D rb2D;				//The Rigidbody2D component attached to this object.
         private float inverseMoveTime;			//Used to make movement more efficient.

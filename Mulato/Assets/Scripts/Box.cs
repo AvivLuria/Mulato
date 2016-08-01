@@ -22,6 +22,7 @@ public class Box : MonoBehaviour
     public GameObject heart;
     public GameObject special;
     public GameObject m_curBoard;
+    public GameObject roniSnowFlakes;
 
     public void setBoardListener(GameObject i_curBoard)
     {
@@ -67,6 +68,8 @@ public class Box : MonoBehaviour
     private void freezeEnemies()
     {
         Enemy[] enemies = UnityEngine.Object.FindObjectsOfType<Enemy>();
+        GameObject roni = Instantiate(roniSnowFlakes, new Vector3(5f, -5f, 0), Quaternion.identity) as GameObject;
+        
         enemySpeed = 0;
         foreach (Enemy enemy in enemies)
         {
@@ -74,7 +77,7 @@ public class Box : MonoBehaviour
             enemy.EnemySpeedSlow = float.MaxValue;
             enemy.gameObject.GetComponent<Enemy>().activeDelay(enemySpeed);
         }
-        
+        Destroy(roni,2f);
     }
 
     private void addMoreLife()
@@ -93,8 +96,7 @@ public class Box : MonoBehaviour
         
     }
 
-   
-    IEnumerator delayedDestory()
+        IEnumerator delayedDestory()
     {
         yield return new WaitForSeconds(0.5f);
         source = GetComponent<AudioSource>();

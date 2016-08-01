@@ -14,6 +14,7 @@ namespace Assets.Scripts
         public int difficulty;
         public bool disappearingMission = false;
         private bool createBoxes = false;
+        private bool missionWon = false;
         GameObject m_CurrBoard;
 
         public void initMission(int input_level, int input_numberOfEnemies, int input_difficulty)
@@ -29,13 +30,12 @@ namespace Assets.Scripts
                     {
                         //2 <= difficulty < 4
                         //sets how much to kill at once
-                        BombManager.main.numOfKillesToWinComboMission = difficulty;                        
-                      
+                        BombManager.main.numOfKillesToWinComboMission = difficulty;
+                        missionWon = false;
                         //for the draw next bomb, to select all types of bomb
                         BombManager.main.onMission = true;
                         //sets up mode to check win condition
-                        BombManager.main.missionMultipleKilled = true;
-                        Timer.main.setTimerMission(timeToSet);
+                        BombManager.main.missionMultipleKilled = true;                      
                       
                         break;
                     }
@@ -49,7 +49,6 @@ namespace Assets.Scripts
                         BombManager.main.startIndexBombColor = color;
                         BombManager.main.setNumberOfColors(color + 1);
                         BombManager.main.onMission = true;
-                        Timer.main.setTimerMission(timeToSet);
                         
                         break;
                     }
@@ -79,7 +78,6 @@ namespace Assets.Scripts
                         BombManager.main.setNumberOfColors(difficulty);                        
                         BombManager.main.onMission = true;
                         disappearingMission = true;
-                        Timer.main.setTimerMission(timeToSet);
                         break;
                     }
                 //survival
@@ -97,7 +95,6 @@ namespace Assets.Scripts
                     {                  
                         BombManager.main.setNumberOfColors(difficulty);
                         BombManager.main.onMission = true;
-                        Timer.main.setTimerMission(timeToSet);
                         createBoxes = true;
                         StartCoroutine(DelayCreateBoxes(difficulty));
                         break;
@@ -114,13 +111,17 @@ namespace Assets.Scripts
                     {
                         if (BombManager.main.wonMissionMultipleKilled)
                         {
+                            missionWon = true;
                             BombManager.main.missionMultipleKilled = false;
+                            GameManager.main.stillPlaying = false;
+                            GameManager.main.timer = false;
                             GameManager.main.changeLevel(3);
                         }
-                        else if (GameManager.main.numberOFEnemiesInTheLevel < difficulty)
+                        else if (GameManager.main.numberOFEnemiesInTheLevel < 2 && !missionWon)
                         {
                             GameManager.main.GameOver(20);
                         }
+
                         break;
                     }
 
@@ -128,6 +129,9 @@ namespace Assets.Scripts
                     {
                         if (GameManager.main.enemiesOnTheBoard[color] == 0)
                         {
+                            GameManager.main.timer = false;
+                            GameManager.main.stillPlaying = false;
+                            BombManager.main.startIndexBombColor = 0;
                             GameManager.main.changeLevel(3);
                         }
                         break;
@@ -145,6 +149,8 @@ namespace Assets.Scripts
                     {
                         if (GameManager.main.numberOFEnemiesInTheLevel == 0)
                         {
+                            GameManager.main.timer = false;
+                            GameManager.main.stillPlaying = false;
                             disappearingMission = false;
                             GameManager.main.changeLevel(3);
                         }

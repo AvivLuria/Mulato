@@ -36,6 +36,13 @@ public class Ui : MonoBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+
+
+            Application.Quit();
+        }
+
     }
 
     public static void activeUI(bool input)

@@ -34,7 +34,7 @@ namespace Assets.Scripts
 
 		public Transform mainMenu, exitMenu,gameOver, pauseMenu, startLevel0, startLevel2, startLevel3, startLevel4, startLevel5, startLevel1, startLevel6, startLevel7, startLevel8, startLevel9, startLevel10, startLevel11, gameWon;
 		public Transform[] startLevel;
-        private bool stillPlaying = true;
+        public bool stillPlaying = true;
 
         public override void Awake()
         {
@@ -75,6 +75,7 @@ namespace Assets.Scripts
                 Destroy(m_CurrentBoard.gameObject);
             }
             #region setting up for all levels
+            stillPlaying = true;
             m_CurrentBoard = Instantiate(m_BoardManager, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
             m_BombManager.GetComponent<BombManager>().m_updateBombGrid = new BombManagerBoxMovingObjectsUpdateBombGridPoint(m_CurrentBoard.GetComponent<BoardManager>().UpdateGridPointObject);
             m_BombManager.GetComponent<BombManager>().m_setBombOnBoard = new BombManagersetBombOnBoard(m_CurrentBoard.GetComponent<BoardManager>().SetBombOnGrid);
@@ -112,7 +113,7 @@ namespace Assets.Scripts
                           {13,14,23,24,33,34,43,44,53,54,63,64,73,74,83,84,93,94,51,52,55,56};                  
                         BombManager.main.setNumberOfColors(numberOfColors);
                         Timer.main.setTimerMission(1800);
-                        
+                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfFreezeBoxes = 1;
                         //    Instantiate(arrowIndicator, new Vector3(3.3f, 9, 0), Quaternion.Euler(0, 0, 300));
                         #endregion
 
@@ -148,7 +149,7 @@ namespace Assets.Scripts
                         m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[]
                           {92, 93, 94, 95, 83, 84, 63, 64, 52, 53, 54, 55, 43, 44, 12, 13, 14, 15, 23, 24};
                         Timer.main.timerText.enabled = true;
-                        Timer.main.setTimerMission(180);
+                        Timer.main.setTimerMission(119);
                         #endregion
                         onAMission = false;
                         break;
@@ -164,7 +165,7 @@ namespace Assets.Scripts
                     {92, 93, 94, 95, 83, 84, 63, 64, 43, 44, 12, 13, 14, 15, 23, 24};
                     m_CurrentBoard.GetComponent<BoardManager>().m_NumOfFreezeBoxes = 1;
                     onAMission = false;
-                    Timer.main.setTimerMission(180);
+                    Timer.main.setTimerMission(119);
                     #endregion
                     break;
                 }
@@ -177,7 +178,7 @@ namespace Assets.Scripts
                     numberOFEnemiesInTheLevel = 6;
                     m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[]
                     {93, 94, 83, 84, 63, 64, 43, 44, 13, 14, 23, 24, 66, 56, 46, 61, 41, 51};
-                    Timer.main.setTimerMission(180);
+                    Timer.main.setTimerMission(90);
                     onAMission = false;
                     #endregion
                     break;
@@ -189,7 +190,7 @@ namespace Assets.Scripts
 
                     
                     numberOfColors = 1;
-                    numberOFEnemiesInTheLevel = 5;
+                    numberOFEnemiesInTheLevel = 6;
                     m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[]
                     {93, 94, 83, 84, 63, 64, 43, 44, 13, 14, 23, 24, 66, 56, 46, 61, 41, 51};
 
@@ -200,7 +201,7 @@ namespace Assets.Scripts
                         m_CurrentBoard.GetComponent<BoardManager>().m_NumOfColors = (numberOfColors);                       
                         BombManager.main.setNumberOfColors(numberOfColors);                       
                         
-                        Timer.main.setTimerMission(120);
+                        Timer.main.setTimerMission(90);
                         onAMission = true;
                         break;
                 }
@@ -216,7 +217,7 @@ namespace Assets.Scripts
                     m_CurrentBoard.GetComponent<BoardManager>().m_NumOfFreezeBoxes = 1;
                     m_CurrentBoard.GetComponent<BoardManager>().m_NumOfNomralBoxes = 2;
 
-                    Timer.main.setTimerMission(180);
+                    Timer.main.setTimerMission(119);
 
                         #endregion
                     onAMission = false;
@@ -234,7 +235,7 @@ namespace Assets.Scripts
                     m_CurrentBoard.GetComponent<BoardManager>().m_NumOfSpecialBombBoxes = 2;
                     m_CurrentBoard.GetComponent<BoardManager>().m_NumOfNomralBoxes = 2;
 
-                    Timer.main.setTimerMission(180);
+                    Timer.main.setTimerMission(90);
 
                     #endregion
                     onAMission = false;
@@ -252,7 +253,8 @@ namespace Assets.Scripts
                         m_CurrentBoard.GetComponent<BoardManager>().m_NumOfLifeBoxes = 1;
                         m_CurrentBoard.GetComponent<BoardManager>().m_NumOfSpecialBombBoxes = 1;
                         m_CurrentBoard.GetComponent<BoardManager>().m_NumOfNomralBoxes = 2;
-                       
+
+                        Timer.main.setTimerMission(90);
                         difficulty = 2;
                         missionNum = 3;
                         #endregion               
@@ -291,9 +293,9 @@ namespace Assets.Scripts
                         m_CurrentBoard.GetComponent<BoardManager>().m_NumOfLifeBoxes = 1;
                         m_CurrentBoard.GetComponent<BoardManager>().m_NumOfSpecialBombBoxes = 1;
                         m_CurrentBoard.GetComponent<BoardManager>().m_NumOfNomralBoxes = 2;
-                      
-                        #endregion                       
-                    onAMission = true;
+                        Timer.main.setTimerMission(90);
+                        #endregion
+                        onAMission = true;
                     break;
                 }
                     /*
@@ -433,9 +435,10 @@ namespace Assets.Scripts
             }
             else
             {                                           
-                BombManager.main.setNumberOfColors(numberOfColors);               
+                BombManager.main.setNumberOfColors(numberOfColors);
+                BombManager.main.onMission = false;              
             }
-
+            timer = true;
             m_CurrentBoard.GetComponent<BoardManager>().StartScene();
             if ( currLevel == -1)
             {
@@ -451,16 +454,21 @@ namespace Assets.Scripts
             BombManager.main.reDrawBombs();
         }
 
-        public void EnemyKilled()
+        public void EnemyKilled(int enemiesKilled)
         {
-            numberOFEnemiesInTheLevel--;
-            if (numberOFEnemiesInTheLevel == 0 && !onAMission && stillPlaying)
+            numberOFEnemiesInTheLevel -= enemiesKilled;
+            if (stillPlaying)
             {
-                changeLevel(3);
-            }
-            else if (onAMission)
-            {
-                Missions.main.checkMissionStatus();
+                if (numberOFEnemiesInTheLevel <= 0 && !onAMission)
+                {
+                    stillPlaying = false;
+                    timer = false;
+                    changeLevel(3);
+                }
+                else if (onAMission)
+                {
+                    Missions.main.checkMissionStatus();
+                }
             }
         }
 
@@ -484,7 +492,7 @@ namespace Assets.Scripts
         {
             stillPlaying = true;
             nextLevel = false;
-            InitGame(currLevel = -1);
+            InitGame(currLevel = -2);
             startLevel[0].gameObject.SetActive(false);
         }
 
@@ -501,7 +509,7 @@ namespace Assets.Scripts
 
         public void changeLevel(float delayTime)
         {
-			StartCoroutine(delayLoadLevel(delayTime));           
+			StartCoroutine(delayLoadLevel(delayTime));         
         }
 
 		public void OkNextLevel(){

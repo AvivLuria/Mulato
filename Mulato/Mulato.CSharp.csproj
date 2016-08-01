@@ -104,7 +104,9 @@
     <Compile Include="Assets\Scripts\colorManager.cs" />
     <Compile Include="Assets\Scripts\floor.cs" />
     <Compile Include="Assets\Scripts\level.cs" />
+    <Compile Include="Assets\Scripts\sound.cs" />
     <Compile Include="Assets\Scripts\startScene.cs" />
+    <Compile Include="Assets\Scripts\test.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Fonts\OFL.txt" />

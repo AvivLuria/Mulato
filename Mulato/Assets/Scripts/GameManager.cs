@@ -23,6 +23,7 @@ namespace Assets.Scripts
         public int[] enemiesOnTheBoard;
         public int numberOfColors;
 
+        public Image m_ToolTip;
         public GameObject m_BombManager;
         public GameObject m_CurrentBoard = null;
         public GameObject m_BoardManager;
@@ -36,6 +37,10 @@ namespace Assets.Scripts
         public Canvas gameCanvas;
         public Canvas mapCanvas;
 
+        public Sprite tooltip_bar;
+        public Sprite tooltip_box;
+        public Sprite tooltip_combo;
+        public Sprite tooltip_bomb;
         public Sprite eggiconRight;
         public Sprite eggiconLeft;
 
@@ -121,7 +126,7 @@ namespace Assets.Scripts
                            ,46 ,51 ,52, 56, 66, 71 ,72, 76, 81, 82,84 ,85 ,86, 91, 92, 93, 94, 95, 96, 54,55,74,75 };
                         //Instantiate(arrowIndicator, new Vector3(6.27f, 8.6f, 0), Quaternion.Euler(0, 0, 50));
                         m_BombManager.GetComponent<BombManager>().explainBombTime = true;
-                        StartCoroutine(delayedMove(arrowIndicator, 4.3f, 5.6f, 3.8f, 5, 3));
+                        StartCoroutine(delayedMove(arrowIndicator, 4f, 6f, 3.5f, 5, 1f));
                         StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 4f));
                         onAMission = false;
                         Timer.main.setTimerMission(1800);
@@ -162,6 +167,12 @@ namespace Assets.Scripts
 
                         Timer.main.timerText.enabled = false;
                         onAMission = false;
+                        #region tooltip
+                        Time.timeScale = 0f;
+                        Ui.activeUI(false);
+                        m_ToolTip.GetComponent<Image>().sprite = tooltip_bar;
+                        m_ToolTip.gameObject.SetActive(true);
+                        #endregion
                         break;
                     }
                     
@@ -177,6 +188,13 @@ namespace Assets.Scripts
                         Timer.main.setTimerMission(119);
                         #endregion
                         onAMission = false;
+
+                        #region tooltip
+                        Time.timeScale = 0f;
+                        Ui.activeUI(false);
+                        m_ToolTip.GetComponent<Image>().sprite = tooltip_combo;
+                        m_ToolTip.gameObject.SetActive(true);
+                        #endregion
                         break;
                     }
                 //classic play
@@ -191,8 +209,17 @@ namespace Assets.Scripts
                     m_CurrentBoard.GetComponent<BoardManager>().m_NumOfFreezeBoxes = 1;
                     onAMission = false;
                     Timer.main.setTimerMission(119);
-                    #endregion
-                    break;
+                     #endregion
+
+                     #region tooltip
+                        Time.timeScale = 0f;
+                        Ui.activeUI(false);
+                        m_ToolTip.transform.position += new Vector3(-40, 30, 0);
+                        m_ToolTip.GetComponent<Image>().sprite = tooltip_box;
+                        m_ToolTip.gameObject.SetActive(true);
+                     #endregion
+
+                        break;
                 }
                 //classic play - robot 
                 case (3):
@@ -262,8 +289,16 @@ namespace Assets.Scripts
                     m_CurrentBoard.GetComponent<BoardManager>().m_NumOfFreezeBoxes = 1;
                     Timer.main.setTimerMission(90);
 
-                    #endregion
-                    onAMission = false;
+                        #endregion
+
+                        #region tooltip
+                        Time.timeScale = 0f;
+                        Ui.activeUI(false);
+                        m_ToolTip.GetComponent<Image>().sprite = tooltip_bomb;
+                        m_ToolTip.gameObject.SetActive(true);
+                        #endregion
+
+                        onAMission = false;
                     break;
 
                 }
@@ -476,10 +511,10 @@ namespace Assets.Scripts
             {
                 Vector2 enemyOne = m_CurrentBoard.GetComponent<BoardManager>().enemies[0].transform.position;
                 Vector2 enemyTwo = m_CurrentBoard.GetComponent<BoardManager>().enemies[1].transform.position;
-                StartCoroutine(delayedMove(arrowIndicator, enemyOne.x + 2.5f, enemyOne.y + 1.8f, enemyOne.x + 1.8f, enemyOne.y + 0.8f, 0f));               
-                StartCoroutine(delayedMove(arrowIndicator_2, enemyOne.x - 1f, enemyOne.y + 2.8f, enemyOne.x, enemyOne.y + 2f, 0f));
-                StartCoroutine(delayedMove(arrowIndicator, enemyTwo.x + 2.5f, enemyTwo.y + 1.8f, enemyTwo.x + 1.8f, enemyTwo.y + 0.8f, 4f));
-                StartCoroutine(delayedMove(arrowIndicator_2, enemyTwo.x - 1f, enemyTwo.y + 2.8f, enemyTwo.x, enemyTwo.y + 2f, 4f));
+                StartCoroutine(delayedMove(arrowIndicator, enemyOne.x + 2f, enemyOne.y + 2f, enemyOne.x + 1.5f, enemyOne.y + 1f, 0f));               
+                StartCoroutine(delayedMove(arrowIndicator_2, enemyOne.x - 1f, enemyOne.y + 2.8f, enemyOne.x  -0.5f, enemyOne.y + 2f, 0f));
+                StartCoroutine(delayedMove(arrowIndicator, enemyTwo.x + 2f, enemyTwo.y + 2f, enemyTwo.x + 1.5f, enemyTwo.y + 1f, 4f));
+                StartCoroutine(delayedMove(arrowIndicator_2, enemyTwo.x - 1f, enemyTwo.y + 2.8f, enemyTwo.x - 0.5f, enemyTwo.y + 2f, 4f));
                 StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 7f));
                 StartCoroutine(delayedMove(arrowIndicator_2, -10, -10, -10, -10, 7f));
             }
@@ -603,6 +638,13 @@ namespace Assets.Scripts
 				timer = true;
 			}
 		}
+
+        public void onClick()
+        {
+            m_ToolTip.gameObject.SetActive(false);
+            Time.timeScale = 1f;
+            Ui.activeUI(true);
+        }
 
         IEnumerator delayStartingLevelLoad()
         {

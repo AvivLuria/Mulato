@@ -17,7 +17,7 @@ namespace Assets.Scripts
 
         private int missionNum;
         public int difficulty;
-        public int currLevel = -3;
+        private int currLevel = -2;
         public int life = 3;
         public int numberOFEnemiesInTheLevel;
         public int[] enemiesOnTheBoard;
@@ -29,13 +29,22 @@ namespace Assets.Scripts
         public GameObject arrowIndicator;
         public GameObject arrowIndicator_2;
         public GameObject Memory;
+        public Sprite redBall;
+        public Sprite greenBall;
 
         public Canvas fader;
+        public Canvas gameCanvas;
+        public Canvas mapCanvas;
 
-		public Transform  mainMenu, exitMenu,gameOver, pauseMenu, startLevel0, startLevel2, startLevel3, startLevel4, startLevel5, startLevel1, startLevel6, startLevel7, startLevel8, startLevel9, startLevel10, startLevel11, gameWon;
+        public Sprite eggiconRight;
+        public Sprite eggiconLeft;
+
+        public Transform  mainMenu, exitMenu,gameOver, pauseMenu, startLevel0, startLevel2, startLevel3, startLevel4, startLevel5, startLevel1, startLevel6, startLevel7, startLevel8, startLevel9, startLevel10, startLevel11,startLevel12, startLevel13, startLevel14, gameWon;
 		public Transform[] startLevel;
+        public GameObject eggIcon;
+        public Image[] levelBalls;
         public bool stillPlaying = true;
-
+        private bool firstTimePlaying = true;
         public override void Awake()
         {
             base.Awake();
@@ -44,8 +53,8 @@ namespace Assets.Scripts
         }
         void Start()
         {
-            
-			startLevel = new Transform[13];
+           
+            startLevel = new Transform[16];
             startLevel[0] = startLevel0;
             startLevel [1] = startLevel1;
 			startLevel [2] = startLevel2;
@@ -58,12 +67,29 @@ namespace Assets.Scripts
 			startLevel [9] = startLevel9;
 			startLevel [10] = startLevel10;
 			startLevel [11] = startLevel11;
-            startLevel[12] = gameWon;
+            startLevel[12] = startLevel12;
+            startLevel[13] = startLevel13;
+            startLevel[14] = startLevel14;
+            startLevel[15] = gameWon;
 
             nextLevel = true;
-			startLevel[0].gameObject.SetActive (nextLevel);
-            startLevel[0].gameObject.GetComponentInChildren<Button>().image.enabled = false;
-            StartCoroutine(delayShowButton(0));
+            if (PlayerPrefs.HasKey("isFirstTime") || PlayerPrefs.GetInt("isFirstTime") == 1)
+            {
+                currLevel = -2;
+                startLevel[currLevel + 2].gameObject.SetActive(nextLevel);
+                startLevel[currLevel + 2].gameObject.GetComponentInChildren<Button>().image.enabled = false;
+                StartCoroutine(delayShowButton(currLevel + 2));
+                PlayerPrefs.SetInt("isFirstTime", 1);
+                PlayerPrefs.Save();
+            } else
+            {
+                currLevel = 0;
+                startLevel[currLevel + 3].gameObject.SetActive(nextLevel);
+                startLevel[currLevel + 3].gameObject.GetComponentInChildren<Button>().image.enabled = false;
+             //   firstTimePlaying = false;
+                StartCoroutine(delayShowButton(currLevel + 3));
+            }
+           
             // InitGame (currLevel = -1);         
         }		
 
@@ -71,7 +97,7 @@ namespace Assets.Scripts
 
             if (m_CurrentBoard != null)
             {
-                m_CurrentBoard.GetComponent<BoardManager>().clearScene();
+                m_CurrentBoard.GetComponent<BoardManager>().clearScene();            
                 Destroy(m_CurrentBoard.gameObject);
             }
             #region setting up for all levels
@@ -95,7 +121,7 @@ namespace Assets.Scripts
                            ,46 ,51 ,52, 56, 66, 71 ,72, 76, 81, 82,84 ,85 ,86, 91, 92, 93, 94, 95, 96, 54,55,74,75 };
                         //Instantiate(arrowIndicator, new Vector3(6.27f, 8.6f, 0), Quaternion.Euler(0, 0, 50));
                         m_BombManager.GetComponent<BombManager>().explainBombTime = true;
-                        
+                        StartCoroutine(delayedMove(arrowIndicator, 4.3f, 5.6f, 3.8f, 5, 3));
                         StartCoroutine(delayedMove(arrowIndicator, -10, -10, -10, -10, 4f));
                         onAMission = false;
                         Timer.main.setTimerMission(1800);
@@ -244,8 +270,9 @@ namespace Assets.Scripts
                 // kill the same color - lucky number 7 
                 case (7):
                 {
-                    #region hard_coding_scene
-
+                        #region hard_coding_scene
+                        difficulty = 2;
+                        missionNum = 3;
                         numberOfColors = 2;
                         numberOFEnemiesInTheLevel = 7;
                         m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[] {73,72,74,64,54,44,34,52,53,55};
@@ -253,9 +280,7 @@ namespace Assets.Scripts
                         m_CurrentBoard.GetComponent<BoardManager>().m_NumOfSpecialBombBoxes = 1;
                         m_CurrentBoard.GetComponent<BoardManager>().m_NumOfNomralBoxes = 2;
 
-                        Timer.main.setTimerMission(90);
-                        difficulty = 2;
-                        missionNum = 3;
+                        Timer.main.setTimerMission(90);                    
                         #endregion               
                     onAMission = true;
                     break;
@@ -297,63 +322,71 @@ namespace Assets.Scripts
                         onAMission = true;
                     break;
                 }
-                    /*
-                //classic play - lots of boxes
+                    
+                //combo kill - 2
                 case (10):
                 {
-                    #region hard_coding_scene
+                        #region hard_coding_scene                   
+                        missionNum = 2;
+                        numberOfColors = 2;
+                        difficulty = 2;
+                        numberOFEnemiesInTheLevel = 8;
+                        m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[] {33, 23, 25, 35, 43, 45, 53, 55, 63, 65, 62, 64, 73, 75 };
+                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfLifeBoxes = 1;
+                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfFreezeBoxes = 1;
+                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfSpecialBombBoxes = 1;
+                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfNomralBoxes = 3;
 
-                     
-                        numberOfColors = 3;
-                        numberOFEnemiesInTheLevel = 9;
-                        BoardManager.main.wallPostions = new int[] { };
-                        BoardManager.main.numOfLifeBoxes = 1;
-                        BoardManager.main.numOfFreezeBoxes = 1;
-                        BoardManager.main.numOfSpecialBombBoxes = 4;
-                        BoardManager.main.numOfNomralBoxes = 20;
+                        Timer.main.setTimerMission(90);
 
-                        Timer.main.setTimerMission(120);
-                        #endregion                    
-                    onAMission = false;
+                        #endregion
+                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfColors = (numberOfColors);
+                        BombManager.main.setNumberOfColors(numberOfColors);
+                        onAMission = true;
                     break;
                 }
-                //survival
+                    
+                // kill the same color
                 case (11):
                 {
-                    #region hard_coding_scene
-
-                        numberOfColors = 3;
+                        #region hard_coding_scene
+                        difficulty = 2;
+                        missionNum = 3;
+                        numberOfColors = 2;
                         numberOFEnemiesInTheLevel = 9;
-                        BoardManager.main.wallPostions = new int[] {33,23,25,35,43,45,53,55,63,65,62,64,73,75 };
-                        BoardManager.main.numOfLifeBoxes = 1;
-                        BoardManager.main.numOfFreezeBoxes = 1;
-                        BoardManager.main.numOfSpecialBombBoxes = 2;
-                        BoardManager.main.numOfNomralBoxes = 3;
-
-                        Timer.main.setTimerMission(120);
+                        m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[] {33,23,25,35,43,45,53,55,63,65,62,64,73,75 };
+                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfLifeBoxes = 1;
+                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfSpecialBombBoxes = 1;
+                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfNomralBoxes = 2;
+                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfFreezeBoxes = 1;
+                        Timer.main.setTimerMission(60);
                         #endregion
-                    onAMission = false;
+                    onAMission = true;
                     break;
                 }
+
                 // closed levels
+                //disappearing enemies - 3 colors
                 case (12):
                 {
-                    #region hard_coding_scene
+                        #region hard_coding_scene
 
+                        missionNum = 5;
                         numberOfColors = 3;
+                        difficulty = numberOfColors;
                         numberOFEnemiesInTheLevel = 9;
-                        BoardManager.main.wallPostions = new int[] { 11,12,13,14,15,16,91,92,93,94,95,96,51,52,55,56};
-                        BoardManager.main.numOfLifeBoxes = 1;
-                        BoardManager.main.numOfFreezeBoxes = 1;
-                        BoardManager.main.numOfSpecialBombBoxes = 2;
-                        BoardManager.main.numOfNomralBoxes = 3;
-
-                        Timer.main.setTimerMission(120);
+                        m_CurrentBoard.GetComponent<BoardManager>().wallPostions = new int[] { 11,12,13,14,15,16,91,92,93,94,95,96,51,52,55,56};
+                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfLifeBoxes = 1;
+                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfSpecialBombBoxes = 1;
+                        m_CurrentBoard.GetComponent<BoardManager>().m_NumOfNomralBoxes = 2;
+                        Timer.main.setTimerMission(90);
+                  
                         #endregion                    
-                    onAMission = false;
+                    onAMission = true;
                     break;
                 }
                 //like bomber man
+                /*
                 case (13):
                 {
                     #region hard_coding_scene
@@ -425,12 +458,12 @@ namespace Assets.Scripts
                 }*/
             }
 
-            enemiesOnTheBoard = new int[numberOfColors];
+            enemiesOnTheBoard = new int[3];
             m_CurrentBoard.GetComponent<BoardManager>().m_NumOfEnemies = numberOFEnemiesInTheLevel;
             m_CurrentBoard.GetComponent<BoardManager>().m_NumOfColors = numberOfColors;
             if (onAMission)
             {
-                Missions.main.initMission(missionNum, numberOFEnemiesInTheLevel,difficulty);
+                Missions.main.initMission(missionNum, numberOFEnemiesInTheLevel, difficulty);
             }
             else
             {                                           
@@ -491,10 +524,28 @@ namespace Assets.Scripts
         {
             stillPlaying = true;
             nextLevel = false;
-            InitGame(currLevel = -2);
-            startLevel[0].gameObject.SetActive(false);
+            InitGame(currLevel);
+            startLevel[currLevel + 2].gameObject.SetActive(false);
         }
 
+        public void OkNextLevel()
+        {
+            if (firstTimePlaying == false)
+            {
+                changeLevel(3);
+
+            } else
+            {
+                nextLevel = false;
+                currLevel++;
+                Ui.activeUI(false);
+
+                startLevel[currLevel + 2].gameObject.SetActive(false);
+                InitGame(currLevel);
+                Ui.activeUI(true);
+            }
+            
+        }
         public void Restart(){
             stillPlaying = true;
             Ui.activeUI(false);
@@ -511,19 +562,12 @@ namespace Assets.Scripts
 			StartCoroutine(delayLoadLevel(delayTime));         
         }
 
-		public void OkNextLevel(){
-			nextLevel = false;
-			currLevel++;
-			Ui.activeUI(false);
-			InitGame(currLevel);			
-			startLevel [currLevel + 2].gameObject.SetActive (false);
-            Ui.activeUI(true);
-        }
+		
 
         public void StartGame()
         {
             currLevel = -2;
-            SceneManager.LoadScene("Scene1", LoadSceneMode.Single);
+            SceneManager.LoadScene("Scene", LoadSceneMode.Single);
         }
 
         public void ExitMenu(bool clicked){
@@ -539,7 +583,8 @@ namespace Assets.Scripts
 
 		public void MainMenu(){
 			SceneManager.LoadScene ("StartScene", LoadSceneMode.Single);
-			nextLevel = false;
+            Time.timeScale = 1f;
+            nextLevel = false;
             Ui.activeUI(true);
         }
 
@@ -564,25 +609,39 @@ namespace Assets.Scripts
             Ui.activeUI(false);
             yield return new WaitForSeconds(3f);
             nextLevel = true;
-            startLevel[currLevel + 3].gameObject.SetActive(nextLevel);
-            startLevel[currLevel + 3].gameObject.GetComponentInChildren<Button>().image.enabled = false;
-            StartCoroutine(delayShowButton(currLevel + 3));
+            startLevel[currLevel + 2].gameObject.SetActive(nextLevel);
+            startLevel[currLevel + 2].gameObject.GetComponentInChildren<Button>().image.enabled = false;
+            StartCoroutine(delayShowButton(currLevel + 2));
         }
 
         IEnumerator delayLoadLevel(float timeDelay)
         {
             Ui.activeUI(false);
             yield return new WaitForSeconds(timeDelay);
-			nextLevel = true;
+            if (currLevel >= 0)
+            {
+              
+                if (currLevel < 4 || currLevel > 8 && currLevel < 12)
+                {
+                    eggIcon.GetComponent<SpriteRenderer>().sprite = eggiconRight;                 
+                } else
+                {
+                    eggIcon.GetComponent<SpriteRenderer>().sprite = eggiconLeft;
+                }
+                
+               StartCoroutine(blinkBlink(levelBalls[currLevel].GetComponent<Image>().sprite));
+            }
+
+            nextLevel = true;
             startLevel [currLevel + 3].gameObject.SetActive (nextLevel);
             startLevel[currLevel + 3].gameObject.GetComponentInChildren<Button>().image.enabled = false;
             StartCoroutine(delayShowButton(currLevel + 3));
         }
 
-        IEnumerator delayShowButton(int currLevel)
+        IEnumerator delayShowButton(int currLevelt)
         {
-            yield return new WaitForSeconds(1.5f);
-            startLevel[currLevel].gameObject.GetComponentInChildren<Button>().image.enabled = true;
+            yield return new WaitForSeconds(1f);
+            startLevel[currLevelt].gameObject.GetComponentInChildren<Button>().image.enabled = true;
         }
 
         IEnumerator delayLost()
@@ -598,6 +657,25 @@ namespace Assets.Scripts
             yield return new WaitForSeconds(timeToWait);
             objectToMove.GetComponent<TweenTransforms>().startingVector = new Vector3(XStartPostion, YStartPostion, 0);
             objectToMove.GetComponent<TweenTransforms>().endVector = new Vector3(XEndPostion, YEndPostion, 0);
+        }
+
+        IEnumerator blinkBlink(Sprite ball)
+        {
+            mapCanvas.gameObject.SetActive(true);
+            gameCanvas.gameObject.SetActive(false);
+            iTween.MoveTo(eggIcon, levelBalls[currLevel].transform.position + new Vector3(0,0.5f,0),3f);
+            yield return new WaitForSeconds(0.8f);     
+            levelBalls[currLevel].GetComponent<Image>().sprite = greenBall;
+            yield return new WaitForSeconds(0.8f);
+            levelBalls[currLevel].GetComponent<Image>().sprite = redBall;
+            yield return new WaitForSeconds(0.8f);
+            levelBalls[currLevel].GetComponent<Image>().sprite = greenBall;
+            yield return new WaitForSeconds(0.8f);
+            levelBalls[currLevel].GetComponent<Image>().sprite = redBall;
+            yield return new WaitForSeconds(0.8f);
+            levelBalls[currLevel].GetComponent<Image>().sprite = greenBall;
+            mapCanvas.gameObject.SetActive(false);
+            gameCanvas.gameObject.SetActive(true);
         }
     }
 }

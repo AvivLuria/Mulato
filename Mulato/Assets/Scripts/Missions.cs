@@ -43,9 +43,7 @@ namespace Assets.Scripts
                 case (3):
                     {
                         //choose which color to destory
-                        color = UnityEngine.Random.Range(0, difficulty);
-
-                        m_CurrBoard.GetComponent<BoardManager>(). m_NumOfColors = difficulty;                     
+                        color = UnityEngine.Random.Range(0, difficulty);                    
                         BombManager.main.startIndexBombColor = color;
                         BombManager.main.setNumberOfColors(color + 1);
                         BombManager.main.onMission = true;
@@ -117,7 +115,8 @@ namespace Assets.Scripts
                             GameManager.main.timer = false;
                             GameManager.main.changeLevel(3);
                         }
-                        else if (GameManager.main.numberOFEnemiesInTheLevel < 2 && !missionWon)
+                        else if ((GameManager.main.enemiesOnTheBoard[0] < 2 && GameManager.main.enemiesOnTheBoard[1] < 2 && GameManager.main.enemiesOnTheBoard[2] < 2) 
+                            && !missionWon)
                         {
                             GameManager.main.GameOver(20);
                         }
